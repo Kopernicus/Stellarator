@@ -152,7 +152,13 @@ namespace StellarGenerator
             List<String> prefix = names["prefix"];
             List<String> middle = names["middle"];
             List<String> suffix = names["suffix"];
-            return prefix[Random.Next(0, prefix.Count)] + middle[Random.Next(0, middle.Count)] + suffix[Random.Next(0, suffix.Count)];
+
+            String name = prefix[Random.Next(0, prefix.Count)];
+            if (Random.Next(0, 100) < 50)
+                name += middle[Random.Next(0, middle.Count)];
+            if (Random.Next(0, 100) < 50)
+                name += suffix[Random.Next(0, suffix.Count)];
+            return name;
         }
 
         /// <summary>
