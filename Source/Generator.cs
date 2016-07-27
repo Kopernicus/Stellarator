@@ -150,8 +150,9 @@ namespace StellarGenerator
         {
             Dictionary<String, List<String>> names = Load<Dictionary<String, List<String>>>("names.json");
             List<String> prefix = names["prefix"];
+            List<String> middle = names["middle"];
             List<String> suffix = names["suffix"];
-            return prefix[Random.Next(0, prefix.Count)] + suffix[Random.Next(0, suffix.Count)];
+            return prefix[Random.Next(0, prefix.Count)] + middle[Random.Next(0, middle.Count)] + suffix[Random.Next(0, suffix.Count)];
         }
 
         /// <summary>
