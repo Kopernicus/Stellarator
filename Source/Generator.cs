@@ -12,6 +12,7 @@ using Accrete;
 using ConfigNodeParser;
 using Newtonsoft.Json;
 using System.Linq;
+using Newtonsoft.Json.Linq;
 
 namespace StellarGenerator
 {
@@ -118,7 +119,7 @@ namespace StellarGenerator
             // Properties
             ConfigNode properties = new ConfigNode("Properties");
             node.AddConfigNode(properties);
-            properties.AddValue("radius", "" + planet.radius * 1000);
+            properties.AddValue("radius", "" + planet.radius * 100);
             properties.AddValue("geeASL", "" + planet.surface_grav);
             properties.AddValue("rotationPeriod", "" + planet.day * 60 * 60);
             properties.AddValue("tidallyLocked", "" + planet.resonant_period);
@@ -156,10 +157,16 @@ namespace StellarGenerator
                 node.AddConfigNode(atmosphere);
                 atmosphere.AddValue("enabled", "True");
                 atmosphere.AddValue("oxygen", "" + Random.Boolean(10));
-                atmosphere.AddValue("atmosphereDepth", "" + planet.radius * 1000 * Random.Range(0.1, 0.16));
+                atmosphere.AddValue("atmosphereDepth", "" + planet.radius * 100 * Random.Range(0.1, 0.16));
                 atmosphere.AddValue("atmosphereMolarMass", "" + planet.molecule_weight / 1000);
                 atmosphere.AddValue("staticPressureASL", "" + planet.surface_pressure / 1000 * 101.324996948242);
                 atmosphere.AddValue("temperatureSeaLevel", "" + planet.surface_temp);
+                if (planet.gas_giant)
+                {
+                    atmosphere.AddValue("ambientColor", planetColor);
+                    atmosphere.AddValue("lightColor", LightColor(planetColor));
+                }
+                // TODO: Get average color from PQS
                 GenerateAtmosphereCurves(ref atmosphere, planet.gas_giant ? "Jool" : GetTemplate(true, true));
             }
 
@@ -174,11 +181,11 @@ namespace StellarGenerator
                 {
                     ConfigNode ring = new ConfigNode("Ring");
                     rings.AddConfigNode(ring);
-                    ring.AddValue("innerRadius", "" + planet.radius * ((Range)r["innerRadius"]).Next());
-                    ring.AddValue("outerRadius", "" + planet.radius * ((Range)r["outerRadius"]).Next()); 
-                    ring.AddValue("angle", "" + planet.radius * ((Range)r["angle"]).Next());
+                    ring.AddValue("innerRadius", "" + planet.radius * 100 * new Range((JObject)r["innerRadius"]).Next());
+                    ring.AddValue("outerRadius", "" + planet.radius * 100 * new Range((JObject)r["outerRadius"]).Next());
+                    ring.AddValue("angle", "" + new Range((JObject)r["angle"]).Next());
                     ring.AddValue("color", planetColor); 
-                    ring.AddValue("lockRotation", "" + Boolean.Parse((String)r["lockRotation"]));
+                    ring.AddValue("lockRotation", "" + (Boolean)r["lockRotation"]);
                     ring.AddValue("unlit", "False");
                 }
             }
@@ -241,6 +248,15 @@ namespace StellarGenerator
             Int32 g = Random.Next(0, 256);
             Int32 b = Random.Next(0, 256);
             return "RGBA(" + r + "," + g + "," + b + ",255)";
+        }
+
+        /// <summary>
+        /// Transforms a normal color into the color form Atmosphere from Ground wants
+        /// </summary>
+        public static String LightColor(String c)
+        {
+            Int32[] components = c.Split(',').Select(s => Int32.Parse(s)).ToArray();
+            return "RGBA(" + (255 - components[0]) + "," + (255 - components[1]) + "," + (255 - components[2]) + ",255)";
         }
 
         /// <summary>

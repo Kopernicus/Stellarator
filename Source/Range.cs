@@ -6,6 +6,7 @@
 
 using System;
 using Accrete;
+using Newtonsoft.Json.Linq;
 
 namespace StellarGenerator
 {
@@ -20,6 +21,12 @@ namespace StellarGenerator
         public Double Next()
         {
             return Generator.Random.Range(min, max);
+        }
+
+        public Range(JObject obj)
+        {
+            min = obj["min"].ToObject<Double>();
+            max = obj["max"].ToObject<Double>();
         }
     }
 }
