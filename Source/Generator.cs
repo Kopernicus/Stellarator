@@ -162,6 +162,8 @@ namespace StellarGenerator
             }
             if (Random.Next(0, 100) < 50 || !hasMiddle)
                 name += suffix[Random.Next(0, suffix.Count)];
+            if (name == "Kerbin")
+                name = GenerateName();
             return name;
         }
 
