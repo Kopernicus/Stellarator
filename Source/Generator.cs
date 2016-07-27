@@ -36,7 +36,7 @@ namespace StellarGenerator
 
             // Create a new Solar System using libaccrete
             SolarSystem system = new SolarSystem(false, true, s => { });
-            SolarSystem.Generate(ref system, seed);
+            SolarSystem.Generate(ref system, seed, Int32.MaxValue);
 
             // Reuse the random component
             Random = system.random;
