@@ -63,7 +63,12 @@ namespace StellarGenerator
 
             // Iterate over all bodies in the generated system
             foreach (Planet planet in system.bodies)
-                root.AddConfigNode(GenerateBody(planet, folder));
+            {
+                ConfigNode node = GenerateBody(planet, folder);
+                root.AddConfigNode(node);
+                foreach (Planet moon in planet.bodies_orbiting)
+                    root.AddConfigNode(GenerateBody(moon, folder, node.GetValue("name")));
+            }
 
             // Save the config
             Directory.CreateDirectory(Directory.GetCurrentDirectory() + "/systems/" + folder);
@@ -152,7 +157,7 @@ namespace StellarGenerator
             }
 
             // Random Main Menu Body
-            node.AddValue("randomMainMenuBody", "True");
+            node.AddValue("randomMainMenuBody", "" + (referenceBody == "Sun"));
 
             // Template
             ConfigNode template = new ConfigNode("Template");
@@ -244,11 +249,11 @@ namespace StellarGenerator
                 {
                     ConfigNode ring = new ConfigNode("Ring");
                     rings.AddConfigNode(ring);
-                    ring.AddValue("innerRadius", "" + planet.radius * 100 * new Range((JObject)r["innerRadius"]).Next());
-                    ring.AddValue("outerRadius", "" + planet.radius * 100 * new Range((JObject)r["outerRadius"]).Next());
-                    ring.AddValue("angle", "" + new Range((JObject)r["angle"]).Next());
-                    ring.AddValue("color", planetColor); 
-                    ring.AddValue("lockRotation", "" + (Boolean)r["lockRotation"]);
+                    ring.AddValue("innerRadius", "" + planet.radius * 100 * new Range((JObject) r["innerRadius"]).Next());
+                    ring.AddValue("outerRadius", "" + planet.radius * 100 * new Range((JObject) r["outerRadius"]).Next());
+                    ring.AddValue("angle", "" + new Range((JObject) r["angle"]).Next());
+                    ring.AddValue("color", planetColor);
+                    ring.AddValue("lockRotation", "" + (Boolean) r["lockRotation"]);
                     ring.AddValue("unlit", "False");
                 }
             }
