@@ -53,7 +53,8 @@ namespace StellarGenerator
             ConfigNode deletor = new ConfigNode("!Body,*");
             root.AddConfigNode(deletor);
 
-            // TODO: Sun
+            // Sun
+            root.AddConfigNode(GenerateSun(system, folder));
 
             // Select Kerbin
             List<Planet> allBodies = new List<Planet>(system.bodies);
@@ -69,6 +70,68 @@ namespace StellarGenerator
             ConfigNode wrapper = new ConfigNode();
             wrapper.AddConfigNode(root);
             wrapper.Save(Directory.GetCurrentDirectory() + "/systems/" + folder + "/System.cfg");
+        }
+
+        /// <summary>
+        /// Creates the ConfigNode for the SunBody
+        /// </summary>
+        public static ConfigNode GenerateSun(SolarSystem system, String folder)
+        {
+            // Create the Body node
+            String name = GenerateName();
+            ConfigNode node = new ConfigNode("Body");
+            node.AddValue("name", "Sun");
+            node.AddValue("cbNameLater", name);
+
+            // Template
+            ConfigNode template = new ConfigNode("Template");
+            node.AddConfigNode(template);
+            template.AddValue("name", "Sun");
+
+            // Properties
+            ConfigNode properties = new ConfigNode("Properties");
+            node.AddConfigNode(properties);
+            properties.AddValue("radius", "" + system.stellar_radius_ratio * 261600000);
+            properties.AddValue("mass", "" + system.stellar_mass_ratio * 1.75656696858329E+28);
+            // TODO: Timewarplimits
+            properties.AddValue("useTheInName", "False");
+
+            // Scaled Space
+            ConfigNode scaled = new ConfigNode("ScaledVersion");
+            node.AddConfigNode(scaled);
+            ConfigNode mat = new ConfigNode("Material");
+            scaled.AddConfigNode(mat);
+
+            // Load database stuff
+            Dictionary<String, Dictionary<String, Dictionary<String, Object>>[]> data = Load<Dictionary<String, Dictionary<String, Dictionary<String, Object>>[]>>("stars.json");
+            Dictionary<String, Dictionary<String, Object>> star = data[system.type.star_class][Random.Next(0, data[system.type.star_class].Length)];
+            mat.AddValue("emitColor0", star["material"]["emitColor0"].ToString());
+            mat.AddValue("emitColor1", star["material"]["emitColor1"].ToString());
+            mat.AddValue("sunspotPower", "" + new Range((JObject) star["material"]["sunspotPower"]).Next());
+            mat.AddValue("sunspotColor", star["material"]["sunspotColor"].ToString());
+            mat.AddValue("rimColor", star["material"]["rimColor"].ToString());
+            mat.AddValue("rimPower", "" + new Range((JObject) star["material"]["rimPower"]).Next());
+            mat.AddValue("rimBlend", "" + new Range((JObject) star["material"]["rimBlend"]).Next());
+
+            // Light Node
+            ConfigNode light = new ConfigNode("Light");
+            scaled.AddConfigNode(light);
+            light.AddValue("sunlightColor", star["light"]["sunlightColor"].ToString());
+            light.AddValue("sunlightIntensity", "" + new Range((JObject) star["light"]["sunlightIntensity"]).Next());
+            light.AddValue("sunlightShadowStrength", "" + new Range((JObject)star["light"]["sunlightShadowStrength"]).Next());
+            light.AddValue("scaledSunlightColor", star["light"]["scaledSunlightColor"].ToString()); 
+            light.AddValue("scaledSunlightIntensity", "" + new Range((JObject)star["light"]["scaledSunlightIntensity"]).Next());
+            light.AddValue("IVASunColor", star["light"]["IVASunColor"].ToString());
+            light.AddValue("IVASunIntensity", "" + new Range((JObject)star["light"]["IVASunIntensity"]).Next());
+            light.AddValue("ambientLightColor", star["light"]["ambientLightColor"].ToString());
+            light.AddValue("sunLensFlareColor", star["light"]["sunLensFlareColor"].ToString()); 
+            light.AddValue("givesOffLight", "" + (Boolean)star["light"]["givesOffLight"]);
+            light.AddValue("luminosity", "" + system.stellar_luminosity_ratio * 1360);
+
+            // TODO: Coronas
+
+            // Return it
+            return node;
         }
 
         /// <summary>
@@ -223,7 +286,7 @@ namespace StellarGenerator
             }
             if (Random.Next(0, 100) < 50 || !hasMiddle)
                 name += suffix[Random.Next(0, suffix.Count)];
-            if (name == "Kerbin")
+            if (name == "Kerbin" || name == "Kerbol")
                 name = GenerateName();
             return name;
         }
