@@ -6,8 +6,10 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace StellarGenerator
@@ -27,6 +29,9 @@ namespace StellarGenerator
             Console.WriteLine("Licensed under the Terms of the MIT License");
             Console.WriteLine("Version: 1.0");
             Console.WriteLine("-------------------------------------------------------------");
+
+            // Can I have some tea?
+            Thread.CurrentThread.CurrentCulture = CultureInfo.GetCultureInfo("en-US");
 
             // Ask for Input
             Int32 seed = Prompt("Please enter the Seed you want to use: ").GetHashCode();
