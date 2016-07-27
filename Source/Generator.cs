@@ -255,7 +255,7 @@ namespace StellarGenerator
         /// </summary>
         public static String LightColor(String c)
         {
-            Int32[] components = c.Split(',').Select(s => Int32.Parse(s)).ToArray();
+            Int32[] components = c.Replace("RGBA(", "").Replace(")", "").Split(',').Select(s => Int32.Parse(s)).ToArray();
             return "RGBA(" + (255 - components[0]) + "," + (255 - components[1]) + "," + (255 - components[2]) + ",255)";
         }
 
