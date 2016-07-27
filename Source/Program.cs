@@ -33,6 +33,7 @@ namespace StellarGenerator
             String folder = Prompt("Please choose a folder name for your system: ");
 
             // Generate the System
+            Generator.Generate(seed, folder);
         }
 
         /// <summary>

@@ -56,7 +56,11 @@ namespace StellarGenerator
             foreach (Planet planet in system.bodies)
                 root.AddConfigNode(GenerateBody(planet));
 
-
+            // Save the config
+            Directory.CreateDirectory(Directory.GetCurrentDirectory() + "/systems/" + folder);
+            ConfigNode wrapper = new ConfigNode();
+            wrapper.AddConfigNode(root);
+            wrapper.Save(Directory.GetCurrentDirectory() + "/systems/" + folder + "/System.cfg");
         }
 
         /// <summary>
