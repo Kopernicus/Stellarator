@@ -38,6 +38,9 @@
       <HintPath>..\packages\CommandLineParser.1.9.71\lib\net40\CommandLine.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="ConfigNode">
+      <HintPath>..\Dependencies\ConfigNode.dll</HintPath>
+    </Reference>
     <Reference Include="libaccrete">
       <HintPath>..\Dependencies\libaccrete.dll</HintPath>
     </Reference>
@@ -52,8 +55,6 @@
     <Compile Include="Generator.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Storage\Body.cs" />
-    <Compile Include="Storage\Properties.cs" />
     <Compile Include="Utility.cs" />
   </ItemGroup>
   <ItemGroup>
