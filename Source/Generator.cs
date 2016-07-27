@@ -331,9 +331,11 @@ namespace StellarGenerator
             ConfigNode pressure = ConfigNode.Load(Directory.GetCurrentDirectory() + "/data/curves/" + template + "Pressure.cfg");
             pressure.name = "pressureCurve";
             atmosphere.AddConfigNode(pressure);
+            atmosphere.AddValue("pressureCurveIsNormalized", "True");
             ConfigNode temperature = ConfigNode.Load(Directory.GetCurrentDirectory() + "/data/curves/" + template + "Temperature.cfg");
             temperature.name = "temperatureCurve";
             atmosphere.AddConfigNode(temperature);
+            atmosphere.AddValue("temperatureCurveIsNormalized", "True");
         }
     }
 }
