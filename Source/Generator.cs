@@ -48,7 +48,6 @@ namespace StellarGenerator
 
             // Select Kerbin
             List<Planet> allBodies = new List<Planet>(system.bodies);
-            allBodies.AddRange(system.bodies.SelectMany(p => p.bodies_orbiting));
             allBodies = allBodies.Where(p => !p.gas_giant).ToList();
             Kerbin = allBodies[Random.Next(0, allBodies.Count)];
 
