@@ -40,6 +40,9 @@
     <Reference Include="libaccrete">
       <HintPath>..\Dependencies\libaccrete.dll</HintPath>
     </Reference>
+    <Reference Include="libpqsmods">
+      <HintPath>..\Dependencies\libpqsmods.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net40\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
@@ -49,6 +52,40 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Generator.cs" />
+    <Compile Include="ModLoader\AltitudeAlpha.cs" />
+    <Compile Include="ModLoader\FlattenArea.cs" />
+    <Compile Include="ModLoader\FlattenAreaTangential.cs" />
+    <Compile Include="ModLoader\FlattenOcean.cs" />
+    <Compile Include="ModLoader\HeightColorMap.cs" />
+    <Compile Include="ModLoader\HeightColorMap2.cs" />
+    <Compile Include="ModLoader\ModLoader.cs" />
+    <Compile Include="ModLoader\Parser\Attributes\ParserTarget.cs" />
+    <Compile Include="ModLoader\Parser\Attributes\ParserTargetCollection.cs" />
+    <Compile Include="ModLoader\Parser\Attributes\PreApply.cs" />
+    <Compile Include="ModLoader\Parser\Attributes\RequireConfigType.cs" />
+    <Compile Include="ModLoader\Parser\BuiltinTypeParsers.cs" />
+    <Compile Include="ModLoader\Parser\Enumerations\ConfigType.cs" />
+    <Compile Include="ModLoader\Parser\Enumerations\NameSignificance.cs" />
+    <Compile Include="ModLoader\Parser\Exceptions\ParserTargetMissingException.cs" />
+    <Compile Include="ModLoader\Parser\Exceptions\ParserTargetTypeMismatchException.cs" />
+    <Compile Include="ModLoader\Parser\Interfaces\IParsable.cs" />
+    <Compile Include="ModLoader\Parser\Interfaces\IParserEventSubscriber.cs" />
+    <Compile Include="ModLoader\Parser\Parser.cs" />
+    <Compile Include="Parser.cs" />
+    <Compile Include="ModLoader\VertexColorNoise.cs" />
+    <Compile Include="ModLoader\VertexColorNoiseRGB.cs" />
+    <Compile Include="ModLoader\VertexColorSolid.cs" />
+    <Compile Include="ModLoader\VertexColorSolidBlend.cs" />
+    <Compile Include="ModLoader\VertexDefineCoastLine.cs" />
+    <Compile Include="ModLoader\VertexHeightNoise.cs" />
+    <Compile Include="ModLoader\VertexHeightNoiseVertHeight.cs" />
+    <Compile Include="ModLoader\VertexHeightNoiseVertHeightCurve.cs" />
+    <Compile Include="ModLoader\VertexHeightNoiseVertHeightCurve2.cs" />
+    <Compile Include="ModLoader\VertexHeightOblate.cs" />
+    <Compile Include="ModLoader\VertexHeightOffset.cs" />
+    <Compile Include="ModLoader\VertexNoise.cs" />
+    <Compile Include="ModLoader\VertexPlanet.cs" />
+    <Compile Include="ModLoader\VertexSimplexHeight.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Range.cs" />
