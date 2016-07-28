@@ -1,12 +1,12 @@
 ﻿/**
- * Stellar Generator - Creates procedural systems for Kopernicus
+ * Stellarator - Creates procedural systems for Kopernicus
  * Copyright (c) 2016 Thomas P.
  * Licensed under the Terms of the MIT License
  */
 
 using System;
 
-namespace StellarGenerator
+namespace Stellarator
 {
     /// <summary>
     /// Extensions for the random class

@@ -36,7 +36,7 @@ using System.Linq;
 using ConfigNodeParser;
 using Microsoft.Xna.Framework;
 using ProceduralQuadSphere.Unity;
-using StellarGenerator;
+using Stellarator;
 using XnaGeometry;
 
 namespace Kopernicus

@@ -32,7 +32,7 @@ using System.Linq;
 using ConfigNodeParser;
 using ProceduralQuadSphere;
 using ProceduralQuadSphere.Unity;
-using StellarGenerator;
+using Stellarator;
 
 
 namespace Kopernicus

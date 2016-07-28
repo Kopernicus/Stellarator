@@ -7,8 +7,8 @@
     <ProjectGuid>{7390CF58-0858-4405-8995-0731B132ABE4}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>StellarGenerator</RootNamespace>
-    <AssemblyName>StellarGenerator</AssemblyName>
+    <RootNamespace>Stellarator</RootNamespace>
+    <AssemblyName>Stellarator</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>

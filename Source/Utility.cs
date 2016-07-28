@@ -1,5 +1,5 @@
 ﻿/**
- * Stellar Generator - Creates procedural systems for Kopernicus
+ * Stellarator - Creates procedural systems for Kopernicus
  * Copyright (c) 2016 Thomas P.
  * Licensed under the Terms of the MIT License
  */
@@ -16,7 +16,7 @@ using Newtonsoft.Json.Linq;
 using ProceduralQuadSphere.Unity;
 using Color = ProceduralQuadSphere.Unity.Color;
 
-namespace StellarGenerator
+namespace Stellarator
 {
     /// <summary>
     /// Tools to help us

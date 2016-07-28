@@ -1,5 +1,5 @@
 ﻿/**
- * Stellar Generator - Creates procedural systems for Kopernicus
+ * Stellarator - Creates procedural systems for Kopernicus
  * Copyright (c) 2016 Thomas P.
  * Licensed under the Terms of the MIT License
  */
@@ -21,7 +21,7 @@ using Newtonsoft.Json.Linq;
 using ProceduralQuadSphere;
 using XnaGeometry;
 
-namespace StellarGenerator
+namespace Stellarator
 {
     public class Generator
     {

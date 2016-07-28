@@ -35,7 +35,7 @@ using ConfigNodeParser;
 using LibNoise.Generator;
 using ProceduralQuadSphere;
 using ProceduralQuadSphere.Unity;
-using StellarGenerator;
+using Stellarator;
 
 
 namespace Kopernicus
