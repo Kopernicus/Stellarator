@@ -87,7 +87,7 @@ namespace Kopernicus
                 foreach (MemberInfo member in o.GetType().GetMembers(BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static)) 
                 {
                     // Is this member a parser target?
-                    ParserTarget[] attributes = member.GetCustomAttributes ((typeof(ParserTarget)), true) as ParserTarget[];
+                    ParserTarget[] attributes = member.GetCustomAttributes (typeof(ParserTarget), true) as ParserTarget[];
                     if (attributes.Length > 0) 
                     {
                         // If this member is a collection
@@ -95,7 +95,7 @@ namespace Kopernicus
                         KeyValuePair<bool, MemberInfo> entry = new KeyValuePair<bool, MemberInfo>(isCollection, member);
 
                         // If this member has the preapply attribute, we need to process it
-                        if (member.GetCustomAttributes ((typeof(PreApply)), true).Length > 0)
+                        if (member.GetCustomAttributes (typeof(PreApply), true).Length > 0)
                             preapplyMembers.Add (entry);
                         else
                             postapplyMembers.Add (entry);
@@ -147,7 +147,7 @@ namespace Kopernicus
             public static void LoadCollectionMemberFromConfigurationNode (MemberInfo member, object o, ConfigNode node, bool getChilds = true)
             {
                 // Get the target attribute
-                ParserTargetCollection target = (member.GetCustomAttributes ((typeof(ParserTargetCollection)), true) as ParserTargetCollection[]) [0];
+                ParserTargetCollection target = (member.GetCustomAttributes (typeof(ParserTargetCollection), true) as ParserTargetCollection[]) [0];
 
                 // Figure out if this field exists and if we care
                 bool isNode = node.HasNode (target.fieldName);
@@ -197,13 +197,13 @@ namespace Kopernicus
                 if (targetType.IsGenericType) 
                 {
                     // If the target is a generic dictionary
-                    if ((typeof(IDictionary)).IsAssignableFrom (targetType)) 
+                    if (typeof(IDictionary).IsAssignableFrom (targetType)) 
                     {
                         throw new Exception ("Generic dictionaries are unsupported at this time");
                     } 
 
                     // If the target is a generic collection
-                    else if ((typeof(IList)).IsAssignableFrom (targetType))
+                    else if (typeof(IList).IsAssignableFrom (targetType))
                     {
                         // We need a node for this decoding
                         if(!isNode)
@@ -280,7 +280,7 @@ namespace Kopernicus
             public static void LoadObjectMemberFromConfigurationNode (MemberInfo member, object o, ConfigNode node, bool getChilds = true)
             {
                 // Get the parser target, only one is allowed so it will be first
-                ParserTarget target = (member.GetCustomAttributes ((typeof(ParserTarget)), true) as ParserTarget[]) [0];
+                ParserTarget target = (member.GetCustomAttributes (typeof(ParserTarget), true) as ParserTarget[]) [0];
                 
                 // Figure out if this field exists and if we care
                 bool isNode = node.HasNode (target.fieldName);
@@ -354,7 +354,7 @@ namespace Kopernicus
                     }
 
                     // Figure out if this object is a parsable type
-                    else if((typeof (IParsable)).IsAssignableFrom(targetType))
+                    else if(typeof (IParsable).IsAssignableFrom(targetType))
                     {
                         // Create a new object
                         IParsable targetParsable = (IParsable) Activator.CreateInstance(targetType);

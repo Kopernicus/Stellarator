@@ -27,7 +27,7 @@
  * https://kerbalspaceprogram.com
  */
 
-using LibNoise.Unity.Generator;
+using LibNoise.Generator;
 using System;
 using System.Collections.Generic;
 using System.Linq;

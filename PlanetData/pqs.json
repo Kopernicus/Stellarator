@@ -1,0 +1,14 @@
+[
+    {
+        "VertexHeightOblate": {
+            "height": {
+                "min": 1000,
+                "max": 3000
+            },
+            "pow": 2
+        },
+        "VertexColorSolidBlend": {
+            "color": "RGBA(255,0,0,255)"
+        } 
+    }
+]

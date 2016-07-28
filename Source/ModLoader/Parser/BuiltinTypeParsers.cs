@@ -56,7 +56,7 @@ namespace Kopernicus
             public NumericParser()
             {
                 // Get the parse method for this object
-                parserMethod = (typeof(T)).GetMethod ("Parse", new Type[] {(typeof(string))});
+                parserMethod = typeof(T).GetMethod ("Parse", new Type[] {typeof(string)});
             }
             public NumericParser(T i) : this()
             {
@@ -94,7 +94,7 @@ namespace Kopernicus
             public NumericCollectionParser()
             {
                 // Get the parse method for this object
-                parserMethod = (typeof(T)).GetMethod ("Parse", new Type[] {(typeof(string))});
+                parserMethod = typeof(T).GetMethod ("Parse", new Type[] {typeof(string)});
             }
             public NumericCollectionParser(T[] i) : this()
             {
@@ -449,191 +449,5 @@ namespace Kopernicus
                 return new FloatCurveParser(value);
             }
         }
-
-        // Parser for Physics Material
-        [RequireConfigType(ConfigType.Node)]
-        public class PhysicsMaterialParser : IParserEventSubscriber
-        {
-            // Physics material we are generating
-            public PhysicMaterial material { get; set; }
-
-            // Physics material parameters
-            [ParserTarget("bounceCombine")]
-            public EnumParser<PhysicMaterialCombine> bounceCombine
-            {
-                get { return material.bounceCombine; }
-                set { material.bounceCombine = value; }
-            }
-
-            [ParserTarget("frictionCombine")]
-            public EnumParser<PhysicMaterialCombine> frictionCombine
-            {
-                get { return material.frictionCombine; }
-                set { material.frictionCombine = value; }
-            }
-
-            [ParserTarget("bounciness")]
-            public NumericParser<float> bounciness
-            {
-                get { return material.bounciness; }
-                set { material.bounciness = value; }
-            }
-
-            [ParserTarget("staticFriction")]
-            public NumericParser<float> staticFriction
-            {
-                get { return material.staticFriction; }
-                set { material.staticFriction = value; }
-            }
-
-            [ParserTarget("dynamicFriction")]
-            public NumericParser<float> dynamicFriction
-            {
-                get { return material.dynamicFriction; }
-                set { material.dynamicFriction = value.value; }
-            }
-
-            void IParserEventSubscriber.Apply(ConfigNode node) { }
-            void IParserEventSubscriber.PostApply(ConfigNode node) { }
-
-            // Default constructor
-            public PhysicsMaterialParser()
-            {
-                this.material = null;
-            }
-
-            // Initializing constructor
-            public PhysicsMaterialParser(PhysicMaterial material)
-            {
-                this.material = material;
-            }
-
-            // Convert
-            public static implicit operator PhysicMaterial(PhysicsMaterialParser parser)
-            {
-                return parser.material;
-            }
-            public static implicit operator PhysicsMaterialParser(PhysicMaterial material)
-            {
-                return new PhysicsMaterialParser(material);
-            }
-        }
-
-        // Parser for mesh
-        [RequireConfigType(ConfigType.Value)]
-        public class MeshParser : IParsable
-        {
-            public Mesh value;
-            public void SetFromString (string s)
-            {
-                // Check if we are attempting to load a builtin mesh
-                if (s.StartsWith ("BUILTIN/"))
-                {
-                    string meshName = Regex.Replace (s, "BUILTIN/", "");
-                    value = UnityEngine.Resources.FindObjectsOfTypeAll<Mesh> ().Where (mesh => mesh.name == meshName).First ();
-                    return;
-                }
-
-                String path = KSPUtil.ApplicationRootPath + "GameData/" + s;
-                if (System.IO.File.Exists(path))
-                {
-                    value = ObjImporter.ImportFile(path);
-                    value.name = Path.GetFileNameWithoutExtension(path);
-                    return;
-                }
-
-                // Mesh was not found
-                value = null;
-            }
-            public MeshParser ()
-            {
-
-            }
-            public MeshParser (Mesh value)
-            {
-                this.value = value;
-            }
-
-            // Convert
-            public static implicit operator Mesh(MeshParser parser)
-            {
-                return parser.value;
-            }
-            public static implicit operator MeshParser(Mesh mesh)
-            {
-                return new MeshParser(mesh);
-            }
-        }
-
-        [RequireConfigType(ConfigType.Value)]
-        public class AssetParser<T> : IParsable where T : UnityEngine.Object
-        {
-            // The loaded value
-            public T value;
-
-            // Load the AssetBundle with the object
-            public void SetFromString(string s)
-            {
-                string[] split = s.Split(':');
-                if (!File.Exists(KSPUtil.ApplicationRootPath + "GameData/" + split[0]))
-                {
-                    Logger.Active.Log("Couldn't find asset file at path: " + KSPUtil.ApplicationRootPath + "GameData/" + split[0]);
-                    return;
-                }
-                AssetBundle bundle = AssetBundle.CreateFromMemoryImmediate(File.ReadAllBytes(KSPUtil.ApplicationRootPath + "GameData/" + split[0]));
-                value = UnityEngine.Object.Instantiate(bundle.LoadAsset<T>(split[1]));
-                UnityEngine.Object.DontDestroyOnLoad(value);
-                bundle.Unload(false);
-            }
-            public AssetParser()
-            {
-
-            }
-            public AssetParser(T value)
-            {
-                this.value = value;
-            }
-
-            // Convert
-            public static implicit operator T(AssetParser<T> parser)
-            {
-                return parser.value;
-            }
-            public static implicit operator AssetParser<T>(T value)
-            {
-                return new AssetParser<T>(value);
-            }
-        }
-
-        // parser for .mu
-		[RequireConfigType(ConfigType.Value)]
-		public class MuParser : IParsable
-		{
-			public GameObject value;
-
-			public void SetFromString (string s)
-			{
-				// If there's a model, import it
-				if (GameDatabase.Instance.ExistsModel (s))
-				{
-					value = GameDatabase.Instance.GetModel (s);
-					return;
-				}
-
-				// Otherwise, set the value to null
-				value = null;
-			}
-
-			// Default constructor
-			public MuParser()
-			{
-			}
-
-			// Initializing constructor
-			public MuParser(GameObject value)
-			{
-				this.value = value;
-			}
-		}
     }
 }
