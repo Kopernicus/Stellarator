@@ -39,6 +39,9 @@ namespace StellarGenerator
 
             // Generate the System
             Generator.Generate(seed, folder);
+
+            // Log
+            Console.WriteLine("Generation has finished. Program is exiting.");
         }
 
         /// <summary>

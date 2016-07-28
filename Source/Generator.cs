@@ -52,6 +52,7 @@ namespace StellarGenerator
         {
             // Log
             Console.WriteLine("Generating the solar system...");
+            Console.WriteLine();
 
             // Create a new Solar System using libaccrete
             SolarSystem system = new SolarSystem(false, true, s => { });
@@ -64,7 +65,7 @@ namespace StellarGenerator
             List<ConfigNode> nodes = new List<ConfigNode>();
 
             // Create the root node
-            ConfigNode root = new ConfigNode("@Kopernicus:FINAL");
+            ConfigNode root = new ConfigNode("@Kopernicus:AFTER[KOPERNICUS]");
             ConfigNode deletor = new ConfigNode("!Body,*");
             root.AddConfigNode(deletor);
 
@@ -92,14 +93,21 @@ namespace StellarGenerator
                     nodes.Add(GenerateBody(moon, folder, node.GetValue("name")));
             }
 
+            // Log
+            Console.WriteLine("Saving the system");
+
             // Save the config
             foreach (ConfigNode n in nodes)
             {
-                root = new ConfigNode("@Kopernicus:FINAL");
+                root = new ConfigNode("@Kopernicus:AFTER[KOPERNICUS]");
                 root.AddConfigNode(n);
                 wrapper = new ConfigNode();
                 wrapper.AddConfigNode(root);
-                wrapper.Save(Directory.GetCurrentDirectory() + "/systems/" + folder + "/Configs/" + n.GetValue("name") + ".cfg");
+                String name = n.HasValue("cbNameLater") ? n.GetValue("cbNameLater") : n.GetValue("name");
+                wrapper.Save(Directory.GetCurrentDirectory() + "/systems/" + folder + "/Configs/" + name + ".cfg");            
+                
+                // Log
+                Console.WriteLine($"Saved {name}");
             }
 
             // Copy files
@@ -130,6 +138,9 @@ namespace StellarGenerator
             properties.AddValue("mass", "" + system.stellar_mass_ratio * 1.75656696858329E+28);
             // TODO: Timewarplimits
             properties.AddValue("useTheInName", "False");
+
+            // Log
+            Console.WriteLine($"Generated root body named {name}");
 
             // Scaled Space
             ConfigNode scaled = new ConfigNode("ScaledVersion");
@@ -163,7 +174,11 @@ namespace StellarGenerator
             light.AddValue("givesOffLight", "" + (Boolean)star["light"]["givesOffLight"]);
             light.AddValue("luminosity", "" + system.stellar_luminosity_ratio * 1360);
 
-            // TODO: Coronas
+            // TODO: Coronas       
+
+            // Log
+            Console.WriteLine($"Generated scaled space for {name}");
+            Console.WriteLine();
 
             // Return it
             return node;
@@ -224,7 +239,10 @@ namespace StellarGenerator
             properties.AddValue("initialRotation", "" + Random.Next(0, 361));
             properties.AddValue("albedo", "" + planet.albedo);
             // TODO: Timewarplimits
-            properties.AddValue("useTheInName", "False");
+            properties.AddValue("useTheInName", "False");            
+            
+            // Log
+            Console.WriteLine($"Generated a planet named {name}. GasGiant: {planet.gas_giant}. Template: {template.GetValue("name")}");
 
             // Orbit
             ConfigNode orbit = new ConfigNode("Orbit");
@@ -237,6 +255,9 @@ namespace StellarGenerator
             orbit.AddValue("meanAnomalyAtEpochD", "" + Random.Range(0, 181));
             orbit.AddValue("color", Utility.GenerateColor());
 
+            // Log
+            Console.WriteLine($"Generated orbit around {referenceBody} for {name}");
+
             // Scaled Space
             ConfigNode scaled = new ConfigNode("ScaledVersion");
             node.AddConfigNode(scaled);
@@ -246,7 +267,10 @@ namespace StellarGenerator
             mat.AddValue("normals", folder + "/PluginData/" + name + "_Normals.png");
             String planetColor = Utility.GenerateColor();
             if (planet.gas_giant)
-                mat.AddValue("color", planetColor);
+                mat.AddValue("color", planetColor);           
+            
+            // Log
+            Console.WriteLine($"Generated scaled space for {name}");
 
             // Atmosphere
             if (planet.surface_pressure > 0.00001)
@@ -265,7 +289,10 @@ namespace StellarGenerator
                     atmosphere.AddValue("lightColor", Utility.LightColor(planetColor));
                 }
                 // TODO: Get average color from PQS
-                GenerateAtmosphereCurves(ref atmosphere, planet.gas_giant ? "Jool" : GetTemplate(true, true));
+                GenerateAtmosphereCurves(ref atmosphere, planet.gas_giant ? "Jool" : GetTemplate(true, true));            
+                
+                // Log
+                Console.WriteLine($"Generated atmosphere for {name}");
             }
 
             // Rings :D
@@ -286,11 +313,18 @@ namespace StellarGenerator
                     ring.AddValue("lockRotation", "" + (Boolean) r["lockRotation"]);
                     ring.AddValue("unlit", "False");
                 }
+
+                // Log
+                Console.WriteLine($"Generated rings around {name}");
             }
 
             // PQS
             if (!planet.gas_giant)
                 node.AddConfigNode(GeneratePQS(name, folder, planet));
+
+            // Log
+            Console.WriteLine($"Generation of body {name} finished!");
+            Console.WriteLine();
 
             // Return
             return node;
@@ -351,7 +385,10 @@ namespace StellarGenerator
         /// </summary>
         /// <returns></returns>
         public static ConfigNode GeneratePQS(String name, String folder, Planet planet)
-        {
+        {                
+            // Log
+            Console.WriteLine("Preparing to load PQS data");
+
             // Create the node
             ConfigNode pqs = new ConfigNode("PQS");
 
@@ -387,7 +424,10 @@ namespace StellarGenerator
 
             // Create a new PQSObject
             PQS pqsVersion = new PQS(planet.radius * 100);
-            List<PQSMod> patchedMods = new List<PQSMod>();
+            List<PQSMod> patchedMods = new List<PQSMod>(); 
+            
+            // Log
+            Console.WriteLine($"Created PQS Object for {name}");
 
             // Get all loaded types
             List<Type> types = AppDomain.CurrentDomain.GetAssemblies().SelectMany(a => a.GetTypes()).ToList();
@@ -435,6 +475,9 @@ namespace StellarGenerator
                     createNew.Invoke(loader, new[] { pqsVersion });
                     ConfigParser.LoadObjectFromConfigurationNode(loader, mod);
                 }
+
+                // Log
+                Console.WriteLine($"Created a new instance of {loaderType.Name} on {name}");
             }            
             
             // Size
@@ -442,7 +485,10 @@ namespace StellarGenerator
 
             // Export ScaledSpace Maps
             Bitmap diffuse = new Bitmap(width, width / 2);
-            Bitmap height  = new Bitmap(width, width / 2);
+            Bitmap height  = new Bitmap(width, width / 2);                
+            
+            // Log
+            Console.WriteLine($"Exporting Scaled Space maps from the PQS. This could take a while...");
 
             // Iterate over the PQS
             for (Int32 i = 0; i < width; i++)
@@ -478,6 +524,9 @@ namespace StellarGenerator
             height.Save(Directory.GetCurrentDirectory() + "/systems/" + folder + "/PluginData/" + name + "_Height.png", ImageFormat.Png); // In case you need it :)
             Bitmap normals = Utility.BumpToNormalMap(height, 7); // TODO: Implement something to make strength dynamic
             normals.Save(Directory.GetCurrentDirectory() + "/systems/" + folder + "/PluginData/" + name + "_Normals.png", ImageFormat.Png);
+
+            // Log
+            Console.WriteLine($"Saved maps to {Directory.GetCurrentDirectory() + "/systems/" + folder + "/PluginData/"}");
 
             // return
             return pqs;
