@@ -254,7 +254,7 @@ namespace Stellarator
             orbit.AddValue("referenceBody", referenceBody);
             orbit.AddValue("inclination", "" + planet.axial_tilt); // Lol
             orbit.AddValue("eccentricity", "" + planet.e);
-            orbit.AddValue("semiMajorAxis", "" + planet.a);
+            orbit.AddValue("semiMajorAxis", "" + planet.a * 100 * Constants.KM_PER_AU);
             orbit.AddValue("longitudeOfAscendingNode", "" + Random.Range(0, 181));
             orbit.AddValue("meanAnomalyAtEpochD", "" + Random.Range(0, 181));
             if (planet.gas_giant)
