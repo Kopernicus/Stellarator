@@ -14,9 +14,9 @@ namespace Stellarator
 {
     public static class Parser
     {
-        public static String WriteColor(Color32 c)
+        public static String WriteColor(Color c)
         {
-            return "RGBA(" + c.r + "," + c.g + "," + c.b + "," + c.a + ")";
+            return "RGBA(" + c.r * 255 + "," + c.g * 255 + "," + c.b * 255 + "," + c.a * 255 + ")";
         }
 
         public static Color ParseColor(String vectorString)

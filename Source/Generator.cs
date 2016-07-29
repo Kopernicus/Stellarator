@@ -20,6 +20,7 @@ using Kopernicus.Configuration;
 using Newtonsoft.Json.Linq;
 using ProceduralQuadSphere;
 using ProceduralQuadSphere.Unity;
+using Color = ProceduralQuadSphere.Unity.Color;
 using XnaGeometry;
 
 namespace Stellarator
@@ -246,7 +247,7 @@ namespace Stellarator
             Console.WriteLine($"Generated a planet named {name}. GasGiant: {planet.gas_giant}. Template: {template.GetValue("name")}");
 
             // Color
-            Color32 planetColor = Utility.GenerateColor();
+            Color planetColor = Utility.GenerateColor();
 
             // Orbit
             ConfigNode orbit = new ConfigNode("Orbit");
@@ -327,7 +328,7 @@ namespace Stellarator
             // PQS
             if (!planet.gas_giant)
             {
-                Color32 average = default(Color32);
+                Color average = default(Color);
                 GeneratePQS(ref node, name, folder, planet, ref average);
 
                 // Apply colors
@@ -402,7 +403,7 @@ namespace Stellarator
         /// Generates a PQS Setup + the Scaled Space Maps needed
         /// </summary>
         /// <returns></returns>
-        public static void GeneratePQS(ref ConfigNode node, String name, String folder, Planet planet, ref Color32 average)
+        public static void GeneratePQS(ref ConfigNode node, String name, String folder, Planet planet, ref Color average)
         {                
             // Log
             Console.WriteLine("Preparing to load PQS data");

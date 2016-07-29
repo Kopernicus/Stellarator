@@ -108,16 +108,16 @@ namespace Stellarator
         /// <summary>
         /// Transforms a normal color into the color form Atmosphere from Ground wants
         /// </summary>
-        public static Color32 LightColor(Color32 c)
+        public static Color LightColor(Color c)
         {
-            return new Color(255 - c.r, 255 - c.g, 255 -c.b, 255);
+            return new Color(1 - c.r, 1 - c.g, 1 - c.b, 1);
         }
 
         /// <summary>
         /// Generates a random color
         /// </summary>
         /// <returns></returns>
-        public static Color32 GenerateColor()
+        public static Color GenerateColor()
         {
             Int32 r = Generator.Random.Next(0, 256);
             Int32 g = Generator.Random.Next(0, 256);
