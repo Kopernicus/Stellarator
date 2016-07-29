@@ -15,6 +15,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using ProceduralQuadSphere.Unity;
 using Color = ProceduralQuadSphere.Unity.Color;
+using Accrete;
 
 namespace Stellarator
 {
@@ -24,11 +25,11 @@ namespace Stellarator
     public class Utility
     {
         // Credit goes to Kragrathea.
-        public static Bitmap BumpToNormalMap(Bitmap source, float strength)
+        public static Bitmap BumpToNormalMap(Bitmap source, Single strength)
         {
             strength = Mathf.Clamp(strength, 0.0F, 10.0F);
             var result = new Bitmap(source.Width, source.Height, PixelFormat.Format32bppArgb);
-            for (int by = 0; @by < result.Height; @by++)
+            for (Int32 by = 0; @by < result.Height; @by++)
             {
                 for (var bx = 0; bx < result.Width; bx++)
                 {
@@ -46,6 +47,43 @@ namespace Stellarator
                 }
             }
             return result;
+        }
+
+        public static Color AlterColor(Color c)
+        {
+            return new Color((Single) Math.Max(1, c.r * Generator.Random.Range(0.9, 1.2)), (Single) Math.Max(1, c.g * Generator.Random.Range(0.9, 1.2)), (Single) Math.Max(1, c.b * Generator.Random.Range(0.9, 1.2)), c.a);
+        }
+
+        public static Color GetAverageColor(Bitmap bm)
+        {
+            BitmapData srcData = bm.LockBits(new Rectangle(0, 0, bm.Width, bm.Height), ImageLockMode.ReadOnly, PixelFormat.Format32bppArgb);
+            Int32 stride = srcData.Stride;
+            IntPtr Scan0 = srcData.Scan0;
+            Int64[] totals = { 0, 0, 0 };
+
+            Int64 width = bm.Width;
+            Int64 height = bm.Height;
+
+            unsafe
+            {
+                Byte* p = (Byte*)(void*)Scan0;
+                for (Int32 y = 0; y < height; y++)
+                {
+                    for (Int32 x = 0; x < width; x++)
+                    {
+                        for (Int32 color = 0; color < 3; color++)
+                        {
+                            Int32 idx = y * stride + x * 4 + color;
+                            totals[color] += p[idx];
+                        }
+                    }
+                }
+            }
+
+            Byte avgB = (Byte)(totals[0] / (width * height));
+            Byte avgG = (Byte)(totals[1] / (width * height));
+            Byte avgR = (Byte)(totals[2] / (width * height));
+            return new Color32(avgR, avgG, avgB, 255);
         }
 
         /// <summary>
@@ -69,22 +107,21 @@ namespace Stellarator
         /// <summary>
         /// Transforms a normal color into the color form Atmosphere from Ground wants
         /// </summary>
-        public static String LightColor(String c)
+        public static Color32 LightColor(Color32 c)
         {
-            Int32[] components = c.Replace("RGBA(", "").Replace(")", "").Split(',').Select(s => Int32.Parse(s)).ToArray();
-            return "RGBA(" + (255 - components[0]) + "," + (255 - components[1]) + "," + (255 - components[2]) + ",255)";
+            return new Color(255 - c.r, 255 - c.g, 255 -c.b, 255);
         }
 
         /// <summary>
         /// Generates a random color
         /// </summary>
         /// <returns></returns>
-        public static String GenerateColor()
+        public static Color32 GenerateColor()
         {
             Int32 r = Generator.Random.Next(0, 256);
             Int32 g = Generator.Random.Next(0, 256);
             Int32 b = Generator.Random.Next(0, 256);
-            return "RGBA(" + r + "," + g + "," + b + ",255)";
+            return new Color32((Byte)r, (Byte)g, (Byte)b, 255);
         }
         
         /// <summary>

@@ -14,6 +14,11 @@ namespace Stellarator
 {
     public static class Parser
     {
+        public static String WriteColor(Color32 c)
+        {
+            return "RGBA(" + c.r + "," + c.g + "," + c.b + "," + c.a + ")";
+        }
+
         public static Color ParseColor(String vectorString)
         {
             String[] strArrays = vectorString.Split(new[] {',', ' ', '\t'}, StringSplitOptions.RemoveEmptyEntries);

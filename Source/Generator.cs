@@ -19,6 +19,7 @@ using System.Reflection;
 using Kopernicus.Configuration;
 using Newtonsoft.Json.Linq;
 using ProceduralQuadSphere;
+using ProceduralQuadSphere.Unity;
 using XnaGeometry;
 
 namespace Stellarator
@@ -77,7 +78,7 @@ namespace Stellarator
             wrapper.Save(Directory.GetCurrentDirectory() + "/systems/" + folder + "/System.cfg");
 
             // Sun
-            root.AddConfigNode(GenerateSun(system, folder));
+            nodes.Add(GenerateSun(system, folder));
 
             // Select Kerbin
             List<Planet> allBodies = new List<Planet>(system.bodies);
@@ -244,6 +245,9 @@ namespace Stellarator
             // Log
             Console.WriteLine($"Generated a planet named {name}. GasGiant: {planet.gas_giant}. Template: {template.GetValue("name")}");
 
+            // Color
+            Color32 planetColor = Utility.GenerateColor();
+
             // Orbit
             ConfigNode orbit = new ConfigNode("Orbit");
             node.AddConfigNode(orbit);
@@ -253,7 +257,8 @@ namespace Stellarator
             orbit.AddValue("semiMajorAxis", "" + planet.a);
             orbit.AddValue("longitudeOfAscendingNode", "" + Random.Range(0, 181));
             orbit.AddValue("meanAnomalyAtEpochD", "" + Random.Range(0, 181));
-            orbit.AddValue("color", Utility.GenerateColor());
+            if (planet.gas_giant)
+                orbit.AddValue("color", Parser.WriteColor(Utility.AlterColor(planetColor)));
 
             // Log
             Console.WriteLine($"Generated orbit around {referenceBody} for {name}");
@@ -265,9 +270,8 @@ namespace Stellarator
             scaled.AddConfigNode(mat);
             mat.AddValue("texture", folder + "/PluginData/" + name + "_Texture.png");
             mat.AddValue("normals", folder + "/PluginData/" + name + "_Normals.png");
-            String planetColor = Utility.GenerateColor();
             if (planet.gas_giant)
-                mat.AddValue("color", planetColor);           
+                mat.AddValue("color", Parser.WriteColor(Utility.AlterColor(planetColor)));           
             
             // Log
             Console.WriteLine($"Generated scaled space for {name}");
@@ -285,10 +289,9 @@ namespace Stellarator
                 atmosphere.AddValue("temperatureSeaLevel", "" + planet.surface_temp);
                 if (planet.gas_giant)
                 {
-                    atmosphere.AddValue("ambientColor", planetColor);
-                    atmosphere.AddValue("lightColor", Utility.LightColor(planetColor));
+                    atmosphere.AddValue("ambientColor", Parser.WriteColor(Utility.AlterColor(planetColor)));
+                    atmosphere.AddValue("lightColor", Parser.WriteColor(Utility.AlterColor(Utility.LightColor(planetColor))));
                 }
-                // TODO: Get average color from PQS
                 GenerateAtmosphereCurves(ref atmosphere, planet.gas_giant ? "Jool" : GetTemplate(true, true));            
                 
                 // Log
@@ -309,7 +312,7 @@ namespace Stellarator
                     ring.AddValue("innerRadius", "" + planet.radius * 100 * new Range((JObject) r["innerRadius"]).Next());
                     ring.AddValue("outerRadius", "" + planet.radius * 100 * new Range((JObject) r["outerRadius"]).Next());
                     ring.AddValue("angle", "" + new Range((JObject) r["angle"]).Next());
-                    ring.AddValue("color", planetColor);
+                    ring.AddValue("color", Parser.WriteColor(Utility.AlterColor(planetColor)));
                     ring.AddValue("lockRotation", "" + (Boolean) r["lockRotation"]);
                     ring.AddValue("unlit", "False");
                 }
@@ -320,7 +323,19 @@ namespace Stellarator
 
             // PQS
             if (!planet.gas_giant)
-                node.AddConfigNode(GeneratePQS(name, folder, planet));
+            {
+                Color32 average = default(Color32);
+                GeneratePQS(ref node, name, folder, planet, ref average);
+
+                // Apply colors
+                orbit.AddValue("color", Parser.WriteColor(Utility.AlterColor(average)));
+                if (node.HasNode("Atmosphere"))
+                {
+                    ConfigNode atmosphere = node.GetNode("Atmosphere");
+                    atmosphere.AddValue("ambientColor", Parser.WriteColor(Utility.AlterColor(average)));
+                    atmosphere.AddValue("lightColor", Parser.WriteColor(Utility.AlterColor(Utility.LightColor(average))));
+                }
+            }
 
             // Log
             Console.WriteLine($"Generation of body {name} finished!");
@@ -384,7 +399,7 @@ namespace Stellarator
         /// Generates a PQS Setup + the Scaled Space Maps needed
         /// </summary>
         /// <returns></returns>
-        public static ConfigNode GeneratePQS(String name, String folder, Planet planet)
+        public static void GeneratePQS(ref ConfigNode node, String name, String folder, Planet planet, ref Color32 average)
         {                
             // Log
             Console.WriteLine("Preparing to load PQS data");
@@ -528,8 +543,11 @@ namespace Stellarator
             // Log
             Console.WriteLine($"Saved maps to {Directory.GetCurrentDirectory() + "/systems/" + folder + "/PluginData/"}");
 
-            // return
-            return pqs;
+            // Finish
+            node.AddConfigNode(pqs);
+
+            // Colors
+            average = Utility.GetAverageColor(diffuse);
         }
     }
 }
