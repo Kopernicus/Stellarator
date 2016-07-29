@@ -51,7 +51,8 @@ namespace Stellarator
 
         public static Color AlterColor(Color c)
         {
-            return new Color((Single) Math.Max(1, c.r * Generator.Random.Range(0.9, 1.2)), (Single) Math.Max(1, c.g * Generator.Random.Range(0.9, 1.2)), (Single) Math.Max(1, c.b * Generator.Random.Range(0.9, 1.2)), c.a);
+            Color ret = new Color((Single) Math.Min(1, c.r * Generator.Random.Range(0.9, 1.2)), (Single) Math.Min(1, c.g * Generator.Random.Range(0.9, 1.2)), (Single) Math.Min(1, c.b * Generator.Random.Range(0.9, 1.2)), c.a);
+            return ret;
         }
 
         public static Color GetAverageColor(Bitmap bm)
