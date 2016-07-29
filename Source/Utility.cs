@@ -49,12 +49,17 @@ namespace Stellarator
             return result;
         }
 
+        /// <summary>
+        /// Makes a color a bit different
+        /// </summary>
         public static Color AlterColor(Color c)
         {
-            Color ret = new Color((Single) Math.Min(1, c.r * Generator.Random.Range(0.9, 1.2)), (Single) Math.Min(1, c.g * Generator.Random.Range(0.9, 1.2)), (Single) Math.Min(1, c.b * Generator.Random.Range(0.9, 1.2)), c.a);
-            return ret;
+            return new Color((Single) Math.Min(1, c.r * Generator.Random.Range(0.92, 1.02)), (Single) Math.Min(1, c.g * Generator.Random.Range(0.92, 1.02)), (Single) Math.Min(1, c.b * Generator.Random.Range(0.92, 1.02)), c.a);
         }
 
+        /// <summary>
+        /// Extracts the average color from a bitmap file
+        /// </summary>
         public static Color GetAverageColor(Bitmap bm)
         {
             BitmapData srcData = bm.LockBits(new Rectangle(0, 0, bm.Width, bm.Height), ImageLockMode.ReadOnly, PixelFormat.Format32bppArgb);
@@ -111,7 +116,7 @@ namespace Stellarator
         {
             const Single joolR = 0.3294118f;
             const Single joolG = 0.5215687f;
-            const Single joolB = 0.07450981f;
+            const Single joolB = 0.17450981f;
 
             // Do some maths..
             Color ret = new Color(c.r / joolR, c.g / joolG, c.b / joolB, 1);
