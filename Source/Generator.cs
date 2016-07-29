@@ -268,8 +268,11 @@ namespace Stellarator
             node.AddConfigNode(scaled);
             ConfigNode mat = new ConfigNode("Material");
             scaled.AddConfigNode(mat);
-            mat.AddValue("texture", folder + "/PluginData/" + name + "_Texture.png");
-            mat.AddValue("normals", folder + "/PluginData/" + name + "_Normals.png");
+            if (!planet.gas_giant)
+            {
+                mat.AddValue("texture", folder + "/PluginData/" + name + "_Texture.png");
+                mat.AddValue("normals", folder + "/PluginData/" + name + "_Normals.png");
+            }
             if (planet.gas_giant)
                 mat.AddValue("color", Parser.WriteColor(Utility.AlterColor(planetColor)));           
             
