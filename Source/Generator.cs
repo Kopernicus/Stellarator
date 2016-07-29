@@ -275,8 +275,15 @@ namespace Stellarator
                 mat.AddValue("normals", folder + "/PluginData/" + name + "_Normals.png");
             }
             if (planet.gas_giant)
-                mat.AddValue("color", Parser.WriteColor(Utility.AlterColor(planetColor)));           
-            
+            {
+                mat.AddValue("color", Parser.WriteColor(Utility.ReColor(Utility.AlterColor(planetColor))));
+                ConfigNode gradient = new ConfigNode("Gradient");
+                mat.AddConfigNode(gradient);
+                gradient.AddValue("0.0", Parser.WriteColor(Utility.AlterColor(planetColor)));
+                gradient.AddValue("0.6", "RGBA(14, 20, 36, 255)");
+                gradient.AddValue("1.0", "RGBA(5, 5, 5, 255)");
+            }
+
             // Log
             Console.WriteLine($"Generated scaled space for {name}");
 

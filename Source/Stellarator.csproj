@@ -72,7 +72,7 @@
     <Compile Include="ModLoader\Parser\Exceptions\ParserTargetTypeMismatchException.cs" />
     <Compile Include="ModLoader\Parser\Interfaces\IParsable.cs" />
     <Compile Include="ModLoader\Parser\Interfaces\IParserEventSubscriber.cs" />
-    <Compile Include="ModLoader\Parser\Parser.cs" />
+    <Compile Include="ModLoader\Parser\ConfigParser.cs" />
     <Compile Include="Parser.cs" />
     <Compile Include="ModLoader\VertexColorNoise.cs" />
     <Compile Include="ModLoader\VertexColorNoiseRGB.cs" />
