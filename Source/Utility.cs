@@ -9,7 +9,6 @@ using System;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
-using System.Linq;
 using ConfigNodeParser;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -112,14 +111,10 @@ namespace Stellarator
         /// <summary>
         /// Modifies a color so that it becomes a multiplier color
         /// </summary>
-        public static Color ReColor(Color c)
+        public static Color ReColor(Color c, Color average)
         {
-            const Single joolR = 0.3294118f;
-            const Single joolG = 0.5215687f;
-            const Single joolB = 0.17450981f;
-
             // Do some maths..
-            Color ret = new Color(c.r / joolR, c.g / joolG, c.b / joolB, 1);
+            Color ret = new Color(c.r / average.r, c.g / average.g, c.b / average.b, 1);
             return ret;
         }
 

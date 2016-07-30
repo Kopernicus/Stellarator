@@ -276,7 +276,22 @@ namespace Stellarator
             }
             if (planet.gas_giant)
             {
-                mat.AddValue("color", Parser.WriteColor(Utility.ReColor(Utility.AlterColor(planetColor))));
+                // Texture
+                String[] files = Directory.GetFiles(Directory.GetCurrentDirectory() + "/data/textures/");
+                String texture = files[Random.Next(0, files.Length)];
+                Directory.CreateDirectory(Directory.GetCurrentDirectory() + "/systems/" + folder + "/PluginData/");
+                File.Copy(texture, Directory.GetCurrentDirectory() + "/systems/" + folder + "/PluginData/" + name + "_Texture.png");
+                mat.AddValue("texture", folder + "/PluginData/" + name + name + "_Texture.png");
+
+                // Load the Image
+                Color average;
+                using (Bitmap image = new Bitmap(Directory.GetCurrentDirectory() + "/systems/" + folder + "/PluginData/" + name + "_Texture.png"))
+                    average = Utility.GetAverageColor(image);
+
+                // Scale
+                mat.AddValue("mainTexScale", (Random.Next(0, 2) - 1) + "," + (Random.Next(0, 2) - 2));
+
+                mat.AddValue("color", Parser.WriteColor(Utility.ReColor(Utility.AlterColor(planetColor), average)));
                 ConfigNode gradient = new ConfigNode("Gradient");
                 mat.AddConfigNode(gradient);
                 gradient.AddValue("0.0", Parser.WriteColor(Utility.AlterColor(planetColor)));
@@ -537,10 +552,10 @@ namespace Stellarator
                     Double h = (builddata.vertHeight - pqsVersion.radius);
                     if (h < 0)
                         h = 0;
-                    ProceduralQuadSphere.Unity.Color c = builddata.vertColor;
+                    Color c = builddata.vertColor;
                     c.a = 1f;
                     diffuse.SetPixel(i, j, c);
-                    height.SetPixel(i, j, new ProceduralQuadSphere.Unity.Color((Single) h, (Single) h, (Single) h, 1f));
+                    height.SetPixel(i, j, new Color((Single) h, (Single) h, (Single) h, 1f));
                 }
             }
 
