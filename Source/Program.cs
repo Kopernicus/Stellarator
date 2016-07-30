@@ -34,7 +34,7 @@ namespace Stellarator
             Thread.CurrentThread.CurrentCulture = CultureInfo.GetCultureInfo("en-US");
 
             // Ask for Input
-            Int32 seed = Prompt("Please enter the Seed you want to use: ").GetHashCode();
+            String seed = Prompt("Please enter the Seed you want to use: ");
             String folder = Prompt("Please choose a folder name for your system: ");
 
             // Generate the System
