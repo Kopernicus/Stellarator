@@ -253,13 +253,19 @@ namespace Stellarator
             ConfigNode orbit = new ConfigNode("Orbit");
             node.AddConfigNode(orbit);
             orbit.AddValue("referenceBody", referenceBody);
-            orbit.AddValue("inclination", "" + planet.axial_tilt); // Lol
             orbit.AddValue("eccentricity", "" + planet.e);
             orbit.AddValue("semiMajorAxis", "" + planet.a * 100 * Constants.KM_PER_AU);
             orbit.AddValue("longitudeOfAscendingNode", "" + Random.Range(0, 181));
             orbit.AddValue("meanAnomalyAtEpochD", "" + Random.Range(0, 181));
             if (planet.gas_giant)
                 orbit.AddValue("color", Parser.WriteColor(Utility.AlterColor(planetColor)));
+            // Inclination
+            List<Object> data = Utility.Load<List<Object>>("inclination.json");
+            Object v = data[Random.Next(data.Count)];
+            if (v is JObject)
+                orbit.AddValue("inclination", "" + new Range((JObject) v).Next());
+            else
+                orbit.AddValue("inclination", v.ToString());
 
             // Log
             Console.WriteLine($"Generated orbit around {referenceBody} for {name}");
