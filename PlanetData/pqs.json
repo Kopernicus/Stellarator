@@ -8,7 +8,7 @@
             "pow": 2
         },
         "VertexColorSolidBlend": {
-            "color": "RGBA(255,0,0,255)"
+            "color": "RGBA(150,150,150,255)"
         } 
     }
 ]
