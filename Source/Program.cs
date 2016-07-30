@@ -20,7 +20,7 @@ namespace Stellarator
         /// The entrypoint for our application.
         /// </summary>
         /// <param name="args"></param>
-        public static void Main(string[] args)
+        public static Int32 Main(string[] args)
         {
             // Say hello
             Console.WriteLine("-------------------------------------------------------------");
@@ -36,21 +36,31 @@ namespace Stellarator
             // Ask for Input
             String seed = Prompt("Please enter the Seed you want to use: ");
             String folder = Prompt("Please choose a folder name for your system: ");
+            String systematic = Prompt("Use systematic planet names? (y/n) ", true);
+            Console.WriteLine();
+
+            // Check
+            if (systematic != "y" && systematic != "n")
+            {
+                Console.WriteLine("Invalid Input! Enter either y or n.");
+                return -1;
+            }
 
             // Generate the System
-            Generator.Generate(seed, folder);
+            Generator.Generate(seed, folder, systematic == "y");
 
             // Log
             Console.WriteLine("Generation has finished. Program is exiting.");
+            return 0;
         }
 
         /// <summary>
         /// Asks the user something and returns an answer.
         /// </summary>
-        public static String Prompt(String prompt)
+        public static String Prompt(String prompt, Boolean key = false)
         {
             Console.Write(prompt);
-            return Console.ReadLine();
+            return key ? Console.ReadKey().KeyChar.ToString() : Console.ReadLine();
         }
     }
 }

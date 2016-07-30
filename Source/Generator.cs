@@ -55,7 +55,7 @@ namespace Stellarator
         /// <summary>
         /// This is the core of the whole app. It generates a solar system, based on a seed.
         /// </summary>
-        public static void Generate(String seed, String folder)
+        public static void Generate(String seed, String folder, Boolean systematicNames)
         {
             // Log
             Console.WriteLine("Generating the solar system...");
@@ -92,12 +92,19 @@ namespace Stellarator
             Kerbin = allBodies[Random.Next(0, allBodies.Count)];
 
             // Iterate over all bodies in the generated system
+            Int32 pCount = 1;
             foreach (Planet planet in system.bodies)
             {
-                ConfigNode node = GenerateBody(planet, folder);
+                ConfigNode node = GenerateBody(planet, folder, systematicName: systematicNames ? nodes[0].GetValue("cbNameLater") + "-" + pCount : null);
                 nodes.Add(node);
+                Int32 mCount = 1;
                 foreach (Planet moon in planet.bodies_orbiting)
-                    nodes.Add(GenerateBody(moon, folder, node.GetValue("name")));
+                {
+                    String name = node.HasValue("cbNameLater") ? node.GetValue("cbNameLater") : node.GetValue("name");
+                    nodes.Add(GenerateBody(moon, folder, node.GetValue("name"), systematicNames ? name + "-" + mCount : null));
+                    mCount++;
+                }
+                pCount++;
             }
 
             // Log
@@ -194,9 +201,9 @@ namespace Stellarator
         /// <summary>
         /// Generates the parameters for a planet
         /// </summary>
-        public static ConfigNode GenerateBody(Planet planet, String folder, String referenceBody = "Sun")
+        public static ConfigNode GenerateBody(Planet planet, String folder, String referenceBody = "Sun", String systematicName = null)
         {
-            String name = GenerateName();
+            String name = systematicName ?? GenerateName();
             ConfigNode node = new ConfigNode("Body");
 
             // Name
