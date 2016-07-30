@@ -289,14 +289,14 @@ namespace Stellarator
                     average = Utility.GetAverageColor(image);
 
                 // Scale
-                mat.AddValue("mainTexScale", (Random.Next(0, 2) - 1) + "," + (Random.Next(0, 2) - 2));
+                mat.AddValue("mainTexScale", (Random.Next(0, 2) - 1) + "," + (Random.Next(0, 2) - 1));
 
                 mat.AddValue("color", Parser.WriteColor(Utility.ReColor(Utility.AlterColor(planetColor), average)));
                 ConfigNode gradient = new ConfigNode("Gradient");
                 mat.AddConfigNode(gradient);
                 gradient.AddValue("0.0", Parser.WriteColor(Utility.AlterColor(planetColor)));
-                gradient.AddValue("0.6", "RGBA(14, 20, 36, 255)");
-                gradient.AddValue("1.0", "RGBA(5, 5, 5, 255)");
+                gradient.AddValue("0.6", "0.0549,0.0784,0.141,1");
+                gradient.AddValue("1.0", "0.0196,0.0196,0.0196,1");
             }
 
             // Log
