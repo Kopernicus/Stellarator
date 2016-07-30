@@ -295,7 +295,7 @@ namespace Stellarator
                     average = Utility.GetAverageColor(image);
 
                 // Scale
-                mat.AddValue("mainTexScale", (Random.Next(0, 1) ==1 ? 1 : -1) + "," + (Random.Next(0, 1) == 1 ? 1 : -1));
+                mat.AddValue("mainTexScale", (Random.Next(0, 2) ==1 ? 1 : -1) + "," + (Random.Next(0, 2) == 1 ? 1 : -1));
 
                 mat.AddValue("color", Parser.WriteColor(Utility.ReColor(Utility.AlterColor(planetColor), average)));
                 ConfigNode gradient = new ConfigNode("Gradient");
