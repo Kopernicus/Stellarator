@@ -280,12 +280,12 @@ namespace Stellarator
                 String[] files = Directory.GetFiles(Directory.GetCurrentDirectory() + "/data/textures/");
                 String texture = files[Random.Next(0, files.Length)];
                 Directory.CreateDirectory(Directory.GetCurrentDirectory() + "/systems/" + folder + "/PluginData/");
-                File.Copy(texture, Directory.GetCurrentDirectory() + "/systems/" + folder + "/PluginData/" + name + "_Texture.png");
-                mat.AddValue("texture", folder + "/PluginData/" + name + name + "_Texture.png");
+                File.Copy(texture, Directory.GetCurrentDirectory() + "/systems/" + folder + "/PluginData/" + name + "_Texture.dds");
+                mat.AddValue("texture", folder + "/PluginData/" + name + "_Texture.png");
 
                 // Load the Image
                 Color average;
-                using (Bitmap image = new Bitmap(Directory.GetCurrentDirectory() + "/systems/" + folder + "/PluginData/" + name + "_Texture.png"))
+                using (Bitmap image = new Bitmap(Directory.GetCurrentDirectory() + "/systems/" + folder + "/PluginData/" + name + "_Texture.dds"))
                     average = Utility.GetAverageColor(image);
 
                 // Scale
