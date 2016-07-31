@@ -353,8 +353,8 @@ namespace Stellarator
                 {
                     ConfigNode ring = new ConfigNode("Ring");
                     rings.AddConfigNode(ring);
-                    ring.AddValue("innerRadius", "" + planet.radius * 100 * new Range((JObject) r["innerRadius"]).Next());
-                    ring.AddValue("outerRadius", "" + planet.radius * 100 * new Range((JObject) r["outerRadius"]).Next());
+                    ring.AddValue("innerRadius", "" + planet.radius * 0.1 * new Range((JObject) r["innerRadius"]).Next());
+                    ring.AddValue("outerRadius", "" + planet.radius * 0.1 * new Range((JObject) r["outerRadius"]).Next());
                     ring.AddValue("angle", "" + new Range((JObject) r["angle"]).Next());
                     ring.AddValue("color", Parser.WriteColor(Utility.AlterColor(planetColor)));
                     ring.AddValue("lockRotation", "" + (Boolean) r["lockRotation"]);
