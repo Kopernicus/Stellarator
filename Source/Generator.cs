@@ -20,6 +20,7 @@ using Kopernicus.Configuration;
 using Newtonsoft.Json.Linq;
 using ProceduralQuadSphere;
 using ProceduralQuadSphere.Unity;
+using Stellarator.Database;
 using Color = ProceduralQuadSphere.Unity.Color;
 using XnaGeometry;
 
@@ -458,11 +459,11 @@ namespace Stellarator
             pqs.AddConfigNode(mods);
 
             // Load the PQSDatabase and select a setup
-            List<Dictionary<String, Dictionary<String, Object>>> data = Utility.Load<List<Dictionary<String, Dictionary<String, Object>>>>("pqs.json");
-            Dictionary<String, Dictionary<String, Object>> setup = data[Random.Next(0, data.Count)];
+            List<PQSPreset> data = Utility.Load<List<PQSPreset>>("pqs.json");
+            PQSPreset setup = data.Where(d => planet.radius * 100 > d.minRadius && planet.radius * 100 < d.maxRadius).ToArray()[Random.Next(0, data.Count)];
 
             // Convert the JSON objects to a config node
-            foreach (var kvP in setup)
+            foreach (var kvP in setup.mods)
             {
                 // Create the Mod node
                 ConfigNode mod = new ConfigNode(kvP.Key);
