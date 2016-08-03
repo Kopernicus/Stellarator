@@ -53,7 +53,13 @@
     <Reference Include="System.Drawing" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Database\PQSPreset.cs" />
+    <Compile Include="Database\RingPrefab.cs" />
+    <Compile Include="Database\StarLight.cs" />
+    <Compile Include="Database\StarMaterial.cs" />
+    <Compile Include="Database\StarPrefab.cs" />
     <Compile Include="Generator.cs" />
+    <Compile Include="JSON\JsonCreationConverter.cs" />
     <Compile Include="ModLoader\AltitudeAlpha.cs" />
     <Compile Include="ModLoader\FlattenArea.cs" />
     <Compile Include="ModLoader\FlattenAreaTangential.cs" />
@@ -72,8 +78,7 @@
     <Compile Include="ModLoader\Parser\Exceptions\ParserTargetTypeMismatchException.cs" />
     <Compile Include="ModLoader\Parser\Interfaces\IParsable.cs" />
     <Compile Include="ModLoader\Parser\Interfaces\IParserEventSubscriber.cs" />
-    <Compile Include="ModLoader\Parser\ConfigParser.cs" />
-    <Compile Include="Parser.cs" />
+    <Compile Include="ModLoader\Parser\Parser.cs" />
     <Compile Include="ModLoader\VertexColorNoise.cs" />
     <Compile Include="ModLoader\VertexColorNoiseRGB.cs" />
     <Compile Include="ModLoader\VertexColorSolid.cs" />
@@ -90,8 +95,7 @@
     <Compile Include="ModLoader\VertexSimplexHeight.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Range.cs" />
-    <Compile Include="RandomExtensions.cs" />
+    <Compile Include="JSON\Range.cs" />
     <Compile Include="Utility.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

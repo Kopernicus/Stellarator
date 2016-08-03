@@ -21,6 +21,7 @@ using Newtonsoft.Json.Linq;
 using ProceduralQuadSphere;
 using ProceduralQuadSphere.Unity;
 using Stellarator.Database;
+using Stellarator.JSON;
 using Color = ProceduralQuadSphere.Unity.Color;
 using XnaGeometry;
 
@@ -136,7 +137,7 @@ namespace Stellarator
         public static ConfigNode GenerateSun(SolarSystem system, String folder)
         {
             // Create the Body node
-            String name = GenerateName();
+            String name = Utility.GenerateName();
             ConfigNode node = new ConfigNode("Body");
             node.AddValue("name", "Sun");
             node.AddValue("cbNameLater", name);
@@ -160,33 +161,35 @@ namespace Stellarator
             // Scaled Space
             ConfigNode scaled = new ConfigNode("ScaledVersion");
             node.AddConfigNode(scaled);
-            ConfigNode mat = new ConfigNode("Material");
-            scaled.AddConfigNode(mat);
 
             // Load database stuff
-            Dictionary<String, Dictionary<String, Dictionary<String, Object>>[]> data = Utility.Load<Dictionary<String, Dictionary<String, Dictionary<String, Object>>[]>>("stars.json");
-            Dictionary<String, Dictionary<String, Object>> star = data[system.type.star_class][Random.Next(0, data[system.type.star_class].Length)];
-            mat.AddValue("emitColor0", star["material"]["emitColor0"].ToString());
-            mat.AddValue("emitColor1", star["material"]["emitColor1"].ToString());
-            mat.AddValue("sunspotPower", "" + new Range((JObject) star["material"]["sunspotPower"]).Next());
-            mat.AddValue("sunspotColor", star["material"]["sunspotColor"].ToString());
-            mat.AddValue("rimColor", star["material"]["rimColor"].ToString());
-            mat.AddValue("rimPower", "" + new Range((JObject) star["material"]["rimPower"]).Next());
-            mat.AddValue("rimBlend", "" + new Range((JObject) star["material"]["rimBlend"]).Next());
+            Dictionary<String, StarPrefab[]> data = Utility.Load<Dictionary<String, StarPrefab[]>>("stars.json");
+            StarPrefab star = data[system.type.star_class][Random.Next(0, data[system.type.star_class].Length)];
+
+            // Materials
+            ConfigNode mat = new ConfigNode("Material");
+            scaled.AddConfigNode(mat);
+            mat.AddValue("emitColor0", Parser.WriteColor(star.material.emitColor0));
+            mat.AddValue("emitColor1", Parser.WriteColor(star.material.emitColor1));
+            mat.AddValue("sunspotPower", "" + star.material.sunspotPower);
+            mat.AddValue("sunspotColor", Parser.WriteColor(star.material.sunspotColor));
+            mat.AddValue("rimColor", Parser.WriteColor(star.material.rimColor));
+            mat.AddValue("rimPower", "" + star.material.rimPower);
+            mat.AddValue("rimBlend", "" + star.material.rimBlend);
 
             // Light Node
             ConfigNode light = new ConfigNode("Light");
             scaled.AddConfigNode(light);
-            light.AddValue("sunlightColor", star["light"]["sunlightColor"].ToString());
-            light.AddValue("sunlightIntensity", "" + new Range((JObject) star["light"]["sunlightIntensity"]).Next());
-            light.AddValue("sunlightShadowStrength", "" + new Range((JObject)star["light"]["sunlightShadowStrength"]).Next());
-            light.AddValue("scaledSunlightColor", star["light"]["scaledSunlightColor"].ToString()); 
-            light.AddValue("scaledSunlightIntensity", "" + new Range((JObject)star["light"]["scaledSunlightIntensity"]).Next());
-            light.AddValue("IVASunColor", star["light"]["IVASunColor"].ToString());
-            light.AddValue("IVASunIntensity", "" + new Range((JObject)star["light"]["IVASunIntensity"]).Next());
-            light.AddValue("ambientLightColor", star["light"]["ambientLightColor"].ToString());
-            light.AddValue("sunLensFlareColor", star["light"]["sunLensFlareColor"].ToString()); 
-            light.AddValue("givesOffLight", "" + (Boolean)star["light"]["givesOffLight"]);
+            light.AddValue("sunlightColor", Parser.WriteColor(star.light.sunlightColor));
+            light.AddValue("sunlightIntensity", "" + star.light.sunlightIntensity);
+            light.AddValue("sunlightShadowStrength", "" + star.light.sunlightShadowStrength);
+            light.AddValue("scaledSunlightColor", Parser.WriteColor(star.light.scaledSunlightColor)); 
+            light.AddValue("scaledSunlightIntensity", "" + star.light.scaledSunlightIntensity);
+            light.AddValue("IVASunColor", Parser.WriteColor(star.light.IVASunColor));
+            light.AddValue("IVASunIntensity", "" + star.light.IVASunIntensity);
+            light.AddValue("ambientLightColor", Parser.WriteColor(star.light.ambientLightColor));
+            light.AddValue("sunLensFlareColor", Parser.WriteColor(star.light.sunLensFlareColor)); 
+            light.AddValue("givesOffLight", "" + star.light.givesOffLight);
             light.AddValue("luminosity", "" + system.stellar_luminosity_ratio * 1360);
 
             // TODO: Coronas       
@@ -204,7 +207,7 @@ namespace Stellarator
         /// </summary>
         public static ConfigNode GenerateBody(Planet planet, String folder, String referenceBody = "Sun", String systematicName = null)
         {
-            String name = systematicName ?? GenerateName();
+            String name = systematicName ?? Utility.GenerateName();
             ConfigNode node = new ConfigNode("Body");
 
             // Name
@@ -228,9 +231,9 @@ namespace Stellarator
                     template.AddValue("name", "Jool");
                 else
                 {
-                    template.AddValue("name", GetTemplate(planet.surface_pressure > 0.00001, false));
+                    template.AddValue("name", Utility.GetTemplate(planet.surface_pressure > 0.00001, false));
                     template.AddValue("removeAllPQSMods", "True");
-                    if (planet.surface_pressure <= 0.00001) 
+                    if (planet.surface_pressure <= 0.00001)
                         template.AddValue("removeAtmosphere", "True");
                     template.AddValue("removeOcean", "True");
                     // TODO: Handle atmospheres and ocean
@@ -254,8 +257,8 @@ namespace Stellarator
             properties.AddValue("initialRotation", "" + Random.Next(0, 361));
             properties.AddValue("albedo", "" + planet.albedo);
             // TODO: Timewarplimits
-            properties.AddValue("useTheInName", "False");            
-            
+            properties.AddValue("useTheInName", "False");
+
             // Log
             Console.WriteLine($"Generated a planet named {name}. GasGiant: {planet.gas_giant}. Template: {template.GetValue("name")}");
 
@@ -273,12 +276,9 @@ namespace Stellarator
             if (planet.gas_giant)
                 orbit.AddValue("color", Parser.WriteColor(Utility.AlterColor(planetColor)));
             // Inclination
-            List<Object> data = Utility.Load<List<Object>>("inclination.json");
-            Object v = data[Random.Next(data.Count)];
-            if (v is JObject)
-                orbit.AddValue("inclination", "" + new Range((JObject) v).Next());
-            else
-                orbit.AddValue("inclination", v.ToString());
+            Double[] data = Utility.Load<Double[]>("inclination.json");
+            Double v = data[Random.Next(data.Length)];
+            orbit.AddValue("inclination", "" + v);
 
             // Log
             Console.WriteLine($"Generated orbit around {referenceBody} for {name}");
@@ -286,6 +286,8 @@ namespace Stellarator
             // Scaled Space
             ConfigNode scaled = new ConfigNode("ScaledVersion");
             node.AddConfigNode(scaled);
+
+            // Material
             ConfigNode mat = new ConfigNode("Material");
             scaled.AddConfigNode(mat);
             if (!planet.gas_giant)
@@ -337,7 +339,7 @@ namespace Stellarator
                     atmosphere.AddValue("ambientColor", Parser.WriteColor(Utility.AlterColor(planetColor)));
                     atmosphere.AddValue("lightColor", Parser.WriteColor(Utility.AlterColor(Utility.LightColor(planetColor))));
                 }
-                GenerateAtmosphereCurves(ref atmosphere, planet.gas_giant ? "Jool" : GetTemplate(true, true));            
+                GenerateAtmosphereCurves(ref atmosphere, planet.gas_giant ? "Jool" : Utility.GetTemplate(true, true));            
                 
                 // Log
                 Console.WriteLine($"Generated atmosphere for {name}");
@@ -348,17 +350,17 @@ namespace Stellarator
             {
                 ConfigNode rings = new ConfigNode("Rings");
                 node.AddConfigNode(rings);
-                List<Dictionary<String, Object>[]> definitions = Utility.Load<List<Dictionary<String, Object>[]>>("rings.json");
-                Dictionary<String, Object>[] def = definitions[Random.Next(0, definitions.Count)];
-                foreach (var r in def)
+                List<RingPrefab[]> definitions = Utility.Load<List<RingPrefab[]>>("rings.json");
+                RingPrefab[] def = definitions[Random.Next(0, definitions.Count)];
+                foreach (RingPrefab r in def)
                 {
                     ConfigNode ring = new ConfigNode("Ring");
                     rings.AddConfigNode(ring);
-                    ring.AddValue("innerRadius", "" + planet.radius * 0.1 * new Range((JObject) r["innerRadius"]).Next());
-                    ring.AddValue("outerRadius", "" + planet.radius * 0.1 * new Range((JObject) r["outerRadius"]).Next());
-                    ring.AddValue("angle", "" + new Range((JObject) r["angle"]).Next());
+                    ring.AddValue("innerRadius", "" + planet.radius * 0.1 * r.innerRadius);
+                    ring.AddValue("outerRadius", "" + planet.radius * 0.1 * r.outerRadius);
+                    ring.AddValue("angle", "" + r.angle);
                     ring.AddValue("color", Parser.WriteColor(Utility.AlterColor(planetColor)));
-                    ring.AddValue("lockRotation", "" + (Boolean) r["lockRotation"]);
+                    ring.AddValue("lockRotation", "" + r.lockRotation);
                     ring.AddValue("unlit", "False");
                 }
 
@@ -380,6 +382,11 @@ namespace Stellarator
                     atmosphere.AddValue("ambientColor", Parser.WriteColor(Utility.AlterColor(average)));
                     atmosphere.AddValue("lightColor", Parser.WriteColor(Utility.AlterColor(Utility.LightColor(average))));
                 }
+                ConfigNode gradient = new ConfigNode("Gradient");
+                mat.AddConfigNode(gradient);
+                gradient.AddValue("0.0", Parser.WriteColor(Utility.AlterColor(average)));
+                gradient.AddValue("0.6", "0.0549,0.0784,0.141,1");
+                gradient.AddValue("1.0", "0.0196,0.0196,0.0196,1");
             }
 
             // Log
@@ -388,40 +395,6 @@ namespace Stellarator
 
             // Return
             return node;
-        }
-
-        /// <summary>
-        /// Returns a random name for the body
-        /// </summary>
-        public static String GenerateName()
-        {
-            Dictionary<String, List<String>> names = Utility.Load<Dictionary<String, List<String>>>("names.json");
-            List<String> prefix = names["prefix"];
-            List<String> middle = names["middle"];
-            List<String> suffix = names["suffix"];
-            Boolean hasMiddle = false;
-
-            String name = prefix[Random.Next(0, prefix.Count)];
-            if (Random.Next(0, 100) < 50)
-            {
-                name += middle[Random.Next(0, middle.Count)];
-                hasMiddle = true;
-            }
-            if (Random.Next(0, 100) < 50 || !hasMiddle)
-                name += suffix[Random.Next(0, suffix.Count)];
-            if (name == "Kerbin" || name == "Kerbol")
-                name = GenerateName();
-            return name;
-        }
-
-        /// <summary>
-        /// Gets a random template for the body. Doesn't include Jool, Kerbin and Sun
-        /// </summary>
-        public static String GetTemplate(Boolean atmosphere, Boolean includeKerbin)
-        {
-            if (atmosphere)
-                return new[] {"Eve", "Duna", "Laythe", "Kerbin"}[Random.Next(0, includeKerbin ? 4 : 3)];
-            return Templates[Random.Next(0, Templates.Length)];
         }
 
         /// <summary>
@@ -475,8 +448,6 @@ namespace Stellarator
                     JToken tmp;
                     if (!(moddata.Value is JObject))
                         mod.AddValue(moddata.Key, moddata.Value.ToString());
-                    else if (((JObject) moddata.Value).TryGetValue("min", out tmp) && ((JObject) moddata.Value).TryGetValue("max", out tmp))
-                        mod.AddValue(moddata.Key, "" + new Range((JObject) moddata.Value).Next());
                     else
                         mod.AddConfigNode(Utility.JSONToNode(moddata.Key, (JObject) moddata.Value));
                 }
@@ -521,19 +492,19 @@ namespace Stellarator
                     if (existingMod != null)
                     {
                         create.Invoke(loader, new[] { existingMod });
-                        ConfigParser.LoadObjectFromConfigurationNode(loader, mod);
+                        Parser.LoadObjectFromConfigurationNode(loader, mod);
                         patchedMods.Add(existingMod);
                     }
                     else
                     {
                         createNew.Invoke(loader, new [] { pqsVersion });
-                        ConfigParser.LoadObjectFromConfigurationNode(loader, mod);
+                        Parser.LoadObjectFromConfigurationNode(loader, mod);
                     }
                 }
                 else
                 {
                     createNew.Invoke(loader, new[] { pqsVersion });
-                    ConfigParser.LoadObjectFromConfigurationNode(loader, mod);
+                    Parser.LoadObjectFromConfigurationNode(loader, mod);
                 }
 
                 // Log

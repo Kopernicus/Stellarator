@@ -2,7 +2,7 @@
     {
         "minRadius": 0,
         "maxRadius": 100000000,
-        "data": {   
+        "mods": {   
             "VertexHeightOblate": {
                 "height": {
                     "min": 1000,

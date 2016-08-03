@@ -6,6 +6,7 @@
 
 
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
@@ -15,34 +16,35 @@ using Newtonsoft.Json.Linq;
 using ProceduralQuadSphere.Unity;
 using Color = ProceduralQuadSphere.Unity.Color;
 using Accrete;
+using Stellarator.JSON;
 
 namespace Stellarator
 {
     /// <summary>
     /// Tools to help us
     /// </summary>
-    public class Utility
+    public static class Utility
     {
         // Credit goes to Kragrathea.
         public static Bitmap BumpToNormalMap(Bitmap source, Single strength)
         {
             strength = Mathf.Clamp(strength, 0.0F, 10.0F);
-            var result = new Bitmap(source.Width, source.Height, PixelFormat.Format32bppArgb);
-            for (Int32 by = 0; @by < result.Height; @by++)
+            Bitmap result = new Bitmap(source.Width, source.Height, PixelFormat.Format32bppArgb);
+            for (Int32 by = 0; by < result.Height; by++)
             {
-                for (var bx = 0; bx < result.Width; bx++)
+                for (Int32 bx = 0; bx < result.Width; bx++)
                 {
                     Int32 x = bx == 0 ? result.Width : bx;
-                    var xLeft = ((Color)source.GetPixel(x - 1, by)).grayscale * strength;
+                    Single xLeft = ((Color)source.GetPixel(x - 1, by)).grayscale * strength;
                     x = bx == result.Width - 1 ? 0 : bx;
-                    var xRight = ((Color)source.GetPixel(x + 1, by)).grayscale * strength;
+                    Single xRight = ((Color)source.GetPixel(x + 1, by)).grayscale * strength;
                     Int32 y = by == 0 ? result.Height : by;
-                    var yUp = ((Color)source.GetPixel(bx, y - 1)).grayscale * strength;
+                    Single yUp = ((Color)source.GetPixel(bx, y - 1)).grayscale * strength;
                     y = by == result.Height - 1 ? 0 : by;
-                    var yDown = ((Color)source.GetPixel(bx, y + 1)).grayscale * strength;
-                    var xDelta = (xLeft - xRight + 1) * 0.5f;
-                    var yDelta = (yUp - yDown + 1) * 0.5f;
-                    result.SetPixel(bx, @by, new Color(yDelta, yDelta, yDelta, xDelta));
+                    Single yDown = ((Color)source.GetPixel(bx, y + 1)).grayscale * strength;
+                    Single xDelta = (xLeft - xRight + 1) * 0.5f;
+                    Single yDelta = (yUp - yDown + 1) * 0.5f;
+                    result.SetPixel(bx, by, new Color(yDelta, yDelta, yDelta, xDelta));
                 }
             }
             return result;
@@ -97,9 +99,9 @@ namespace Stellarator
         public static ConfigNode JSONToNode(String name, JToken obj)
         {
             ConfigNode node = new ConfigNode(name);
-            foreach (var jToken in obj)
+            foreach (JToken jToken in obj)
             {
-                var x = (JProperty)jToken;
+                JProperty x = (JProperty)jToken;
                 if (x.Value.HasValues)
                     node.AddConfigNode(JSONToNode(x.Name, x.Value));
                 else
@@ -114,8 +116,7 @@ namespace Stellarator
         public static Color ReColor(Color c, Color average)
         {
             // Do some maths..
-            Color ret = new Color(c.r / average.r, c.g / average.g, c.b / average.b, 1);
-            return ret;
+            return new Color(c.r / average.r, c.g / average.g, c.b / average.b, 1);
         }
 
 
@@ -146,7 +147,49 @@ namespace Stellarator
         {
             // Get the full path
             String path = Directory.GetCurrentDirectory() + "/data/" + filename;
-            return JsonConvert.DeserializeObject<T>(File.ReadAllText(path));
+            return JsonConvert.DeserializeObject<T>(File.ReadAllText(path), new Range.Converter());
+        }
+
+        /// <summary>
+        /// Returns a random boolean
+        /// </summary>
+        public static Boolean Boolean(this Random random, Int32 prob = 50)
+        {
+            return random.Next(0, 100) < prob;
+        }
+        
+        /// <summary>
+        /// Returns a random name for the body
+        /// </summary>
+        public static String GenerateName()
+        {
+            Dictionary<String, List<String>> names = Load<Dictionary<String, List<String>>>("names.json");
+            List<String> prefix = names["prefix"];
+            List<String> middle = names["middle"];
+            List<String> suffix = names["suffix"];
+            Boolean hasMiddle = false;
+
+            String name = prefix[Generator.Random.Next(0, prefix.Count)];
+            if (Generator.Random.Next(0, 100) < 50)
+            {
+                name += middle[Generator.Random.Next(0, middle.Count)];
+                hasMiddle = true;
+            }
+            if (Generator.Random.Next(0, 100) < 50 || !hasMiddle)
+                name += suffix[Generator.Random.Next(0, suffix.Count)];
+            if (name == "Kerbin" || name == "Kerbol")
+                name = GenerateName();
+            return name;
+        }
+
+        /// <summary>
+        /// Gets a random template for the body. Doesn't include Jool, Kerbin and Sun
+        /// </summary>
+        public static String GetTemplate(Boolean atmosphere, Boolean includeKerbin)
+        {
+            if (atmosphere)
+                return new[] { "Eve", "Duna", "Laythe", "Kerbin" }[Generator.Random.Next(0, includeKerbin ? 4 : 3)];
+            return Generator.Templates[Generator.Random.Next(0, Generator.Templates.Length)];
         }
     }
 }
