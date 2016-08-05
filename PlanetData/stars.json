@@ -1,18 +1,18 @@
 {
-    "F0": [
+    "O0": [
         {
             "material": {
                 "emitColor0": {
                     "r": 1,
                     "g": 0.8160422,
                     "b": 0.5069931,
-                    "a": 1 
+                    "a": 1
                 },
                 "emitColor1": {
                     "r": 0.9253731,
                     "g": 0.7731564,
                     "b": 0.2879657,
-                    "a": 1 
+                    "a": 1
                 },
                 "sunspotPower": {
                     "min": 0.9,
@@ -22,13 +22,13 @@
                     "r": 0.2835821,
                     "g": 0.1267107,
                     "b": 0.02082244,
-                    "a": 1 
+                    "a": 1
                 },
                 "rimColor": {
                     "r": 1,
                     "g": 0.8633754,
                     "b": 0.5839161,
-                    "a": 1 
+                    "a": 1
                 },
                 "rimPower": {
                     "min": 1.2,
@@ -44,7 +44,7 @@
                     "r": 1,
                     "g": 1,
                     "b": 1,
-                    "a": 1    
+                    "a": 1
                 },
                 "sunlightIntensity": {
                     "min": 0.8,
@@ -58,7 +58,7 @@
                     "r": 1,
                     "g": 1,
                     "b": 1,
-                    "a": 1    
+                    "a": 1
                 },
                 "scaledSunlightIntensity": {
                     "min": 0.8,
@@ -68,7 +68,7 @@
                     "r": 1,
                     "g": 0.977,
                     "b": 0.896,
-                    "a": 1    
+                    "a": 1
                 },
                 "IVASunIntensity": {
                     "min": 0.7,
@@ -78,7 +78,7 @@
                     "r": 0.06,
                     "g": 0.06,
                     "b": 0.06,
-                    "a": 1    
+                    "a": 1
                 },
                 "sunLensFlareColor": {
                     "r": 1,
@@ -87,7 +87,644 @@
                     "a": 1
                 },
                 "givesOffLight": true
-            }  
+            }
         }
-    ] 
+    ],
+    "B0": [
+        {
+            "material": {
+                "emitColor0": {
+                    "r": 1,
+                    "g": 0.8160422,
+                    "b": 0.5069931,
+                    "a": 1
+                },
+                "emitColor1": {
+                    "r": 0.9253731,
+                    "g": 0.7731564,
+                    "b": 0.2879657,
+                    "a": 1
+                },
+                "sunspotPower": {
+                    "min": 0.9,
+                    "max": 1.1
+                },
+                "sunspotColor": {
+                    "r": 0.2835821,
+                    "g": 0.1267107,
+                    "b": 0.02082244,
+                    "a": 1
+                },
+                "rimColor": {
+                    "r": 1,
+                    "g": 0.8633754,
+                    "b": 0.5839161,
+                    "a": 1
+                },
+                "rimPower": {
+                    "min": 1.2,
+                    "max": 1.4
+                },
+                "rimBlend": {
+                    "min": 2.4,
+                    "max": 2.6
+                }
+            },
+            "light": {
+                "sunlightColor": {
+                    "r": 1,
+                    "g": 1,
+                    "b": 1,
+                    "a": 1
+                },
+                "sunlightIntensity": {
+                    "min": 0.8,
+                    "max": 1.0
+                },
+                "sunlightShadowStrength": {
+                    "min": 0.6523364,
+                    "max": 0.8523364
+                },
+                "scaledSunlightColor": {
+                    "r": 1,
+                    "g": 1,
+                    "b": 1,
+                    "a": 1
+                },
+                "scaledSunlightIntensity": {
+                    "min": 0.8,
+                    "max": 1.0
+                },
+                "IVASunColor": {
+                    "r": 1,
+                    "g": 0.977,
+                    "b": 0.896,
+                    "a": 1
+                },
+                "IVASunIntensity": {
+                    "min": 0.7,
+                    "max": 0.9
+                },
+                "ambientLightColor": {
+                    "r": 0.06,
+                    "g": 0.06,
+                    "b": 0.06,
+                    "a": 1
+                },
+                "sunLensFlareColor": {
+                    "r": 1,
+                    "g": 1,
+                    "b": 1,
+                    "a": 1
+                },
+                "givesOffLight": true
+            }
+        }
+    ],
+    "A0": [
+        {
+            "material": {
+                "emitColor0": {
+                    "r": 1,
+                    "g": 0.8160422,
+                    "b": 0.5069931,
+                    "a": 1
+                },
+                "emitColor1": {
+                    "r": 0.9253731,
+                    "g": 0.7731564,
+                    "b": 0.2879657,
+                    "a": 1
+                },
+                "sunspotPower": {
+                    "min": 0.9,
+                    "max": 1.1
+                },
+                "sunspotColor": {
+                    "r": 0.2835821,
+                    "g": 0.1267107,
+                    "b": 0.02082244,
+                    "a": 1
+                },
+                "rimColor": {
+                    "r": 1,
+                    "g": 0.8633754,
+                    "b": 0.5839161,
+                    "a": 1
+                },
+                "rimPower": {
+                    "min": 1.2,
+                    "max": 1.4
+                },
+                "rimBlend": {
+                    "min": 2.4,
+                    "max": 2.6
+                }
+            },
+            "light": {
+                "sunlightColor": {
+                    "r": 1,
+                    "g": 1,
+                    "b": 1,
+                    "a": 1
+                },
+                "sunlightIntensity": {
+                    "min": 0.8,
+                    "max": 1.0
+                },
+                "sunlightShadowStrength": {
+                    "min": 0.6523364,
+                    "max": 0.8523364
+                },
+                "scaledSunlightColor": {
+                    "r": 1,
+                    "g": 1,
+                    "b": 1,
+                    "a": 1
+                },
+                "scaledSunlightIntensity": {
+                    "min": 0.8,
+                    "max": 1.0
+                },
+                "IVASunColor": {
+                    "r": 1,
+                    "g": 0.977,
+                    "b": 0.896,
+                    "a": 1
+                },
+                "IVASunIntensity": {
+                    "min": 0.7,
+                    "max": 0.9
+                },
+                "ambientLightColor": {
+                    "r": 0.06,
+                    "g": 0.06,
+                    "b": 0.06,
+                    "a": 1
+                },
+                "sunLensFlareColor": {
+                    "r": 1,
+                    "g": 1,
+                    "b": 1,
+                    "a": 1
+                },
+                "givesOffLight": true
+            }
+        }
+    ],
+    "F0": [
+        {
+            "material": {
+                "emitColor0": {
+                    "r": 1,
+                    "g": 0.8160422,
+                    "b": 0.5069931,
+                    "a": 1
+                },
+                "emitColor1": {
+                    "r": 0.9253731,
+                    "g": 0.7731564,
+                    "b": 0.2879657,
+                    "a": 1
+                },
+                "sunspotPower": {
+                    "min": 0.9,
+                    "max": 1.1
+                },
+                "sunspotColor": {
+                    "r": 0.2835821,
+                    "g": 0.1267107,
+                    "b": 0.02082244,
+                    "a": 1
+                },
+                "rimColor": {
+                    "r": 1,
+                    "g": 0.8633754,
+                    "b": 0.5839161,
+                    "a": 1
+                },
+                "rimPower": {
+                    "min": 1.2,
+                    "max": 1.4
+                },
+                "rimBlend": {
+                    "min": 2.4,
+                    "max": 2.6
+                }
+            },
+            "light": {
+                "sunlightColor": {
+                    "r": 1,
+                    "g": 1,
+                    "b": 1,
+                    "a": 1
+                },
+                "sunlightIntensity": {
+                    "min": 0.8,
+                    "max": 1.0
+                },
+                "sunlightShadowStrength": {
+                    "min": 0.6523364,
+                    "max": 0.8523364
+                },
+                "scaledSunlightColor": {
+                    "r": 1,
+                    "g": 1,
+                    "b": 1,
+                    "a": 1
+                },
+                "scaledSunlightIntensity": {
+                    "min": 0.8,
+                    "max": 1.0
+                },
+                "IVASunColor": {
+                    "r": 1,
+                    "g": 0.977,
+                    "b": 0.896,
+                    "a": 1
+                },
+                "IVASunIntensity": {
+                    "min": 0.7,
+                    "max": 0.9
+                },
+                "ambientLightColor": {
+                    "r": 0.06,
+                    "g": 0.06,
+                    "b": 0.06,
+                    "a": 1
+                },
+                "sunLensFlareColor": {
+                    "r": 1,
+                    "g": 1,
+                    "b": 1,
+                    "a": 1
+                },
+                "givesOffLight": true
+            }
+        }
+    ],
+    "G0": [
+        {
+            "material": {
+                "emitColor0": {
+                    "r": 1,
+                    "g": 0.8160422,
+                    "b": 0.5069931,
+                    "a": 1
+                },
+                "emitColor1": {
+                    "r": 0.9253731,
+                    "g": 0.7731564,
+                    "b": 0.2879657,
+                    "a": 1
+                },
+                "sunspotPower": {
+                    "min": 0.9,
+                    "max": 1.1
+                },
+                "sunspotColor": {
+                    "r": 0.2835821,
+                    "g": 0.1267107,
+                    "b": 0.02082244,
+                    "a": 1
+                },
+                "rimColor": {
+                    "r": 1,
+                    "g": 0.8633754,
+                    "b": 0.5839161,
+                    "a": 1
+                },
+                "rimPower": {
+                    "min": 1.2,
+                    "max": 1.4
+                },
+                "rimBlend": {
+                    "min": 2.4,
+                    "max": 2.6
+                }
+            },
+            "light": {
+                "sunlightColor": {
+                    "r": 1,
+                    "g": 1,
+                    "b": 1,
+                    "a": 1
+                },
+                "sunlightIntensity": {
+                    "min": 0.8,
+                    "max": 1.0
+                },
+                "sunlightShadowStrength": {
+                    "min": 0.6523364,
+                    "max": 0.8523364
+                },
+                "scaledSunlightColor": {
+                    "r": 1,
+                    "g": 1,
+                    "b": 1,
+                    "a": 1
+                },
+                "scaledSunlightIntensity": {
+                    "min": 0.8,
+                    "max": 1.0
+                },
+                "IVASunColor": {
+                    "r": 1,
+                    "g": 0.977,
+                    "b": 0.896,
+                    "a": 1
+                },
+                "IVASunIntensity": {
+                    "min": 0.7,
+                    "max": 0.9
+                },
+                "ambientLightColor": {
+                    "r": 0.06,
+                    "g": 0.06,
+                    "b": 0.06,
+                    "a": 1
+                },
+                "sunLensFlareColor": {
+                    "r": 1,
+                    "g": 1,
+                    "b": 1,
+                    "a": 1
+                },
+                "givesOffLight": true
+            }
+        }
+    ],
+    "K0": [
+        {
+            "material": {
+                "emitColor0": {
+                    "r": 1,
+                    "g": 0.8160422,
+                    "b": 0.5069931,
+                    "a": 1
+                },
+                "emitColor1": {
+                    "r": 0.9253731,
+                    "g": 0.7731564,
+                    "b": 0.2879657,
+                    "a": 1
+                },
+                "sunspotPower": {
+                    "min": 0.9,
+                    "max": 1.1
+                },
+                "sunspotColor": {
+                    "r": 0.2835821,
+                    "g": 0.1267107,
+                    "b": 0.02082244,
+                    "a": 1
+                },
+                "rimColor": {
+                    "r": 1,
+                    "g": 0.8633754,
+                    "b": 0.5839161,
+                    "a": 1
+                },
+                "rimPower": {
+                    "min": 1.2,
+                    "max": 1.4
+                },
+                "rimBlend": {
+                    "min": 2.4,
+                    "max": 2.6
+                }
+            },
+            "light": {
+                "sunlightColor": {
+                    "r": 1,
+                    "g": 1,
+                    "b": 1,
+                    "a": 1
+                },
+                "sunlightIntensity": {
+                    "min": 0.8,
+                    "max": 1.0
+                },
+                "sunlightShadowStrength": {
+                    "min": 0.6523364,
+                    "max": 0.8523364
+                },
+                "scaledSunlightColor": {
+                    "r": 1,
+                    "g": 1,
+                    "b": 1,
+                    "a": 1
+                },
+                "scaledSunlightIntensity": {
+                    "min": 0.8,
+                    "max": 1.0
+                },
+                "IVASunColor": {
+                    "r": 1,
+                    "g": 0.977,
+                    "b": 0.896,
+                    "a": 1
+                },
+                "IVASunIntensity": {
+                    "min": 0.7,
+                    "max": 0.9
+                },
+                "ambientLightColor": {
+                    "r": 0.06,
+                    "g": 0.06,
+                    "b": 0.06,
+                    "a": 1
+                },
+                "sunLensFlareColor": {
+                    "r": 1,
+                    "g": 1,
+                    "b": 1,
+                    "a": 1
+                },
+                "givesOffLight": true
+            }
+        }
+    ],
+    "M0": [
+        {
+            "material": {
+                "emitColor0": {
+                    "r": 1,
+                    "g": 0.8160422,
+                    "b": 0.5069931,
+                    "a": 1
+                },
+                "emitColor1": {
+                    "r": 0.9253731,
+                    "g": 0.7731564,
+                    "b": 0.2879657,
+                    "a": 1
+                },
+                "sunspotPower": {
+                    "min": 0.9,
+                    "max": 1.1
+                },
+                "sunspotColor": {
+                    "r": 0.2835821,
+                    "g": 0.1267107,
+                    "b": 0.02082244,
+                    "a": 1
+                },
+                "rimColor": {
+                    "r": 1,
+                    "g": 0.8633754,
+                    "b": 0.5839161,
+                    "a": 1
+                },
+                "rimPower": {
+                    "min": 1.2,
+                    "max": 1.4
+                },
+                "rimBlend": {
+                    "min": 2.4,
+                    "max": 2.6
+                }
+            },
+            "light": {
+                "sunlightColor": {
+                    "r": 1,
+                    "g": 1,
+                    "b": 1,
+                    "a": 1
+                },
+                "sunlightIntensity": {
+                    "min": 0.8,
+                    "max": 1.0
+                },
+                "sunlightShadowStrength": {
+                    "min": 0.6523364,
+                    "max": 0.8523364
+                },
+                "scaledSunlightColor": {
+                    "r": 1,
+                    "g": 1,
+                    "b": 1,
+                    "a": 1
+                },
+                "scaledSunlightIntensity": {
+                    "min": 0.8,
+                    "max": 1.0
+                },
+                "IVASunColor": {
+                    "r": 1,
+                    "g": 0.977,
+                    "b": 0.896,
+                    "a": 1
+                },
+                "IVASunIntensity": {
+                    "min": 0.7,
+                    "max": 0.9
+                },
+                "ambientLightColor": {
+                    "r": 0.06,
+                    "g": 0.06,
+                    "b": 0.06,
+                    "a": 1
+                },
+                "sunLensFlareColor": {
+                    "r": 1,
+                    "g": 1,
+                    "b": 1,
+                    "a": 1
+                },
+                "givesOffLight": true
+            }
+        }
+    ],
+    "D0": [
+        {
+            "material": {
+                "emitColor0": {
+                    "r": 1,
+                    "g": 0.8160422,
+                    "b": 0.5069931,
+                    "a": 1
+                },
+                "emitColor1": {
+                    "r": 0.9253731,
+                    "g": 0.7731564,
+                    "b": 0.2879657,
+                    "a": 1
+                },
+                "sunspotPower": {
+                    "min": 0.9,
+                    "max": 1.1
+                },
+                "sunspotColor": {
+                    "r": 0.2835821,
+                    "g": 0.1267107,
+                    "b": 0.02082244,
+                    "a": 1
+                },
+                "rimColor": {
+                    "r": 1,
+                    "g": 0.8633754,
+                    "b": 0.5839161,
+                    "a": 1
+                },
+                "rimPower": {
+                    "min": 1.2,
+                    "max": 1.4
+                },
+                "rimBlend": {
+                    "min": 2.4,
+                    "max": 2.6
+                }
+            },
+            "light": {
+                "sunlightColor": {
+                    "r": 1,
+                    "g": 1,
+                    "b": 1,
+                    "a": 1
+                },
+                "sunlightIntensity": {
+                    "min": 0.8,
+                    "max": 1.0
+                },
+                "sunlightShadowStrength": {
+                    "min": 0.6523364,
+                    "max": 0.8523364
+                },
+                "scaledSunlightColor": {
+                    "r": 1,
+                    "g": 1,
+                    "b": 1,
+                    "a": 1
+                },
+                "scaledSunlightIntensity": {
+                    "min": 0.8,
+                    "max": 1.0
+                },
+                "IVASunColor": {
+                    "r": 1,
+                    "g": 0.977,
+                    "b": 0.896,
+                    "a": 1
+                },
+                "IVASunIntensity": {
+                    "min": 0.7,
+                    "max": 0.9
+                },
+                "ambientLightColor": {
+                    "r": 0.06,
+                    "g": 0.06,
+                    "b": 0.06,
+                    "a": 1
+                },
+                "sunLensFlareColor": {
+                    "r": 1,
+                    "g": 1,
+                    "b": 1,
+                    "a": 1
+                },
+                "givesOffLight": true
+            }
+        }
+    ]
 }
