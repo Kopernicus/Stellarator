@@ -95,7 +95,14 @@
     <Compile Include="ModLoader\VertexHeightOffset.cs" />
     <Compile Include="ModLoader\VertexNoise.cs" />
     <Compile Include="ModLoader\VertexPlanet.cs" />
+    <Compile Include="ModLoader\VertexSimplexColorRGB.cs" />
     <Compile Include="ModLoader\VertexSimplexHeight.cs" />
+    <Compile Include="ModLoader\VertexSimplexHeightAbsolute.cs" />
+    <Compile Include="ModLoader\VertexSimplexHeightFlatten.cs" />
+    <Compile Include="ModLoader\VertexSimplexMultiChromatic.cs" />
+    <Compile Include="ModLoader\VertexSimplexNoiseColor.cs" />
+    <Compile Include="ModLoader\VertexVoronoi.cs" />
+    <Compile Include="ModLoader\VoronoiCraters.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="JSON\Range.cs" />

@@ -541,10 +541,9 @@ namespace Stellarator
                     };
 
                     // Build the maps
-                    foreach (PQSMod m in pqsVersion.mods)
-                        m.OnVertexBuildHeight(builddata);
-                    foreach (PQSMod m in pqsVersion.mods) // Memory? Who cares
-                        m.OnVertexBuild(builddata);
+                    pqsVersion.OnSetup();
+                    pqsVersion.OnVertexBuildHeight(builddata);
+                    pqsVersion.OnVertexBuild(builddata);
 
                     Double h = (builddata.vertHeight - pqsVersion.radius);
                     if (h < 0)
