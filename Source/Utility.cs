@@ -16,6 +16,7 @@ using Newtonsoft.Json.Linq;
 using ProceduralQuadSphere.Unity;
 using Color = ProceduralQuadSphere.Unity.Color;
 using Accrete;
+using DynamicExpresso;
 using Stellarator.JSON;
 
 namespace Stellarator
@@ -96,16 +97,19 @@ namespace Stellarator
         /// <summary>
         /// Converts a JSON Object to a configNode
         /// </summary>
-        public static ConfigNode JSONToNode(String name, JToken obj)
+        public static ConfigNode JSONToNode(String name, JObject obj, Interpreter interpreter)
         {
+            JToken tmp;
             ConfigNode node = new ConfigNode(name);
-            foreach (JToken jToken in obj)
+            foreach (JToken jToken in (JToken)obj)
             {
                 JProperty x = (JProperty)jToken;
-                if (x.Value.HasValues)
-                    node.AddConfigNode(JSONToNode(x.Name, x.Value));
+                if (obj.TryGetValue("min", out tmp) && obj.TryGetValue("max", out tmp) && obj.Count == 2)
+                    node.AddValue(x.Name, "" + Range.Converter.Create(obj, interpreter));
+                else if (x.Value.HasValues)
+                    node.AddConfigNode(JSONToNode(x.Name, (JObject)x.Value, interpreter));
                 else
-                    node.AddValue(x.Name, x.ToObject<String>());
+                    node.AddValue(x.Name, interpreter.TryEval(x.ToObject<String>()));
             }
             return node;
         }
@@ -190,6 +194,21 @@ namespace Stellarator
             if (atmosphere)
                 return new[] { "Eve", "Duna", "Laythe", "Kerbin" }[Generator.Random.Next(0, includeKerbin ? 4 : 3)];
             return Generator.Templates[Generator.Random.Next(0, Generator.Templates.Length)];
+        }
+
+        /// <summary>
+        /// Tries to evaluate an expression and returns the expression text when it fails
+        /// </summary>
+        public static String TryEval(this Interpreter interpreter, string expression)
+        {
+            try
+            {
+                return interpreter.Eval<Object>(expression).ToString();
+            }
+            catch
+            {
+                return expression;
+            }
         }
     }
 }

@@ -39,6 +39,9 @@
     <Reference Include="ConfigNode">
       <HintPath>..\Dependencies\ConfigNode.dll</HintPath>
     </Reference>
+    <Reference Include="DynamicExpresso.Core">
+      <HintPath>..\Dependencies\DynamicExpresso.Core.dll</HintPath>
+    </Reference>
     <Reference Include="libaccrete">
       <HintPath>..\Dependencies\libaccrete.dll</HintPath>
     </Reference>

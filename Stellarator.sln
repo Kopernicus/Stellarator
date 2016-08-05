@@ -5,6 +5,48 @@ VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Stellarator", "Source\Stellarator.csproj", "{7390CF58-0858-4405-8995-0731B132ABE4}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{4065AEAB-9965-4F76-BC5F-8AF196AEF489}"
+	ProjectSection(SolutionItems) = preProject
+		PlanetData\inclination.json = PlanetData\inclination.json
+		PlanetData\names.json = PlanetData\names.json
+		PlanetData\pqs.json = PlanetData\pqs.json
+		PlanetData\rings.json = PlanetData\rings.json
+		PlanetData\stars.json = PlanetData\stars.json
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "curves", "curves", "{34734E9F-4141-49E3-AF34-D2A530B78D27}"
+	ProjectSection(SolutionItems) = preProject
+		PlanetData\curves\DunaPressure.cfg = PlanetData\curves\DunaPressure.cfg
+		PlanetData\curves\DunaTemperature.cfg = PlanetData\curves\DunaTemperature.cfg
+		PlanetData\curves\EvePressure.cfg = PlanetData\curves\EvePressure.cfg
+		PlanetData\curves\EveTemperature.cfg = PlanetData\curves\EveTemperature.cfg
+		PlanetData\curves\JoolPressure.cfg = PlanetData\curves\JoolPressure.cfg
+		PlanetData\curves\JoolTemperature.cfg = PlanetData\curves\JoolTemperature.cfg
+		PlanetData\curves\KerbinPressure.cfg = PlanetData\curves\KerbinPressure.cfg
+		PlanetData\curves\KerbinTemperature.cfg = PlanetData\curves\KerbinTemperature.cfg
+		PlanetData\curves\LaythePressure.cfg = PlanetData\curves\LaythePressure.cfg
+		PlanetData\curves\LaytheTemperature.cfg = PlanetData\curves\LaytheTemperature.cfg
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "textures", "textures", "{23FD01F5-FD5F-4408-82FC-F8CC114AD2A9}"
+	ProjectSection(SolutionItems) = preProject
+		PlanetData\textures\Texture1.png = PlanetData\textures\Texture1.png
+		PlanetData\textures\Texture10.png = PlanetData\textures\Texture10.png
+		PlanetData\textures\Texture11.png = PlanetData\textures\Texture11.png
+		PlanetData\textures\Texture12.png = PlanetData\textures\Texture12.png
+		PlanetData\textures\Texture13.png = PlanetData\textures\Texture13.png
+		PlanetData\textures\Texture14.png = PlanetData\textures\Texture14.png
+		PlanetData\textures\Texture15.png = PlanetData\textures\Texture15.png
+		PlanetData\textures\Texture2.png = PlanetData\textures\Texture2.png
+		PlanetData\textures\Texture3.png = PlanetData\textures\Texture3.png
+		PlanetData\textures\Texture4.png = PlanetData\textures\Texture4.png
+		PlanetData\textures\Texture5.png = PlanetData\textures\Texture5.png
+		PlanetData\textures\Texture6.png = PlanetData\textures\Texture6.png
+		PlanetData\textures\Texture7.png = PlanetData\textures\Texture7.png
+		PlanetData\textures\Texture8.png = PlanetData\textures\Texture8.png
+		PlanetData\textures\Texture9.png = PlanetData\textures\Texture9.png
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -18,5 +60,9 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{34734E9F-4141-49E3-AF34-D2A530B78D27} = {4065AEAB-9965-4F76-BC5F-8AF196AEF489}
+		{23FD01F5-FD5F-4408-82FC-F8CC114AD2A9} = {4065AEAB-9965-4F76-BC5F-8AF196AEF489}
 	EndGlobalSection
 EndGlobal

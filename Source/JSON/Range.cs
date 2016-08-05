@@ -6,6 +6,7 @@
 
 using System;
 using Accrete;
+using DynamicExpresso;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Linq;
@@ -41,6 +42,19 @@ namespace Stellarator.JSON
                     {
                         min = jObject["min"].ToObject<Double>(),
                         max = jObject["max"].ToObject<Double>()
+                    };
+                }
+                return jObject.ToObject<Double>();
+            }
+
+            public static Double Create(JObject jObject, Interpreter interpreter)
+            {
+                if (FieldExists("min", jObject) && FieldExists("max", jObject))
+                {
+                    return new Range
+                    {
+                        min = interpreter.Eval<Double>(jObject["min"].ToObject<String>()),
+                        max = interpreter.Eval<Double>(jObject["max"].ToObject<String>())
                     };
                 }
                 return jObject.ToObject<Double>();

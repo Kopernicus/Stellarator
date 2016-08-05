@@ -51,7 +51,7 @@ namespace Stellarator.JSON
             throw new NotImplementedException();
         }
 
-        protected Boolean FieldExists(String fieldName, JObject jObject)
+        protected static Boolean FieldExists(String fieldName, JObject jObject)
         {
             return jObject[fieldName] != null;
         }

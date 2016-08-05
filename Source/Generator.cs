@@ -16,6 +16,7 @@ using ConfigNodeParser;
 using Newtonsoft.Json;
 using System.Linq;
 using System.Reflection;
+using DynamicExpresso;
 using Kopernicus.Configuration;
 using Newtonsoft.Json.Linq;
 using ProceduralQuadSphere;
@@ -435,6 +436,9 @@ namespace Stellarator
             List<PQSPreset> data = Utility.Load<List<PQSPreset>>("pqs.json");
             PQSPreset setup = data.Where(d => planet.radius * 100 > d.minRadius && planet.radius * 100 < d.maxRadius).ToArray()[Random.Next(0, data.Count)];
 
+            // Setup the interpreter
+            Interpreter interpreter = new Interpreter().SetVariable("planet", planet, typeof(Planet)).SetVariable("pqsVersion", setup, typeof(PQSPreset));
+
             // Convert the JSON objects to a config node
             foreach (var kvP in setup.mods)
             {
@@ -446,10 +450,13 @@ namespace Stellarator
                 foreach (var moddata in kvP.Value)
                 {
                     JToken tmp;
-                    if (!(moddata.Value is JObject))
-                        mod.AddValue(moddata.Key, moddata.Value.ToString());
+                    JObject jObject = moddata.Value as JObject;
+                    if (jObject == null)
+                        mod.AddValue(moddata.Key, interpreter.TryEval(moddata.Value.ToString()));
+                    else if (jObject.TryGetValue("min", out tmp) && jObject.TryGetValue("max", out tmp))
+                        mod.AddValue(moddata.Key, "" + Range.Converter.Create(jObject, interpreter));
                     else
-                        mod.AddConfigNode(Utility.JSONToNode(moddata.Key, (JObject) moddata.Value));
+                        mod.AddConfigNode(Utility.JSONToNode(moddata.Key, jObject, interpreter));
                 }
             }
 
