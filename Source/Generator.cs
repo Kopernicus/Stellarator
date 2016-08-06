@@ -407,7 +407,8 @@ namespace Stellarator
             List<PQSPreset> data = new List<PQSPreset>();
             foreach (ConfigNode n in pqsDatabase.nodes)
                 data.Add(Parser.CreateObjectFromConfigNode<PQSPreset>(n));
-            PQSPreset setup = data.Where(d => planet.radius * 100 > d.minRadius && planet.radius * 100 < d.maxRadius).ToArray()[Random.Next(0, data.Count)];
+            data = data.Where(d => planet.radius * 100 > d.minRadius && planet.radius * 100 < d.maxRadius).ToList();
+            PQSPreset setup = data[Random.Next(0, data.Count)];
 
             // Setup the interpreter
             Interpreter interpreter = new Interpreter()
@@ -520,7 +521,7 @@ namespace Stellarator
             Directory.CreateDirectory(Directory.GetCurrentDirectory() + "/systems/" + folder + "/PluginData/");
             diffuse.Save(Directory.GetCurrentDirectory() + "/systems/" + folder + "/PluginData/" + name + "_Texture.png", ImageFormat.Png);
             height.Save(Directory.GetCurrentDirectory() + "/systems/" + folder + "/PluginData/" + name + "_Height.png", ImageFormat.Png); // In case you need it :)
-            Bitmap normals = Utility.BumpToNormalMap(height, 7); // TODO: Implement something to make strength dynamic
+            Bitmap normals = Utility.BumpToNormalMap(height, 9); // TODO: Implement something to make strength dynamic
             normals.Save(Directory.GetCurrentDirectory() + "/systems/" + folder + "/PluginData/" + name + "_Normals.png", ImageFormat.Png);
 
             // Log
