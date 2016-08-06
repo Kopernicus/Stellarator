@@ -137,6 +137,20 @@ namespace Stellarator
         {
             return new Color(1 - c.r, 1 - c.g, 1 - c.b, 1);
         }
+
+        /// <summary>
+        /// Makes a color darker
+        /// </summary>
+        public static Color Dark(Color c)
+        {
+            if (c.r > 0.5)
+                c.r = c.r * (Single)Generator.Random.Range(0.4, 0.5);
+            if (c.g > 0.5)
+                c.g = c.g * (Single)Generator.Random.Range(0.4, 0.5);
+            if (c.b > 0.5)
+                c.b = c.b * (Single)Generator.Random.Range(0.4, 0.5);
+            return c;
+        }
         #endregion
 
         #region ConfigNode
