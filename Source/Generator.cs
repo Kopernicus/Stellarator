@@ -493,11 +493,8 @@ namespace Stellarator
             // Log
             Console.WriteLine($"Exporting Scaled Space maps from the PQS. This could take a while...");
 
-            // Get max height
-            Double maxHeight = 0;
-
             // Iterate over the PQS
-            pqsVersion.OnSetup();
+            pqsVersion.SetupSphere();
             for (Int32 i = 0; i < width; i++)
             {
                 for (Int32 j = 0; j < width / 2; j++)
@@ -505,7 +502,7 @@ namespace Stellarator
                     // Create a VertexBuildData
                     VertexBuildData builddata = new VertexBuildData
                     {
-                        directionFromCenter = (Quaternion.CreateFromAxisAngle(Vector3.Up, (Math.PI / width) * i) * Quaternion.CreateFromAxisAngle(Vector3.Right, (Math.PI / 2) - (Math.PI/(width/2)) * j)) * Vector3.Forward,
+                        directionFromCenter = (Quaternion.CreateFromAngleAxis((360d / width) * i, Vector3.Up) * Quaternion.CreateFromAngleAxis(90d - (180d / (width / 2)) * j, Vector3.Right)) * Vector3.Forward,
                         vertHeight = pqsVersion.radius
                     };
 
@@ -513,7 +510,7 @@ namespace Stellarator
                     pqsVersion.OnVertexBuildHeight(builddata);
                     pqsVersion.OnVertexBuild(builddata);
                     builddata.vertColor.a = 1f;
-                    Single h = (Single) ((builddata.vertHeight - pqsVersion.radius) * (1d / 9000));
+                    Single h = Mathf.Clamp01((Single) ((builddata.vertHeight - pqsVersion.radius) * (1d / pqsVersion.radiusMax)));
                     diffuse.SetPixel(i, j, builddata.vertColor);
                     height.SetPixel(i, j, new Color(h, h, h));
                 }

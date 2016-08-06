@@ -72,6 +72,10 @@ namespace Kopernicus
             {
                 return new NumericParser<T>(value);
             }
+            public override String ToString()
+            {
+                return value.ToString();
+            }
         }
 
         // Simple parser for numeric collections
@@ -114,6 +118,10 @@ namespace Kopernicus
             {
                 return new NumericCollectionParser<T>(value);
             }
+            public override String ToString()
+            {
+                return String.Join(" ", value);
+            }
         }
 
         // Simple parser for string arrays
@@ -147,6 +155,10 @@ namespace Kopernicus
             public static implicit operator StringCollectionParser(string[] value)
             {
                 return new StringCollectionParser(value);
+            }
+            public override String ToString()
+            {
+                return String.Join(",", value);
             }
         }
 

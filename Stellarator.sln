@@ -43,6 +43,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "pqs", "pqs", "{20DFB811-F7C9-40CF-AEFD-B5BEDB600F62}"
 	ProjectSection(SolutionItems) = preProject
 		PlanetData\pqs\AsteroidExample.cfg = PlanetData\pqs\AsteroidExample.cfg
+		PlanetData\pqs\VertexPlanet.cfg = PlanetData\pqs\VertexPlanet.cfg
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "names", "names", "{81298ACF-E442-4A7C-8105-CA22CB599DB3}"
