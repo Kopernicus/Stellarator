@@ -538,7 +538,7 @@ namespace Stellarator
                     // Create a VertexBuildData
                     VertexBuildData builddata = new VertexBuildData
                     {
-                        directionFromCenter = (Quaternion.CreateFromAxisAngle(Vector3.Up, Math.PI * width / i) * Quaternion.CreateFromAxisAngle(Vector3.Right, (Math.PI / 2) - (Math.PI/(width/2)) * j)) * Vector3.Forward,
+                        directionFromCenter = (Quaternion.CreateFromAxisAngle(Vector3.Up, (Math.PI / width) * i) * Quaternion.CreateFromAxisAngle(Vector3.Right, (Math.PI / 2) - (Math.PI/(width/2)) * j)) * Vector3.Forward,
                         vertHeight = pqsVersion.radius
                     };
 
