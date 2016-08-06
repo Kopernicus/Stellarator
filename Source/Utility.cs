@@ -23,6 +23,8 @@ namespace Stellarator
     /// </summary>
     public static class Utility
     {
+        #region Bitmaps
+
         // Credit goes to Kragrathea.
         public static Bitmap BumpToNormalMap(Bitmap source, Single strength)
         {
@@ -46,14 +48,6 @@ namespace Stellarator
                 }
             }
             return result;
-        }
-
-        /// <summary>
-        /// Makes a color a bit different
-        /// </summary>
-        public static Color AlterColor(Color c)
-        {
-            return new Color((Single) Math.Min(1, c.r * Generator.Random.Range(0.92, 1.02)), (Single) Math.Min(1, c.g * Generator.Random.Range(0.92, 1.02)), (Single) Math.Min(1, c.b * Generator.Random.Range(0.92, 1.02)), c.a);
         }
 
         /// <summary>
@@ -103,23 +97,9 @@ namespace Stellarator
             }
         }
 
-        /// <summary>
-        /// Modifies a color so that it becomes a multiplier color
-        /// </summary>
-        public static Color ReColor(Color c, Color average)
-        {
-            // Do some maths..
-            return new Color(c.r / average.r, c.g / average.g, c.b / average.b, 1);
-        }
+        #endregion
 
-
-        /// <summary>
-        /// Transforms a normal color into the color form Atmosphere from Ground wants
-        /// </summary>
-        public static Color LightColor(Color c)
-        {
-            return new Color(1 - c.r, 1 - c.g, 1 - c.b, 1);
-        }
+        #region Colors
 
         /// <summary>
         /// Generates a random color
@@ -132,7 +112,35 @@ namespace Stellarator
             Int32 b = Generator.Random.Next(0, 256);
             return new Color32((Byte)r, (Byte)g, (Byte)b, 255);
         }
-        
+
+        /// <summary>
+        /// Makes a color a bit different
+        /// </summary>
+        public static Color AlterColor(Color c)
+        {
+            return new Color((Single) Math.Min(1, c.r * Generator.Random.Range(0.92, 1.02)), (Single) Math.Min(1, c.g * Generator.Random.Range(0.92, 1.02)), (Single) Math.Min(1, c.b * Generator.Random.Range(0.92, 1.02)), c.a);
+        }
+
+        /// <summary>
+        /// Modifies a color so that it becomes a multiplier color
+        /// </summary>
+        public static Color ReColor(Color c, Color average)
+        {
+            // Do some maths..
+            return new Color(c.r / average.r, c.g / average.g, c.b / average.b, 1);
+        }
+
+        /// <summary>
+        /// Transforms a normal color into the color form Atmosphere from Ground wants
+        /// </summary>
+        public static Color LightColor(Color c)
+        {
+            return new Color(1 - c.r, 1 - c.g, 1 - c.b, 1);
+        }
+        #endregion
+
+        #region ConfigNode
+
         /// <summary>
         /// Deserializes a file from the "data" folder, using ConfigNodes
         /// </summary>
@@ -168,13 +176,48 @@ namespace Stellarator
         }
 
         /// <summary>
+        /// Evals the values of a confignode
+        /// </summary>
+        public static ConfigNode Eval(ConfigNode node, Interpreter interpreter)
+        {
+            for (Int32 i = 0; i < node.CountValues; i++)
+                node.SetValue(node.values[i].Key, interpreter.TryEval(node.values[i].Value));
+            for (Int32 i = 0; i < node.CountNodes; i++)
+                node.nodes[i] = Eval(node.nodes[i], interpreter);
+            return node;
+        }
+
+        /// <summary>
+        /// Saves a config Node
+        /// </summary>
+        public static void Save(ConfigNode node, String parent, String path, String header)
+        {
+            // Create wrapper nodes
+            ConfigNode root = new ConfigNode(parent);
+            ConfigNode wrapper = new ConfigNode();
+            root.AddConfigNode(node);
+            wrapper.AddConfigNode(root);
+
+            // Save
+            wrapper.Save(path, header);
+        }
+
+        #endregion
+
+        #region Random
+
+        /// <summary>
         /// Returns a random boolean
         /// </summary>
         public static Boolean Boolean(this Random random, Int32 prob = 50)
         {
             return random.Next(0, 100) < prob;
         }
-        
+
+        #endregion
+
+        #region Template
+
         /// <summary>
         /// Returns a random name for the body
         /// </summary>
@@ -206,20 +249,12 @@ namespace Stellarator
         {
             if (atmosphere)
                 return new[] { "Eve", "Duna", "Laythe", "Kerbin" }[Generator.Random.Next(0, includeKerbin ? 4 : 3)];
-            return Generator.Templates[Generator.Random.Next(0, Generator.Templates.Length)];
+            return Templates.StockTemplates[Generator.Random.Next(0, Templates.StockTemplates.Length)];
         }
 
-        /// <summary>
-        /// Evals the values of a confignode
-        /// </summary>
-        public static ConfigNode Eval(ConfigNode node, Interpreter interpreter)
-        {
-            for (Int32 i = 0; i < node.CountValues; i++)
-                node.SetValue(node.values[i].Key, interpreter.TryEval(node.values[i].Value));
-            for (Int32 i = 0; i < node.CountNodes; i++)
-                node.nodes[i] = Eval(node.nodes[i], interpreter);
-            return node;
-        }
+        #endregion
+
+        #region Eval
 
         /// <summary>
         /// Tries to evaluate an expression and returns the expression text when it fails
@@ -235,5 +270,7 @@ namespace Stellarator
                 return expression;
             }
         }
+
+        #endregion
     }
 }
