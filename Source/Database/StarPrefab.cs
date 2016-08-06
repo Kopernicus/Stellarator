@@ -6,6 +6,7 @@
 
 using System;
 using System.Collections.Generic;
+using Kopernicus.Configuration;
 
 namespace Stellarator.Database
 {
@@ -14,7 +15,7 @@ namespace Stellarator.Database
     /// </summary>
     public class StarPrefab
     {
-        public StarMaterial material;
-        public StarLight light;
+        [ParserTarget("Material")] public StarMaterial material;
+        [ParserTarget("Light")] public StarLight light;
     }
 }

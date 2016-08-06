@@ -6,6 +6,7 @@
 
 using System;
 using System.Collections.Generic;
+using Kopernicus.Configuration;
 
 namespace Stellarator.Database
 {
@@ -14,9 +15,13 @@ namespace Stellarator.Database
     /// </summary>{
     public class RingPrefab
     {
-        public Double innerRadius;
-        public Double outerRadius;
-        public Double angle;
-        public Boolean lockRotation;
+        [ParserTargetCollection("Rings")] public List<Ring> rings;
+        public class Ring
+        {
+            [ParserTarget("innerRadius")] public NumericParser<Double> innerRadius;
+            [ParserTarget("outerRadius")] public NumericParser<Double> outerRadius;
+            [ParserTarget("angle")] public NumericParser<Double> angle;
+            [ParserTarget("lockRotation")] public NumericParser<Boolean> lockRotation;
+        }
     }
 }

@@ -6,13 +6,6 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Stellarator", "Source\Stellarator.csproj", "{7390CF58-0858-4405-8995-0731B132ABE4}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{4065AEAB-9965-4F76-BC5F-8AF196AEF489}"
-	ProjectSection(SolutionItems) = preProject
-		PlanetData\inclination.json = PlanetData\inclination.json
-		PlanetData\names.json = PlanetData\names.json
-		PlanetData\pqs.json = PlanetData\pqs.json
-		PlanetData\rings.json = PlanetData\rings.json
-		PlanetData\stars.json = PlanetData\stars.json
-	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "curves", "curves", "{34734E9F-4141-49E3-AF34-D2A530B78D27}"
 	ProjectSection(SolutionItems) = preProject
@@ -47,6 +40,35 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "textures", "textures", "{23
 		PlanetData\textures\Texture9.png = PlanetData\textures\Texture9.png
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "pqs", "pqs", "{20DFB811-F7C9-40CF-AEFD-B5BEDB600F62}"
+	ProjectSection(SolutionItems) = preProject
+		PlanetData\pqs\AsteroidExample.cfg = PlanetData\pqs\AsteroidExample.cfg
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "names", "names", "{81298ACF-E442-4A7C-8105-CA22CB599DB3}"
+	ProjectSection(SolutionItems) = preProject
+		PlanetData\names\middle.cfg = PlanetData\names\middle.cfg
+		PlanetData\names\prefix.cfg = PlanetData\names\prefix.cfg
+		PlanetData\names\suffix.cfg = PlanetData\names\suffix.cfg
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "rings", "rings", "{C573862F-0F00-449D-9699-D5E554D98A51}"
+	ProjectSection(SolutionItems) = preProject
+		PlanetData\rings\example.cfg = PlanetData\rings\example.cfg
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "stars", "stars", "{918F7E6D-43A7-4AE8-B5EA-0F3DBABD065A}"
+	ProjectSection(SolutionItems) = preProject
+		PlanetData\stars\A0.cfg = PlanetData\stars\A0.cfg
+		PlanetData\stars\B0.cfg = PlanetData\stars\B0.cfg
+		PlanetData\stars\D0.cfg = PlanetData\stars\D0.cfg
+		PlanetData\stars\F0.cfg = PlanetData\stars\F0.cfg
+		PlanetData\stars\G0.cfg = PlanetData\stars\G0.cfg
+		PlanetData\stars\K0.cfg = PlanetData\stars\K0.cfg
+		PlanetData\stars\M0.cfg = PlanetData\stars\M0.cfg
+		PlanetData\stars\O0.cfg = PlanetData\stars\O0.cfg
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -64,5 +86,9 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{34734E9F-4141-49E3-AF34-D2A530B78D27} = {4065AEAB-9965-4F76-BC5F-8AF196AEF489}
 		{23FD01F5-FD5F-4408-82FC-F8CC114AD2A9} = {4065AEAB-9965-4F76-BC5F-8AF196AEF489}
+		{20DFB811-F7C9-40CF-AEFD-B5BEDB600F62} = {4065AEAB-9965-4F76-BC5F-8AF196AEF489}
+		{81298ACF-E442-4A7C-8105-CA22CB599DB3} = {4065AEAB-9965-4F76-BC5F-8AF196AEF489}
+		{C573862F-0F00-449D-9699-D5E554D98A51} = {4065AEAB-9965-4F76-BC5F-8AF196AEF489}
+		{918F7E6D-43A7-4AE8-B5EA-0F3DBABD065A} = {4065AEAB-9965-4F76-BC5F-8AF196AEF489}
 	EndGlobalSection
 EndGlobal

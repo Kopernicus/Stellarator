@@ -16,13 +16,13 @@ using ConfigNodeParser;
 using Newtonsoft.Json;
 using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
 using DynamicExpresso;
 using Kopernicus.Configuration;
 using Newtonsoft.Json.Linq;
 using ProceduralQuadSphere;
 using ProceduralQuadSphere.Unity;
 using Stellarator.Database;
-using Stellarator.JSON;
 using Color = ProceduralQuadSphere.Unity.Color;
 using XnaGeometry;
 
@@ -34,6 +34,7 @@ namespace Stellarator
         /// The random number generator
         /// </summary>
         public static Random Random { get; set; }
+        public static Int32 Seed { get; set; }
 
         /// <summary>
         /// The Kerbin equivalent for the system
@@ -67,6 +68,7 @@ namespace Stellarator
             // Create a new Solar System using libaccrete
             SolarSystem system = new SolarSystem(false, true, s => { });
             SolarSystem.Generate(ref system, seed.GetHashCode(), Int32.MaxValue);
+            Seed = seed.GetHashCode();
 
             // Reuse the random component
             Random = system.random;
@@ -164,8 +166,10 @@ namespace Stellarator
             node.AddConfigNode(scaled);
 
             // Load database stuff
-            Dictionary<String, StarPrefab[]> data = Utility.Load<Dictionary<String, StarPrefab[]>>("stars.json");
-            StarPrefab star = data[system.type.star_class][Random.Next(0, data[system.type.star_class].Length)];
+            ConfigNode starDatabase = Utility.Load("stars");
+            ConfigNode data = starDatabase.GetNode(system.type.star_class);
+            data = data.nodes[Random.Next(0, data.nodes.Length)];
+            StarPrefab star = Parser.CreateObjectFromConfigNode<StarPrefab>(data);
 
             // Materials
             ConfigNode mat = new ConfigNode("Material");
@@ -277,9 +281,7 @@ namespace Stellarator
             if (planet.gas_giant)
                 orbit.AddValue("color", Parser.WriteColor(Utility.AlterColor(planetColor)));
             // Inclination
-            Double[] data = Utility.Load<Double[]>("inclination.json");
-            Double v = data[Random.Next(data.Length)];
-            orbit.AddValue("inclination", "" + v);
+            orbit.AddValue("inclination", "" + Random.Range(-3, 5));
 
             // Log
             Console.WriteLine($"Generated orbit around {referenceBody} for {name}");
@@ -351,9 +353,10 @@ namespace Stellarator
             {
                 ConfigNode rings = new ConfigNode("Rings");
                 node.AddConfigNode(rings);
-                List<RingPrefab[]> definitions = Utility.Load<List<RingPrefab[]>>("rings.json");
-                RingPrefab[] def = definitions[Random.Next(0, definitions.Count)];
-                foreach (RingPrefab r in def)
+                ConfigNode ringDatatbase = Utility.Load("rings");
+                ConfigNode data = ringDatatbase.nodes[Random.Next(0, ringDatatbase.nodes.Length)];
+                RingPrefab def = Parser.CreateObjectFromConfigNode<RingPrefab>(data);
+                foreach (RingPrefab.Ring r in def.rings)
                 {
                     ConfigNode ring = new ConfigNode("Ring");
                     rings.AddConfigNode(ring);
@@ -433,32 +436,27 @@ namespace Stellarator
             pqs.AddConfigNode(mods);
 
             // Load the PQSDatabase and select a setup
-            List<PQSPreset> data = Utility.Load<List<PQSPreset>>("pqs.json");
+            ConfigNode pqsDatabase = Utility.Load("pqs");
+            List<PQSPreset> data = new List<PQSPreset>();
+            foreach (ConfigNode n in pqsDatabase.nodes)
+                data.Add(Parser.CreateObjectFromConfigNode<PQSPreset>(n));
             PQSPreset setup = data.Where(d => planet.radius * 100 > d.minRadius && planet.radius * 100 < d.maxRadius).ToArray()[Random.Next(0, data.Count)];
 
             // Setup the interpreter
-            Interpreter interpreter = new Interpreter().SetVariable("planet", planet, typeof(Planet)).SetVariable("pqsVersion", setup, typeof(PQSPreset));
+            Interpreter interpreter = new Interpreter()
+                .SetVariable("planet", planet, typeof(Planet))
+                .SetVariable("pqsVersion", setup, typeof(PQSPreset))
+                .SetVariable("Random", Random, typeof(Random))
+                .SetVariable("Seed", Seed, typeof(Int32))
+                .SetVariable("Color", Utility.GenerateColor(), typeof(Color))
+                .Reference(typeof(Parser))
+                .Reference(typeof(Generator))
+                .Reference(typeof(Utility))
+                .Reference(typeof(Utils));
 
-            // Convert the JSON objects to a config node
-            foreach (var kvP in setup.mods)
-            {
-                // Create the Mod node
-                ConfigNode mod = new ConfigNode(kvP.Key);
-                mods.AddConfigNode(mod);
-
-                // Process the values
-                foreach (var moddata in kvP.Value)
-                {
-                    JToken tmp;
-                    JObject jObject = moddata.Value as JObject;
-                    if (jObject == null)
-                        mod.AddValue(moddata.Key, interpreter.TryEval(moddata.Value.ToString()));
-                    else if (jObject.TryGetValue("min", out tmp) && jObject.TryGetValue("max", out tmp))
-                        mod.AddValue(moddata.Key, "" + Range.Converter.Create(jObject, interpreter));
-                    else
-                        mod.AddConfigNode(Utility.JSONToNode(moddata.Key, jObject, interpreter));
-                }
-            }
+            // Transfer the mod nodes and evaluate expressions
+            foreach (ConfigNode modNode in setup.mods.nodes)
+                mods.AddConfigNode(Utility.Eval(modNode, interpreter));
 
             // Create a new PQSObject
             PQS pqsVersion = new PQS(planet.radius * 100);
@@ -528,7 +526,11 @@ namespace Stellarator
             // Log
             Console.WriteLine($"Exporting Scaled Space maps from the PQS. This could take a while...");
 
+            // Get max height
+            Double maxHeight = 0;
+
             // Iterate over the PQS
+            pqsVersion.OnSetup();
             for (Int32 i = 0; i < width; i++)
             {
                 for (Int32 j = 0; j < width / 2; j++)
@@ -536,22 +538,17 @@ namespace Stellarator
                     // Create a VertexBuildData
                     VertexBuildData builddata = new VertexBuildData
                     {
-                        directionFromCenter = Quaternion.CreateFromAxisAngle(Vector3.Up, 360d / 2048 * i) * Quaternion.CreateFromAxisAngle(Vector3.Right, 90d - 180d / (width / 2) * j) * Vector3.Forward,
+                        directionFromCenter = (Quaternion.CreateFromAxisAngle(Vector3.Up, Math.PI * width / i) * Quaternion.CreateFromAxisAngle(Vector3.Right, (Math.PI / 2) - (Math.PI/(width/2)) * j)) * Vector3.Forward,
                         vertHeight = pqsVersion.radius
                     };
 
                     // Build the maps
-                    pqsVersion.OnSetup();
                     pqsVersion.OnVertexBuildHeight(builddata);
                     pqsVersion.OnVertexBuild(builddata);
-
-                    Double h = (builddata.vertHeight - pqsVersion.radius);
-                    if (h < 0)
-                        h = 0;
-                    Color c = builddata.vertColor;
-                    c.a = 1f;
-                    diffuse.SetPixel(i, j, c);
-                    height.SetPixel(i, j, new Color((Single) h, (Single) h, (Single) h, 1f));
+                    builddata.vertColor.a = 1f;
+                    Single h = (Single) ((builddata.vertHeight - pqsVersion.radius) * (1d / 9000));
+                    diffuse.SetPixel(i, j, builddata.vertColor);
+                    height.SetPixel(i, j, new Color(h, h, h));
                 }
             }
 

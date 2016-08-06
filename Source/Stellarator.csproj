@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Stellarator</RootNamespace>
     <AssemblyName>Stellarator</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <TargetFrameworkProfile />
@@ -24,6 +24,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -34,6 +35,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="ConfigNode">
@@ -62,7 +64,6 @@
     <Compile Include="Database\StarMaterial.cs" />
     <Compile Include="Database\StarPrefab.cs" />
     <Compile Include="Generator.cs" />
-    <Compile Include="JSON\JsonCreationConverter.cs" />
     <Compile Include="ModLoader\AltitudeAlpha.cs" />
     <Compile Include="ModLoader\FlattenArea.cs" />
     <Compile Include="ModLoader\FlattenAreaTangential.cs" />
@@ -70,18 +71,18 @@
     <Compile Include="ModLoader\HeightColorMap.cs" />
     <Compile Include="ModLoader\HeightColorMap2.cs" />
     <Compile Include="ModLoader\ModLoader.cs" />
-    <Compile Include="ModLoader\Parser\Attributes\ParserTarget.cs" />
-    <Compile Include="ModLoader\Parser\Attributes\ParserTargetCollection.cs" />
-    <Compile Include="ModLoader\Parser\Attributes\PreApply.cs" />
-    <Compile Include="ModLoader\Parser\Attributes\RequireConfigType.cs" />
-    <Compile Include="ModLoader\Parser\BuiltinTypeParsers.cs" />
-    <Compile Include="ModLoader\Parser\Enumerations\ConfigType.cs" />
-    <Compile Include="ModLoader\Parser\Enumerations\NameSignificance.cs" />
-    <Compile Include="ModLoader\Parser\Exceptions\ParserTargetMissingException.cs" />
-    <Compile Include="ModLoader\Parser\Exceptions\ParserTargetTypeMismatchException.cs" />
-    <Compile Include="ModLoader\Parser\Interfaces\IParsable.cs" />
-    <Compile Include="ModLoader\Parser\Interfaces\IParserEventSubscriber.cs" />
-    <Compile Include="ModLoader\Parser\Parser.cs" />
+    <Compile Include="Parser\Attributes\ParserTarget.cs" />
+    <Compile Include="Parser\Attributes\ParserTargetCollection.cs" />
+    <Compile Include="Parser\Attributes\PreApply.cs" />
+    <Compile Include="Parser\Attributes\RequireConfigType.cs" />
+    <Compile Include="Parser\BuiltinTypeParsers.cs" />
+    <Compile Include="Parser\Enumerations\ConfigType.cs" />
+    <Compile Include="Parser\Enumerations\NameSignificance.cs" />
+    <Compile Include="Parser\Exceptions\ParserTargetMissingException.cs" />
+    <Compile Include="Parser\Exceptions\ParserTargetTypeMismatchException.cs" />
+    <Compile Include="Parser\Interfaces\IParsable.cs" />
+    <Compile Include="Parser\Interfaces\IParserEventSubscriber.cs" />
+    <Compile Include="Parser\Parser.cs" />
     <Compile Include="ModLoader\VertexColorNoise.cs" />
     <Compile Include="ModLoader\VertexColorNoiseRGB.cs" />
     <Compile Include="ModLoader\VertexColorSolid.cs" />
@@ -105,8 +106,11 @@
     <Compile Include="ModLoader\VoronoiCraters.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="JSON\Range.cs" />
+    <Compile Include="Parser\Range.cs" />
     <Compile Include="Utility.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

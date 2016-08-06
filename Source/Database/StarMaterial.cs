@@ -6,6 +6,7 @@
 
 using System;
 using System.Collections.Generic;
+using Kopernicus.Configuration;
 using ProceduralQuadSphere.Unity;
 
 namespace Stellarator.Database
@@ -15,12 +16,12 @@ namespace Stellarator.Database
     /// </summary>
     public class StarMaterial
     {
-        public Color emitColor0;
-        public Color emitColor1;
-        public Double sunspotPower;
-        public Color sunspotColor;
-        public Color rimColor;
-        public Double rimPower;
-        public Double rimBlend;
+        [ParserTarget("emitColor0")] public ColorParser emitColor0;
+        [ParserTarget("emitColor1")] public ColorParser emitColor1;
+        [ParserTarget("sunspotPower")] public NumericParser<Double> sunspotPower;
+        [ParserTarget("sunspotColor")] public ColorParser sunspotColor;
+        [ParserTarget("rimColor")] public ColorParser rimColor;
+        [ParserTarget("rimPower")] public NumericParser<Double> rimPower;
+        [ParserTarget("rimBlend")] public NumericParser<Double> rimBlend;
     }
 }

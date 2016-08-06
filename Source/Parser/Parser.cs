@@ -35,6 +35,7 @@ using System.Collections.Generic;
 using ConfigNodeParser;
 using Microsoft.Xna.Framework;
 using ProceduralQuadSphere.Unity;
+using Stellarator;
 using XnaGeometry;
 
 namespace Kopernicus
@@ -327,16 +328,6 @@ namespace Kopernicus
                     // Nothing to do, so DONT return!
                     return;
                 }
-
-                // Does this node have a required config source type (and if so, check if valid)
-                RequireConfigType[] attributes = member.GetCustomAttributes (typeof(RequireConfigType), true) as RequireConfigType[];
-                if (attributes.Length > 0) 
-                {
-                    if((attributes[0].type == ConfigType.Node && !isNode) || (attributes[0].type == ConfigType.Value && !isValue))
-                    {
-                        throw new ParserTargetTypeMismatchException (target.fieldName + " requires config value of " + attributes[0].type);
-                    }
-                }
                 
                 // If this object is a value (attempt no merge here)
                 if(isValue)
@@ -373,12 +364,18 @@ namespace Kopernicus
                 }
                 
                 // If this object is a node (potentially merge)
-                else if(isNode)
+                else
                 {
                     // If the target type is a ConfigNode, this works natively
-                    if (targetType.Equals(typeof(ConfigNode)))
+                    if (targetType == typeof(ConfigNode))
                     {
                         targetValue = node.GetNode(target.fieldName);
+                    }
+
+                    // Check for Ranges
+                    else if (targetType == typeof(NumericParser<Double>))
+                    {
+                        targetValue = new NumericParser<Double>((Double) CreateObjectFromConfigNode<Range>(node.GetNode(target.fieldName)));
                     }
 
                     // We need to get an instance of the object we are trying to populate
@@ -394,7 +391,7 @@ namespace Kopernicus
                         LoadObjectFromConfigurationNode(targetValue, node.GetNode(target.fieldName), target.getChild);
                     }
                 }
-                
+
                 // If the member type is a field, set the value
                 if(member.MemberType == MemberTypes.Field)
                 {

@@ -6,6 +6,7 @@
 
 using System;
 using System.Collections.Generic;
+using Kopernicus.Configuration;
 using ProceduralQuadSphere.Unity;
 
 namespace Stellarator.Database
@@ -15,15 +16,15 @@ namespace Stellarator.Database
     /// </summary>
     public class StarLight
     {
-        public Color sunlightColor;
-        public Double sunlightIntensity;
-        public Double sunlightShadowStrength;
-        public Color scaledSunlightColor;
-        public Double scaledSunlightIntensity;
-        public Color IVASunColor;
-        public Double IVASunIntensity;
-        public Color ambientLightColor;
-        public Color sunLensFlareColor;
-        public Boolean givesOffLight;
+        [ParserTarget("sunlightColor")] public ColorParser sunlightColor;
+        [ParserTarget("sunlightIntensity")] public NumericParser<Double> sunlightIntensity;
+        [ParserTarget("sunlightShadowStrength")] public NumericParser<Double> sunlightShadowStrength;
+        [ParserTarget("scaledSunlightColor")] public ColorParser scaledSunlightColor;
+        [ParserTarget("scaledSunlightIntensity")] public NumericParser<Double> scaledSunlightIntensity;
+        [ParserTarget("IVASunColor")] public ColorParser IVASunColor;
+        [ParserTarget("IVASunIntensity")] public NumericParser<Double> IVASunIntensity;
+        [ParserTarget("ambientLightColor")] public ColorParser ambientLightColor;
+        [ParserTarget("sunLensFlareColor")] public ColorParser sunLensFlareColor;
+        [ParserTarget("givesOffLight")] public NumericParser<Boolean> givesOffLight;
     }
 }

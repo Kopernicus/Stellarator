@@ -17,7 +17,6 @@ using ProceduralQuadSphere.Unity;
 using Color = ProceduralQuadSphere.Unity.Color;
 using Accrete;
 using DynamicExpresso;
-using Stellarator.JSON;
 
 namespace Stellarator
 {
@@ -95,23 +94,15 @@ namespace Stellarator
         }
 
         /// <summary>
-        /// Converts a JSON Object to a configNode
+        /// Applies the given colors to the bitmap using unsafe code
         /// </summary>
-        public static ConfigNode JSONToNode(String name, JObject obj, Interpreter interpreter)
+        public static void ApplyData(Bitmap bmp, Color[] colors)
         {
-            JToken tmp;
-            ConfigNode node = new ConfigNode(name);
-            foreach (JToken jToken in (JToken)obj)
+            for (int y = 0; y < bmp.Height; y++)
             {
-                JProperty x = (JProperty)jToken;
-                if (obj.TryGetValue("min", out tmp) && obj.TryGetValue("max", out tmp) && obj.Count == 2)
-                    node.AddValue(x.Name, "" + Range.Converter.Create(obj, interpreter));
-                else if (x.Value.HasValues)
-                    node.AddConfigNode(JSONToNode(x.Name, (JObject)x.Value, interpreter));
-                else
-                    node.AddValue(x.Name, interpreter.TryEval(x.ToObject<String>()));
+                for (int x = 0; x < bmp.Width; x++)
+                    bmp.SetPixel(x, y, colors[y * bmp.Width + x]);
             }
-            return node;
         }
 
         /// <summary>
@@ -145,13 +136,37 @@ namespace Stellarator
         }
         
         /// <summary>
-        /// Deserializes a file from the "data" folder, using JSON.NET
+        /// Deserializes a file from the "data" folder, using ConfigNodes
         /// </summary>
-        public static T Load<T>(String filename)
+        public static ConfigNode Load(String foldername)
         {
-            // Get the full path
-            String path = Directory.GetCurrentDirectory() + "/data/" + filename;
-            return JsonConvert.DeserializeObject<T>(File.ReadAllText(path), new Range.Converter());
+            ConfigNode supernode = new ConfigNode("STELLARATOR");
+            foreach (String file in Directory.GetFiles(Directory.GetCurrentDirectory() + "/data/" + foldername, "*.cfg", SearchOption.AllDirectories))
+            {
+                ConfigNode n = ConfigNode.Load(file);
+                supernode = Merge(n.GetNode("STELLARATOR"), supernode);
+            }
+            return supernode; 
+        }
+
+        /// <summary>
+        /// Merges two config Nodes
+        /// </summary>
+        public static ConfigNode Merge(ConfigNode from, ConfigNode to)
+        {
+            foreach (var value in from.values)
+                to.AddValue(value.Key, value.Value);
+            foreach (ConfigNode node in from.nodes)
+            {
+                if (to.HasNode(node.name))
+                {
+                    ConfigNode to_ = to.GetNode(node.name);
+                    to_ = Merge(node, to_);
+                }
+                else
+                    to.AddConfigNode(node);
+            }
+            return to;
         }
 
         /// <summary>
@@ -167,20 +182,20 @@ namespace Stellarator
         /// </summary>
         public static String GenerateName()
         {
-            Dictionary<String, List<String>> names = Load<Dictionary<String, List<String>>>("names.json");
-            List<String> prefix = names["prefix"];
-            List<String> middle = names["middle"];
-            List<String> suffix = names["suffix"];
+            ConfigNode namesDatabase = Load("names");
+            String[] prefix = namesDatabase.GetValues("prefix");
+            String[] middle = namesDatabase.GetValues("middle");
+            String[] suffix = namesDatabase.GetValues("suffix");
             Boolean hasMiddle = false;
 
-            String name = prefix[Generator.Random.Next(0, prefix.Count)];
+            String name = prefix[Generator.Random.Next(0, prefix.Length)];
             if (Generator.Random.Next(0, 100) < 50)
             {
-                name += middle[Generator.Random.Next(0, middle.Count)];
+                name += middle[Generator.Random.Next(0, middle.Length)];
                 hasMiddle = true;
             }
             if (Generator.Random.Next(0, 100) < 50 || !hasMiddle)
-                name += suffix[Generator.Random.Next(0, suffix.Count)];
+                name += suffix[Generator.Random.Next(0, suffix.Length)];
             if (name == "Kerbin" || name == "Kerbol")
                 name = GenerateName();
             return name;
@@ -197,6 +212,18 @@ namespace Stellarator
         }
 
         /// <summary>
+        /// Evals the values of a confignode
+        /// </summary>
+        public static ConfigNode Eval(ConfigNode node, Interpreter interpreter)
+        {
+            for (Int32 i = 0; i < node.CountValues; i++)
+                node.SetValue(node.values[i].Key, interpreter.TryEval(node.values[i].Value));
+            for (Int32 i = 0; i < node.CountNodes; i++)
+                node.nodes[i] = Eval(node.nodes[i], interpreter);
+            return node;
+        }
+
+        /// <summary>
         /// Tries to evaluate an expression and returns the expression text when it fails
         /// </summary>
         public static String TryEval(this Interpreter interpreter, string expression)
@@ -205,7 +232,7 @@ namespace Stellarator
             {
                 return interpreter.Eval<Object>(expression).ToString();
             }
-            catch
+            catch (Exception e)
             {
                 return expression;
             }
