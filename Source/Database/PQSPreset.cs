@@ -8,7 +8,6 @@ using System;
 using System.Collections.Generic;
 using ConfigNodeParser;
 using Kopernicus.Configuration;
-using Newtonsoft.Json.Linq;
 
 namespace Stellarator.Database
 {

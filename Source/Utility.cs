@@ -11,8 +11,6 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using ConfigNodeParser;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using ProceduralQuadSphere.Unity;
 using Color = ProceduralQuadSphere.Unity.Color;
 using Accrete;

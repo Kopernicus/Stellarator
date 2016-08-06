@@ -8,9 +8,6 @@ using System;
 using Accrete;
 using DynamicExpresso;
 using Kopernicus.Configuration;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
-using Newtonsoft.Json.Linq;
 
 namespace Stellarator
 {
