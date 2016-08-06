@@ -80,7 +80,7 @@ namespace Stellarator
             {
                 ConfigNode node = GenerateBody(system[i], folder, systematicName: systematicNames ? nodes[0].GetValue("cbNameLater") + "-" + i : null);
                 nodes.Add(node);
-                for (Int32 j = 0; i < system[i].BodiesOrbiting.Length; i++)
+                for (Int32 j = 0; j < system[i].BodiesOrbiting.Length; j++)
                 {
                     String name = node.HasValue("cbNameLater") ? node.GetValue("cbNameLater") : node.GetValue("name");
                     nodes.Add(GenerateBody(system[i][j], folder, node.GetValue("name"), systematicNames ? name + "-" + j : null));
