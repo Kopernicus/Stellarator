@@ -214,7 +214,7 @@ namespace Stellarator
             else
             {
                 template.AddValue("name", "Kerbin");
-                template.AddValue("removePQSMods", "VertexSimplexHeightAbsolute, VertexHeightNoiseVertHeightCurve2, VertexRidgedAltitudeCurve, LandControl, AerialPerspectiveMaterial, VertexHeightMap, QuadEnhanceCoast, MapDecalTangent, MapDecal, FlattenArea[IslandAirfield], PQSCity[KSC2], PQSCity[IslandAirfield]");
+                template.AddValue("removePQSMods", "PQSLandControl, QuadEnhanceCoast, VertexHeightMap, VertexHeightNoiseVertHeightCurve2, VertexRidgedAltitudeCurve, VertexSimplexHeightAbsolute");
                 template.AddValue("removeAtmosphere", "True");
                 template.AddValue("removeOcean", "True");
             }
