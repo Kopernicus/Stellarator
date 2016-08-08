@@ -143,12 +143,8 @@ namespace Stellarator
         /// </summary>
         public static Color Dark(Color c)
         {
-            if (c.r > 0.5)
-                c.r = c.r * (Single)Generator.Random.Range(0.4, 0.5);
-            if (c.g > 0.5)
-                c.g = c.g * (Single)Generator.Random.Range(0.4, 0.5);
-            if (c.b > 0.5)
-                c.b = c.b * (Single)Generator.Random.Range(0.4, 0.5);
+            if (c.r > 0.5 || c.g > 0.5 || c.b > 0.5)
+                c = c * new Color(0.5f, 0.5f, 0.5f);
             return c;
         }
         #endregion
