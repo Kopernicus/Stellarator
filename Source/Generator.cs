@@ -277,7 +277,7 @@ namespace Stellarator
 
                 // Load the Image
                 Color average;
-                using (Bitmap image = new Bitmap(Directory.GetCurrentDirectory() + "/systems/" + folder + "/PluginData/" + name + "_Texture.png"))
+                using (Bitmap image = new Bitmap(Directory.GetCurrentDirectory() + "/systems/" + folder + "/PluginData/" + textureName))
                     average = Utility.GetAverageColor(image);
 
                 // Scale
@@ -489,14 +489,16 @@ namespace Stellarator
             Int32 width = pqsVersion.radius >= 600000 ? 4096 : pqsVersion.radius <= 100000 ? 1024 : 2048;
 
             // Export ScaledSpace Maps
-            Bitmap diffuse = new Bitmap(width, width / 2);
-            Bitmap height  = new Bitmap(width, width / 2);                
+            UnsafeBitmap diffuse = new UnsafeBitmap(width, width / 2);
+            UnsafeBitmap height  = new UnsafeBitmap(width, width / 2);                
             
             // Log
             Console.WriteLine($"Exporting Scaled Space maps from the PQS. This could take a while...");
 
             // Iterate over the PQS
             pqsVersion.SetupSphere();
+            diffuse.LockBitmap();
+            height.LockBitmap();
             for (Int32 i = 0; i < width; i++)
             {
                 for (Int32 j = 0; j < width / 2; j++)
@@ -517,12 +519,14 @@ namespace Stellarator
                     height.SetPixel(i, j, new Color(h, h, h));
                 }
             }
+            diffuse.UnlockBitmap();
+            height.UnlockBitmap();
 
             // Save the textures
             Directory.CreateDirectory(Directory.GetCurrentDirectory() + "/systems/" + folder + "/PluginData/");
-            diffuse.Save(Directory.GetCurrentDirectory() + "/systems/" + folder + "/PluginData/" + name + "_Texture.png", ImageFormat.Png);
-            height.Save(Directory.GetCurrentDirectory() + "/systems/" + folder + "/PluginData/" + name + "_Height.png", ImageFormat.Png); // In case you need it :)
-            Bitmap normals = Utility.BumpToNormalMap(height, 9); // TODO: Implement something to make strength dynamic
+            Bitmap normals = Utility.BumpToNormalMap(height.Bitmap, 9); // TODO: Implement something to make strength dynamic
+            diffuse.Bitmap.Save(Directory.GetCurrentDirectory() + "/systems/" + folder + "/PluginData/" + name + "_Texture.png", ImageFormat.Png);
+            height.Bitmap.Save(Directory.GetCurrentDirectory() + "/systems/" + folder + "/PluginData/" + name + "_Height.png", ImageFormat.Png); // In case you need it :)
             normals.Save(Directory.GetCurrentDirectory() + "/systems/" + folder + "/PluginData/" + name + "_Normals.png", ImageFormat.Png);
 
             // Log
@@ -532,7 +536,7 @@ namespace Stellarator
             node.AddConfigNode(pqs);
 
             // Colors
-            average = Utility.GetAverageColor(diffuse);
+            average = Utility.GetAverageColor(diffuse.Bitmap);
         }
     }
 }
