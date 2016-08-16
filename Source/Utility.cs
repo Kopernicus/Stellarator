@@ -229,6 +229,86 @@ namespace Stellarator
         #region Template
 
         /// <summary>
+        /// Returns a random name for the star
+        /// </summary>
+        public static String GenerateStarName()
+        {
+            ConfigNode namesDatabase = Load("starnames");
+            // Load Greek Letters
+            String[] commonLetters = namesDatabase.GetValues("commonLetters");
+            String[] rareLetters = namesDatabase.GetValues("rareLetters");
+            // Load Greek Characters
+            String[] commonChars = namesDatabase.GetValues("commonChars");
+            String[] rareChars = namesDatabase.GetValues("rareChars");
+            // Load constellation names
+            String[] prefix = namesDatabase.GetValues("starprefix");
+            String[] middle = namesDatabase.GetValues("starmiddle");
+            String[] suffix = namesDatabase.GetValues("starsuffix");
+            // Load multiple systems nomenclature
+            String[] multiple = namesDatabase.GetValues("starmultiple");
+            Boolean useChars = false;
+
+            // Generate Constellation Name First
+
+            String name = prefix[Generator.Random.Next(0, prefix.Length)];
+            name += middle[Generator.Random.Next(0, middle.Length)];
+            // Avoid being anal
+            if (name == "An")
+                name += "n";
+            name += suffix[Generator.Random.Next(0, suffix.Length)];
+
+            // Add Letters or Characters
+            if (Generator.Random.Next(0, 100) < 25)
+            {
+                useChars = true;
+            }
+
+            // Choose which letter to use
+            int letter = Generator.Random.Next(0, 501);
+            if (letter < 350)
+            {
+                if (useChars)
+                    name = commonChars[Generator.Random.Next(0, commonChars.Length)] + " " + name;
+                else
+                    name = commonLetters[Generator.Random.Next(0, commonLetters.Length)] + " " + name;
+            }
+            else if (letter < 500)
+            {
+                if (useChars)
+                    name = rareChars[Generator.Random.Next(0, rareChars.Length)] + " " + name;
+                else
+                    name = rareLetters[Generator.Random.Next(0, rareLetters.Length)] + " " + name;
+            }
+            else
+            {
+                if (useChars)
+                    name = "κ " + name;
+                else
+                    name = "Kappa " + name;
+            }
+
+            // Add Majoris or Minoris
+
+            if (Generator.Random.Next(0, 100) < 10)
+            {
+                if (Generator.Random.Next(0, 100) < 50)
+                    name += " Minoris";
+                else
+                    name += " Majoris";
+            }
+
+            // Add multiple systems nomenclature
+
+            if (Generator.Random.Next(0, 100) < 5)
+            {
+                name += " " + multiple[Generator.Random.Next(0, multiple.Length)];
+            }
+
+            return name;
+        }
+
+
+        /// <summary>
         /// Returns a random name for the body
         /// </summary>
         public static String GenerateName()
