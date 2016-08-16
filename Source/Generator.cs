@@ -88,7 +88,7 @@ namespace Stellarator
                 for (Int32 j = 0; j < system[i].BodiesOrbiting.Length; j++)
                 {
                     String name = node.HasValue("cbNameLater") ? node.GetValue("cbNameLater") : node.GetValue("name");
-                    nodes.Add(GenerateBody(system[i][j], folder, node.GetValue("name"), systematicNames ? name + "-" + j : null));
+                    nodes.Add(GenerateBody(system[i][j], folder, node.GetValue("name"), systematicNames ? name + "-" + (j+1) : null));
                 }
             }
 
