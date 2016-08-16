@@ -107,7 +107,7 @@ namespace Stellarator
         public static ConfigNode GenerateSun(SolarSystem system, String folder)
         {
             // Create the Body node
-            String name = Utility.GenerateName();
+            String name = Utility.GenerateStarName();
             ConfigNode node = new ConfigNode("Body");
             node.AddValue("name", "Sun");
             node.AddValue("cbNameLater", name);
