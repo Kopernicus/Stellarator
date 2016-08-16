@@ -75,10 +75,15 @@ namespace Stellarator
             List<Planet> allBodies = system.Bodies.Where(p => !p.gas_giant && p.surface_pressure > 0).ToList();
             Kerbin = allBodies[Random.Next(0, allBodies.Count)];
 
+            // Load Roman Numerals
+
+            ConfigNode starDatabase = Utility.Load("stars");
+            String[] rN = starDatabase.GetValues("romanNumerals");
+
             // Iterate over all bodies in the generated system
             for (Int32 i = 0; i < system.Bodies.Length; i++)
             {
-                ConfigNode node = GenerateBody(system[i], folder, systematicName: systematicNames ? nodes[0].GetValue("cbNameLater") + "-" + i : null);
+                ConfigNode node = GenerateBody(system[i], folder, systematicName: systematicNames ? nodes[0].GetValue("cbNameLater") + " " + rN[i] : null);
                 nodes.Add(node);
                 for (Int32 j = 0; j < system[i].BodiesOrbiting.Length; j++)
                 {
