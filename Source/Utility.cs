@@ -309,7 +309,7 @@ namespace Stellarator
 
 
         /// <summary>
-        /// Returns a random name for the star
+        /// Returns a systematic name for the star
         /// </summary>
         public static String SystematicStarName()
         {
