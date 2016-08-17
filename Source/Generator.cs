@@ -69,17 +69,22 @@ namespace Stellarator
             Utility.Save(new ConfigNode("!Body,*"), "@Kopernicus:AFTER[KOPERNICUS]", Directory.GetCurrentDirectory() + "/systems/" + folder + "/System.cfg", String.Format(Templates.header, seed));
 
             // Sun
-            nodes.Add(GenerateSun(system, folder));
+            nodes.Add(GenerateSun(system, folder, systematicNames));
 
             // Select Kerbin
             List<Planet> allBodies = system.Bodies.Where(p => !p.gas_giant && p.surface_pressure > 0).ToList();
             Kerbin = allBodies[Random.Next(0, allBodies.Count)];
 
-            // Load Roman Numerals
-
-            ConfigNode starDatabase = Utility.Load("stars");
-            String[] rN = starDatabase.GetValues("romanNumerals");
-            String[] moons = starDatabase.GetValues("letters");
+            // Define Roman Numerals and letters
+            String moons = "abcdefghijklmnopqrstuvwxy";
+            String[] rN = new string[50] 
+            {
+                "I",    "II",    "III",    "IV",    "V",    "VI",    "VII",    "VIII",    "IX",    "X",
+                "XI",   "XII",   "XIII",   "XIV",   "XV",   "XVI",   "XVII",   "XVIII",   "XIX",   "XX",
+                "XXI",  "XXII",  "XXIII",  "XXIV",  "XXV",  "XXVI",  "XXVII",  "XXVIII",  "XXIX",  "XXX",
+                "XXXI", "XXXII", "XXXIII", "XXXIV", "XXXV", "XXXVI", "XXXVII", "XXXVIII", "XXXIX", "XL",
+                "XLI",  "XLII",  "XLIII",  "XLIV",  "XLV",  "XLVI",  "XLVII",  "XLVIII",  "XLIX",  "L"
+            };
 
             // Iterate over all bodies in the generated system
             for (Int32 i = 0; i < system.Bodies.Length; i++)
@@ -110,10 +115,16 @@ namespace Stellarator
         /// <summary>
         /// Creates the ConfigNode for the SunBody
         /// </summary>
-        public static ConfigNode GenerateSun(SolarSystem system, String folder)
+        public static ConfigNode GenerateSun(SolarSystem system, String folder, Boolean systematicNames)
         {
             // Create the Body node
-            String name = Utility.GenerateStarName();
+            string name = null;
+
+            if (Random.Next(0, 100) < (systematicNames ? 50 : 1))
+                name = Utility.SystematicStarName();
+            else
+                name = Utility.GenerateStarName();
+
             ConfigNode node = new ConfigNode("Body");
             node.AddValue("name", "Sun");
             node.AddValue("cbNameLater", name);

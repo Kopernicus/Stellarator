@@ -309,6 +309,22 @@ namespace Stellarator
 
 
         /// <summary>
+        /// Returns a random name for the star
+        /// </summary>
+        public static String SystematicStarName()
+        {
+            ConfigNode namesDatabase = Load("starnames");
+            // Load Acronyms
+            String[] acronym = namesDatabase.GetValues("acronym");
+
+            String name = acronym[Generator.Random.Next(0, acronym.Length)];
+            name += new String('0', Generator.Random.Next(0, 5));
+            name += Generator.Random.Next(100, 9999);
+            return name;
+        }
+
+
+        /// <summary>
         /// Returns a random name for the body
         /// </summary>
         public static String GenerateName()
