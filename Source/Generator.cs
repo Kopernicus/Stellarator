@@ -79,6 +79,7 @@ namespace Stellarator
 
             ConfigNode starDatabase = Utility.Load("stars");
             String[] rN = starDatabase.GetValues("romanNumerals");
+            String[] moons = starDatabase.GetValues("letters");
 
             // Iterate over all bodies in the generated system
             for (Int32 i = 0; i < system.Bodies.Length; i++)
@@ -88,7 +89,7 @@ namespace Stellarator
                 for (Int32 j = 0; j < system[i].BodiesOrbiting.Length; j++)
                 {
                     String name = node.HasValue("cbNameLater") ? node.GetValue("cbNameLater") : node.GetValue("name");
-                    nodes.Add(GenerateBody(system[i][j], folder, node.GetValue("name"), systematicNames ? name + "-" + (j+1) : null));
+                    nodes.Add(GenerateBody(system[i][j], folder, node.GetValue("name"), systematicNames ? name + moons[j] : null));
                 }
             }
 
