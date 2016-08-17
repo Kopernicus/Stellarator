@@ -77,7 +77,7 @@ namespace Stellarator
 
             // Define Roman Numerals and letters
             String moons = "abcdefghijklmnopqrstuvwxy";
-            String[] rN = new string[50] 
+            String[] rN = new string[] 
             {
                 "I",    "II",    "III",    "IV",    "V",    "VI",    "VII",    "VIII",    "IX",    "X",
                 "XI",   "XII",   "XIII",   "XIV",   "XV",   "XVI",   "XVII",   "XVIII",   "XIX",   "XX",
@@ -152,7 +152,7 @@ namespace Stellarator
             // Load database stuff
             ConfigNode starDatabase = Utility.Load("stars");
             ConfigNode data = starDatabase.GetNode(system.type.star_class);
-            data = data.nodes[Random.Next(0, data.nodes.Length)];
+            data = Utility.Choose(data.nodes);
             StarPrefab star = Parser.CreateObjectFromConfigNode<StarPrefab>(data);
 
             // Materials
@@ -286,7 +286,7 @@ namespace Stellarator
             {
                 // Texture
                 String[] files = Directory.GetFiles(Directory.GetCurrentDirectory() + "/data/textures/");
-                String texture = files[Random.Next(0, files.Length)];
+                String texture = Utility.Choose(files);
                 String textureName = Path.GetFileNameWithoutExtension(texture) + ".png";
                 Directory.CreateDirectory(Directory.GetCurrentDirectory() + "/systems/" + folder + "/PluginData/");
                 File.Copy(texture, Directory.GetCurrentDirectory() + "/systems/" + folder + "/PluginData/" + textureName, true);
@@ -339,7 +339,7 @@ namespace Stellarator
                 ConfigNode rings = new ConfigNode("Rings");
                 node.AddConfigNode(rings);
                 ConfigNode ringDatatbase = Utility.Load("rings");
-                ConfigNode data = ringDatatbase.nodes[Random.Next(0, ringDatatbase.nodes.Length)];
+                ConfigNode data = Utility.Choose(ringDatatbase.nodes);
                 RingPrefab def = Parser.CreateObjectFromConfigNode<RingPrefab>(data);
                 foreach (RingPrefab.Ring r in def.rings)
                 {
