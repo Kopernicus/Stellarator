@@ -69,21 +69,32 @@ namespace Stellarator
             Utility.Save(new ConfigNode("!Body,*"), "@Kopernicus:AFTER[KOPERNICUS]", Directory.GetCurrentDirectory() + "/systems/" + folder + "/System.cfg", String.Format(Templates.header, seed));
 
             // Sun
-            nodes.Add(GenerateSun(system, folder));
+            nodes.Add(GenerateSun(system, folder, systematicNames));
 
             // Select Kerbin
             List<Planet> allBodies = system.Bodies.Where(p => !p.gas_giant && p.surface_pressure > 0).ToList();
             Kerbin = allBodies[Random.Next(0, allBodies.Count)];
 
+            // Define Roman Numerals and letters
+            String moons = "abcdefghijklmnopqrstuvwxy";
+            String[] rN = new string[] 
+            {
+                "I",    "II",    "III",    "IV",    "V",    "VI",    "VII",    "VIII",    "IX",    "X",
+                "XI",   "XII",   "XIII",   "XIV",   "XV",   "XVI",   "XVII",   "XVIII",   "XIX",   "XX",
+                "XXI",  "XXII",  "XXIII",  "XXIV",  "XXV",  "XXVI",  "XXVII",  "XXVIII",  "XXIX",  "XXX",
+                "XXXI", "XXXII", "XXXIII", "XXXIV", "XXXV", "XXXVI", "XXXVII", "XXXVIII", "XXXIX", "XL",
+                "XLI",  "XLII",  "XLIII",  "XLIV",  "XLV",  "XLVI",  "XLVII",  "XLVIII",  "XLIX",  "L"
+            };
+
             // Iterate over all bodies in the generated system
             for (Int32 i = 0; i < system.Bodies.Length; i++)
             {
-                ConfigNode node = GenerateBody(system[i], folder, systematicName: systematicNames ? nodes[0].GetValue("cbNameLater") + "-" + i : null);
+                ConfigNode node = GenerateBody(system[i], folder, systematicName: systematicNames ? nodes[0].GetValue("cbNameLater") + " " + rN[i] : null);
                 nodes.Add(node);
                 for (Int32 j = 0; j < system[i].BodiesOrbiting.Length; j++)
                 {
                     String name = node.HasValue("cbNameLater") ? node.GetValue("cbNameLater") : node.GetValue("name");
-                    nodes.Add(GenerateBody(system[i][j], folder, node.GetValue("name"), systematicNames ? name + "-" + j : null));
+                    nodes.Add(GenerateBody(system[i][j], folder, node.GetValue("name"), systematicNames ? name + moons[j] : null));
                 }
             }
 
@@ -104,10 +115,16 @@ namespace Stellarator
         /// <summary>
         /// Creates the ConfigNode for the SunBody
         /// </summary>
-        public static ConfigNode GenerateSun(SolarSystem system, String folder)
+        public static ConfigNode GenerateSun(SolarSystem system, String folder, Boolean systematicNames)
         {
             // Create the Body node
-            String name = Utility.GenerateStarName();
+            string name = null;
+
+            if (Random.Next(0, 100) < (systematicNames ? 50 : 1))
+                name = Utility.SystematicStarName();
+            else
+                name = Utility.GenerateStarName();
+
             ConfigNode node = new ConfigNode("Body");
             node.AddValue("name", "Sun");
             node.AddValue("cbNameLater", name);
@@ -135,7 +152,7 @@ namespace Stellarator
             // Load database stuff
             ConfigNode starDatabase = Utility.Load("stars");
             ConfigNode data = starDatabase.GetNode(system.type.star_class);
-            data = data.nodes[Random.Next(0, data.nodes.Length)];
+            data = Utility.Choose(data.nodes);
             StarPrefab star = Parser.CreateObjectFromConfigNode<StarPrefab>(data);
 
             // Materials
@@ -269,7 +286,7 @@ namespace Stellarator
             {
                 // Texture
                 String[] files = Directory.GetFiles(Directory.GetCurrentDirectory() + "/data/textures/");
-                String texture = files[Random.Next(0, files.Length)];
+                String texture = Utility.Choose(files);
                 String textureName = Path.GetFileNameWithoutExtension(texture) + ".png";
                 Directory.CreateDirectory(Directory.GetCurrentDirectory() + "/systems/" + folder + "/PluginData/");
                 File.Copy(texture, Directory.GetCurrentDirectory() + "/systems/" + folder + "/PluginData/" + textureName, true);
@@ -322,7 +339,7 @@ namespace Stellarator
                 ConfigNode rings = new ConfigNode("Rings");
                 node.AddConfigNode(rings);
                 ConfigNode ringDatatbase = Utility.Load("rings");
-                ConfigNode data = ringDatatbase.nodes[Random.Next(0, ringDatatbase.nodes.Length)];
+                ConfigNode data = Utility.Choose(ringDatatbase.nodes);
                 RingPrefab def = Parser.CreateObjectFromConfigNode<RingPrefab>(data);
                 foreach (RingPrefab.Ring r in def.rings)
                 {

@@ -228,6 +228,16 @@ namespace Stellarator
 
         #region Template
 
+
+        /// <summary>
+        /// Chooses a random element from an array
+        /// </summary>
+        public static T Choose<T>(T[] array)
+        {
+            return array[Generator.Random.Next(0, array.Length)];
+        }
+
+
         /// <summary>
         /// Returns a random name for the star
         /// </summary>
@@ -250,12 +260,12 @@ namespace Stellarator
 
             // Generate Constellation Name First
 
-            String name = prefix[Generator.Random.Next(0, prefix.Length)];
-            name += middle[Generator.Random.Next(0, middle.Length)];
+            String name = Choose(prefix);
+            name += Choose(middle);
             // Avoid being anal
             if (name == "An")
                 name += "n";
-            name += suffix[Generator.Random.Next(0, suffix.Length)];
+            name += Choose(suffix);
 
             // Add Letters or Characters
             if (Generator.Random.Next(0, 100) < 25)
@@ -268,16 +278,16 @@ namespace Stellarator
             if (letter < 350)
             {
                 if (useChars)
-                    name = commonChars[Generator.Random.Next(0, commonChars.Length)] + " " + name;
+                    name = Choose(commonChars) + " " + name;
                 else
-                    name = commonLetters[Generator.Random.Next(0, commonLetters.Length)] + " " + name;
+                    name = Choose(commonLetters) + " " + name;
             }
             else if (letter < 500)
             {
                 if (useChars)
-                    name = rareChars[Generator.Random.Next(0, rareChars.Length)] + " " + name;
+                    name = Choose(rareChars) + " " + name;
                 else
-                    name = rareLetters[Generator.Random.Next(0, rareLetters.Length)] + " " + name;
+                    name = Choose(rareLetters) + " " + name;
             }
             else
             {
@@ -301,9 +311,25 @@ namespace Stellarator
 
             if (Generator.Random.Next(0, 100) < 5)
             {
-                name += " " + multiple[Generator.Random.Next(0, multiple.Length)];
+                name += " " + Choose(multiple);
             }
 
+            return name;
+        }
+
+
+        /// <summary>
+        /// Returns a systematic name for the star
+        /// </summary>
+        public static String SystematicStarName()
+        {
+            ConfigNode namesDatabase = Load("starnames");
+            // Load Acronyms
+            String[] acronym = namesDatabase.GetValues("acronym");
+
+            String name = Choose(acronym);
+            name += new String('0', Generator.Random.Next(0, 5));
+            name += Generator.Random.Next(100, 9999);
             return name;
         }
 
@@ -319,14 +345,14 @@ namespace Stellarator
             String[] suffix = namesDatabase.GetValues("suffix");
             Boolean hasMiddle = false;
 
-            String name = prefix[Generator.Random.Next(0, prefix.Length)];
+            String name = Choose(prefix);
             if (Generator.Random.Next(0, 100) < 50)
             {
-                name += middle[Generator.Random.Next(0, middle.Length)];
+                name += Choose(middle);
                 hasMiddle = true;
             }
             if (Generator.Random.Next(0, 100) < 50 || !hasMiddle)
-                name += suffix[Generator.Random.Next(0, suffix.Length)];
+                name += Choose(suffix);
             if (name == "Kerbin" || name == "Kerbol")
                 name = GenerateName();
             return name;
