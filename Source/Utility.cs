@@ -26,21 +26,21 @@ namespace Stellarator
         #region Bitmaps
 
         // Credit goes to Kragrathea.
-        public static Bitmap BumpToNormalMap(Bitmap source, Single strength)
+        public static UnsafeBitmap BumpToNormalMap(UnsafeBitmap source, Single strength)
         {
             strength = Mathf.Clamp(strength, 0.0F, 10.0F);
-            Bitmap result = new Bitmap(source.Width, source.Height, PixelFormat.Format32bppArgb);
-            for (Int32 by = 0; by < result.Height; by++)
+            UnsafeBitmap result = new UnsafeBitmap(new Bitmap(source.Bitmap.Width, source.Bitmap.Height, PixelFormat.Format32bppArgb));
+            for (Int32 by = 0; by < result.Bitmap.Height; by++)
             {
-                for (Int32 bx = 0; bx < result.Width; bx++)
+                for (Int32 bx = 0; bx < result.Bitmap.Width; bx++)
                 {
-                    Int32 x = bx == 0 ? result.Width : bx;
+                    Int32 x = bx == 0 ? result.Bitmap.Width : bx;
                     Single xLeft = ((Color)source.GetPixel(x - 1, by)).grayscale * strength;
-                    x = bx == result.Width - 1 ? 0 : bx;
+                    x = bx == result.Bitmap.Width - 1 ? 0 : bx;
                     Single xRight = ((Color)source.GetPixel(x + 1, by)).grayscale * strength;
-                    Int32 y = by == 0 ? result.Height : by;
+                    Int32 y = by == 0 ? result.Bitmap.Height : by;
                     Single yUp = ((Color)source.GetPixel(bx, y - 1)).grayscale * strength;
-                    y = by == result.Height - 1 ? 0 : by;
+                    y = by == result.Bitmap.Height - 1 ? 0 : by;
                     Single yDown = ((Color)source.GetPixel(bx, y + 1)).grayscale * strength;
                     Single xDelta = (xLeft - xRight + 1) * 0.5f;
                     Single yDelta = (yUp - yDown + 1) * 0.5f;
