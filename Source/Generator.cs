@@ -152,7 +152,7 @@ namespace Stellarator
             // Load database stuff
             ConfigNode starDatabase = Utility.Load("stars");
             ConfigNode data = starDatabase.GetNode(system.type.star_class);
-            data = Utility.Choose(data.nodes);
+            data = Random.Choose(data.nodes);
             StarPrefab star = Parser.CreateObjectFromConfigNode<StarPrefab>(data);
 
             // Materials
@@ -286,7 +286,7 @@ namespace Stellarator
             {
                 // Texture
                 String[] files = Directory.GetFiles(Directory.GetCurrentDirectory() + "/data/textures/");
-                String texture = Utility.Choose(files);
+                String texture = Random.Choose(files);
                 String textureName = Path.GetFileNameWithoutExtension(texture) + ".png";
                 Directory.CreateDirectory(Directory.GetCurrentDirectory() + "/systems/" + folder + "/PluginData/");
                 File.Copy(texture, Directory.GetCurrentDirectory() + "/systems/" + folder + "/PluginData/" + textureName, true);
@@ -339,7 +339,7 @@ namespace Stellarator
                 ConfigNode rings = new ConfigNode("Rings");
                 node.AddConfigNode(rings);
                 ConfigNode ringDatatbase = Utility.Load("rings");
-                ConfigNode data = Utility.Choose(ringDatatbase.nodes);
+                ConfigNode data = Random.Choose(ringDatatbase.nodes);
                 RingPrefab def = Parser.CreateObjectFromConfigNode<RingPrefab>(data);
                 foreach (RingPrefab.Ring r in def.rings)
                 {

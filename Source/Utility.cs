@@ -223,19 +223,18 @@ namespace Stellarator
         {
             return random.Next(0, 100) < prob;
         }
+        
+        /// <summary>
+        /// Chooses a random element from an array
+        /// </summary>
+        public static T Choose<T>(this Random r, T[] array)
+        {
+            return array[r.Next(0, array.Length)];
+        }
 
         #endregion
 
         #region Template
-
-
-        /// <summary>
-        /// Chooses a random element from an array
-        /// </summary>
-        public static T Choose<T>(T[] array)
-        {
-            return array[Generator.Random.Next(0, array.Length)];
-        }
 
 
         /// <summary>
@@ -260,12 +259,12 @@ namespace Stellarator
 
             // Generate Constellation Name First
 
-            String name = Choose(prefix);
-            name += Choose(middle);
+            String name = Generator.Random.Choose(prefix);
+            name += Generator.Random.Choose(middle);
             // Avoid being anal
             if (name == "An")
                 name += "n";
-            name += Choose(suffix);
+            name += Generator.Random.Choose(suffix);
 
             // Add Letters or Characters
             if (Generator.Random.Next(0, 100) < 25)
@@ -278,16 +277,16 @@ namespace Stellarator
             if (letter < 350)
             {
                 if (useChars)
-                    name = Choose(commonChars) + " " + name;
+                    name = Generator.Random.Choose(commonChars) + " " + name;
                 else
-                    name = Choose(commonLetters) + " " + name;
+                    name = Generator.Random.Choose(commonLetters) + " " + name;
             }
             else if (letter < 500)
             {
                 if (useChars)
-                    name = Choose(rareChars) + " " + name;
+                    name = Generator.Random.Choose(rareChars) + " " + name;
                 else
-                    name = Choose(rareLetters) + " " + name;
+                    name = Generator.Random.Choose(rareLetters) + " " + name;
             }
             else
             {
@@ -311,7 +310,7 @@ namespace Stellarator
 
             if (Generator.Random.Next(0, 100) < 5)
             {
-                name += " " + Choose(multiple);
+                name += " " + Generator.Random.Choose(multiple);
             }
 
             return name;
@@ -327,7 +326,7 @@ namespace Stellarator
             // Load Acronyms
             String[] acronym = namesDatabase.GetValues("acronym");
 
-            String name = Choose(acronym);
+            String name = Generator.Random.Choose(acronym);
             name += new String('0', Generator.Random.Next(0, 5));
             name += Generator.Random.Next(100, 9999);
             return name;
@@ -345,14 +344,14 @@ namespace Stellarator
             String[] suffix = namesDatabase.GetValues("suffix");
             Boolean hasMiddle = false;
 
-            String name = Choose(prefix);
+            String name = Generator.Random.Choose(prefix);
             if (Generator.Random.Next(0, 100) < 50)
             {
-                name += Choose(middle);
+                name += Generator.Random.Choose(middle);
                 hasMiddle = true;
             }
             if (Generator.Random.Next(0, 100) < 50 || !hasMiddle)
-                name += Choose(suffix);
+                name += Generator.Random.Choose(suffix);
             if (name == "Kerbin" || name == "Kerbol")
                 name = GenerateName();
             return name;
