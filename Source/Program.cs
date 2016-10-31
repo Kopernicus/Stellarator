@@ -27,7 +27,7 @@ namespace Stellarator
             Console.WriteLine("Stellar Generator - Creates procedural systems for Kopernicus");
             Console.WriteLine("Copyright (c) 2016 Thomas P.");
             Console.WriteLine("Licensed under the Terms of the MIT License");
-            Console.WriteLine("Version: 1.0");
+            Console.WriteLine("Version: 0.1");
             Console.WriteLine("-------------------------------------------------------------");
 
             // Can I have some tea?

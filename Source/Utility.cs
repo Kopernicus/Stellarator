@@ -30,6 +30,8 @@ namespace Stellarator
         {
             strength = Mathf.Clamp(strength, 0.0F, 10.0F);
             UnsafeBitmap result = new UnsafeBitmap(new Bitmap(source.Bitmap.Width, source.Bitmap.Height, PixelFormat.Format32bppArgb));
+            source.LockBitmap();
+            result.LockBitmap();
             for (Int32 by = 0; by < result.Bitmap.Height; by++)
             {
                 for (Int32 bx = 0; bx < result.Bitmap.Width; bx++)
@@ -47,6 +49,8 @@ namespace Stellarator
                     result.SetPixel(bx, by, new Color(yDelta, yDelta, yDelta, xDelta));
                 }
             }
+            source.UnlockBitmap();
+            result.UnlockBitmap();
             return result;
         }
 
@@ -55,33 +59,28 @@ namespace Stellarator
         /// </summary>
         public static Color GetAverageColor(Bitmap bm)
         {
-            BitmapData srcData = bm.LockBits(new Rectangle(0, 0, bm.Width, bm.Height), ImageLockMode.ReadOnly, PixelFormat.Format32bppArgb);
-            Int32 stride = srcData.Stride;
-            IntPtr Scan0 = srcData.Scan0;
+            UnsafeBitmap bitmap = new UnsafeBitmap(bm);
+            bitmap.LockBitmap();
             Int64[] totals = { 0, 0, 0 };
 
             Int64 width = bm.Width;
             Int64 height = bm.Height;
 
-            unsafe
+            for (Int32 y = 0; y < height; y++)
             {
-                Byte* p = (Byte*)(void*)Scan0;
-                for (Int32 y = 0; y < height; y++)
+                for (Int32 x = 0; x < width; x++)
                 {
-                    for (Int32 x = 0; x < width; x++)
-                    {
-                        for (Int32 color = 0; color < 3; color++)
-                        {
-                            Int32 idx = y * stride + x * 4 + color;
-                            totals[color] += p[idx];
-                        }
-                    }
+                    System.Drawing.Color c = bitmap.GetPixel(x, y);
+                    totals[0] += c.B;
+                    totals[1] += c.G;
+                    totals[2] += c.R;
                 }
             }
 
             Byte avgB = (Byte)(totals[0] / (width * height));
             Byte avgG = (Byte)(totals[1] / (width * height));
             Byte avgR = (Byte)(totals[2] / (width * height));
+            bitmap.UnlockBitmap();
             return new Color32(avgR, avgG, avgB, 255);
         }
 
