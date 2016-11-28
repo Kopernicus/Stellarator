@@ -34,9 +34,9 @@ namespace Stellarator
             Thread.CurrentThread.CurrentCulture = CultureInfo.GetCultureInfo("en-US");
 
             // Ask for Input
-            String seed = Prompt("Please enter the Seed you want to use: ");
-            String folder = Prompt("Please choose a folder name for your system: ");
-            String systematic = Prompt("Use systematic planet names? (y/n) ", true);
+            String seed = Prompt("Please enter the Seed you want to use: ", "--seed");
+            String folder = Prompt("Please choose a folder name for your system: ", "--name");
+            String systematic = Prompt("Use systematic planet names? (y/n) ", "--systematic", true);
             Console.WriteLine();
 
             // Check
@@ -57,8 +57,16 @@ namespace Stellarator
         /// <summary>
         /// Asks the user something and returns an answer.
         /// </summary>
-        public static String Prompt(String prompt, Boolean key = false)
+        public static String Prompt(String prompt, String cmdLine, Boolean key = false)
         {
+            String[] args = Environment.GetCommandLineArgs();
+            if (args.Any(s => s.Trim().StartsWith(cmdLine)))
+            {
+                String arg = args.First(s => s.Trim().StartsWith(cmdLine));
+                arg = arg.Trim().Remove(0, (cmdLine + ":").Length);
+                Console.WriteLine(prompt + arg);
+                return arg;
+            }
             Console.Write(prompt);
             return key ? Console.ReadKey().KeyChar.ToString() : Console.ReadLine();
         }
