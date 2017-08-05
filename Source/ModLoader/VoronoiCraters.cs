@@ -27,10 +27,7 @@
  * https://kerbalspaceprogram.com
  */
 
-using System;
-using Microsoft.Xna.Framework;
 using ProceduralQuadSphere;
-using Stellarator;
 
 namespace Kopernicus
 {
@@ -48,7 +45,7 @@ namespace Kopernicus
                     get { return mod.colorOpacity; }
                     set { mod.colorOpacity = value; }
                 }
-                
+
                 // DebugColorMapping
                 [ParserTarget("DebugColorMapping")]
                 public NumericParser<bool> DebugColorMapping
@@ -172,4 +169,3 @@ namespace Kopernicus
         }
     }
 }
-

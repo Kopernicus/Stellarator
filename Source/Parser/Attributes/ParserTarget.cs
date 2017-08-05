@@ -41,10 +41,10 @@ namespace Kopernicus
         {
             // Storage key in config node tree.  If null, key is determined with reflection
             public string fieldName = null;
-            
+
             // Flag indiciating whether the presence of this value is required
             public bool optional = true;
-            
+
             // Flag indiciating whether the contents of the config tree can be merged
             // via reflection with a potentially present field.  If the field is null,
             // this flag is disregarged
@@ -56,7 +56,7 @@ namespace Kopernicus
             // Whether the parser should merge all values in the config node into one
             // Use this only one collections, the implementation is veeeeery dumb
             public string getAll = null;
-            
+
             // Constructor sets name
             public ParserTarget(string fieldName = null)
             {
@@ -65,4 +65,3 @@ namespace Kopernicus
         }
     }
 }
-

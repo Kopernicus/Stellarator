@@ -29,7 +29,6 @@
 
 using ProceduralQuadSphere;
 
- 
 namespace Kopernicus
 {
     namespace Configuration

@@ -26,14 +26,12 @@
  * 
  * https://kerbalspaceprogram.com
  */
- 
+
 using System.Collections.Generic;
 using System.Linq;
 using ConfigNodeParser;
 using ProceduralQuadSphere;
 using ProceduralQuadSphere.Unity;
-using Stellarator;
-
 
 namespace Kopernicus
 {

@@ -39,11 +39,9 @@ namespace Kopernicus
         [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field)]
         public class PreApply : Attribute
         {
-            public PreApply() 
-            { 
-            
+            public PreApply()
+            {
             }
         }
     }
 }
-

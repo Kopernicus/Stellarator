@@ -27,7 +27,6 @@
  * https://kerbalspaceprogram.com
  */
 
-using System;
 using ProceduralQuadSphere;
 
 namespace Kopernicus
@@ -90,4 +89,3 @@ namespace Kopernicus
         }
     }
 }
-

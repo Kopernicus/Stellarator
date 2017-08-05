@@ -28,15 +28,12 @@
  */
 
 using System;
-using System.IO;
-using System.Reflection;
 using System.Collections.Generic;
-using System.Text.RegularExpressions;
 using System.Linq;
+using System.Reflection;
 using ConfigNodeParser;
 using Microsoft.Xna.Framework;
 using ProceduralQuadSphere.Unity;
-using Stellarator;
 using XnaGeometry;
 
 namespace Kopernicus

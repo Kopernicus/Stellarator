@@ -28,10 +28,10 @@
  */
 
 using System;
-using System.Linq;
-using System.Reflection;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 using ConfigNodeParser;
 using Microsoft.Xna.Framework;
 using ProceduralQuadSphere.Unity;
@@ -178,7 +178,7 @@ namespace Kopernicus
                         else
                             targetValue = null;
                     }
-                    catch (Exception e)
+                    catch (Exception)
                     {
                         // ignored
                     }
@@ -311,7 +311,7 @@ namespace Kopernicus
                         else
                             targetValue = null;
                     }
-                    catch (Exception e)
+                    catch (Exception)
                     {
                     }
                 }

@@ -38,7 +38,9 @@ namespace Kopernicus
          **/
         public class ParserTargetTypeMismatchException : Exception
         {
-            public ParserTargetTypeMismatchException (string message) : base(message) { }
+            public ParserTargetTypeMismatchException(string message) : base(message)
+            {
+            }
         }
     }
 }

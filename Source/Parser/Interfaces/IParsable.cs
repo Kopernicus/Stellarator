@@ -27,8 +27,6 @@
  * https://kerbalspaceprogram.com
  */
 
-using System;
-
 namespace Kopernicus
 {
     namespace Configuration

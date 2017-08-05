@@ -44,8 +44,9 @@ namespace Kopernicus
             public string typePrefix = "";
 
             // Constructor sets name
-            public ParserTargetCollection(string fieldName = null) : base (fieldName) { }
+            public ParserTargetCollection(string fieldName = null) : base(fieldName)
+            {
+            }
         }
     }
 }
-

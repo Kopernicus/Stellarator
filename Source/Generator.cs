@@ -6,23 +6,20 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
-using System.Globalization;
 using System.IO;
-using Accrete;
-using ConfigNodeParser;
 using System.Linq;
 using System.Reflection;
-using System.Threading.Tasks;
+using Accrete;
+using ConfigNodeParser;
 using DynamicExpresso;
 using Kopernicus.Configuration;
 using ProceduralQuadSphere;
 using ProceduralQuadSphere.Unity;
 using Stellarator.Database;
-using Color = ProceduralQuadSphere.Unity.Color;
 using XnaGeometry;
+using Color = ProceduralQuadSphere.Unity.Color;
 
 namespace Stellarator
 {

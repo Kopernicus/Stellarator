@@ -27,7 +27,6 @@
  * https://kerbalspaceprogram.com
  */
 
-using System;
 using ProceduralQuadSphere;
 
 namespace Kopernicus
@@ -38,7 +37,7 @@ namespace Kopernicus
         {
             [RequireConfigType(ConfigType.Node)]
             public class VertexVoronoi : ModLoader<PQSMod_VertexVoronoi>
-            { 
+            {
                 // Deformation of the Voronoi
                 [ParserTarget("deformation")]
                 public NumericParser<double> deformation
@@ -82,4 +81,3 @@ namespace Kopernicus
         }
     }
 }
-
