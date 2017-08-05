@@ -26,7 +26,8 @@
  * 
  * https://kerbalspaceprogram.com
  */
- 
+
+using LibNoise;
 using ProceduralQuadSphere;
 
 namespace Kopernicus
@@ -64,7 +65,7 @@ namespace Kopernicus
 
                 // Noise quality
                 [ParserTarget("mode")]
-                public EnumParser<LibNoise.QualityMode> mode
+                public EnumParser<QualityMode> mode
                 {
                     get { return mod.mode; }
                     set { mod.mode = value; }

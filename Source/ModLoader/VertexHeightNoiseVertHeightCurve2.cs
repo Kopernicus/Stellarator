@@ -27,9 +27,8 @@
  * https://kerbalspaceprogram.com
  */
 
-using System;
+using LibNoise;
 using ProceduralQuadSphere;
-
 
 namespace Kopernicus
 {
@@ -82,7 +81,7 @@ namespace Kopernicus
 
                 // ridgedMode
                 [ParserTarget("ridgedMode")]
-                public EnumParser<LibNoise.QualityMode> ridgedMode
+                public EnumParser<QualityMode> ridgedMode
                 {
                     get { return mod.ridgedMode; }
                     set { mod.ridgedMode = value; }

@@ -27,7 +27,6 @@
  * https://kerbalspaceprogram.com
  */
 
-using Accrete;
 using ProceduralQuadSphere;
 
 namespace Kopernicus

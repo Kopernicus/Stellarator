@@ -6,7 +6,6 @@
 
 using System;
 using Accrete;
-using DynamicExpresso;
 using Kopernicus.Configuration;
 
 namespace Stellarator

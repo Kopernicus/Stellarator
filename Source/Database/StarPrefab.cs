@@ -4,8 +4,6 @@
  * Licensed under the Terms of the MIT License
  */
 
-using System;
-using System.Collections.Generic;
 using Kopernicus.Configuration;
 
 namespace Stellarator.Database

@@ -38,7 +38,6 @@ namespace Kopernicus
             [RequireConfigType(ConfigType.Node)]
             public class FlattenAreaTangential : ModLoader<PQSMod_FlattenAreaTangential>
             {
-
                 // flattenTo
                 [ParserTarget("flattenTo")]
                 public NumericParser<double> flattenTo
@@ -90,4 +89,3 @@ namespace Kopernicus
         }
     }
 }
-

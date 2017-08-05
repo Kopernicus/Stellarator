@@ -5,9 +5,7 @@
  */
 
 using System;
-using System.Collections.Generic;
 using Kopernicus.Configuration;
-using ProceduralQuadSphere.Unity;
 
 namespace Stellarator.Database
 {

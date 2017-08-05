@@ -27,16 +27,13 @@
  * https://kerbalspaceprogram.com
  */
 
-using LibNoise.Generator;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using ConfigNodeParser;
+using LibNoise;
 using LibNoise.Generator;
 using ProceduralQuadSphere;
 using ProceduralQuadSphere.Unity;
-using Stellarator;
-
 
 namespace Kopernicus
 {
@@ -149,7 +146,7 @@ namespace Kopernicus
 
                         // quality
                         [ParserTarget("quality")]
-                        public EnumParser<LibNoise.QualityMode> quality
+                        public EnumParser<QualityMode> quality
                         {
                             get { return noise.Quality; }
                             set { noise.Quality = value; }

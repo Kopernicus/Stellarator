@@ -5,7 +5,6 @@
  */
 
 using System;
-using System.Collections.Generic;
 using ConfigNodeParser;
 using Kopernicus.Configuration;
 
@@ -16,11 +15,8 @@ namespace Stellarator.Database
     /// </summary>
     public class PQSPreset
     {
-        [ParserTarget("minRadius")]
-        public NumericParser<Int32> minRadius;
-        [ParserTarget("maxRadius")]
-        public NumericParser<Int32> maxRadius;
-        [ParserTarget("Mods")]
-        public ConfigNode mods;
+        [ParserTarget("minRadius")] public NumericParser<Int32> minRadius;
+        [ParserTarget("maxRadius")] public NumericParser<Int32> maxRadius;
+        [ParserTarget("Mods")] public ConfigNode mods;
     }
 }

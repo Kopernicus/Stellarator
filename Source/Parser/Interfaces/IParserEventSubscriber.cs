@@ -27,7 +27,6 @@
  * https://kerbalspaceprogram.com
  */
 
-using System;
 using ConfigNodeParser;
 
 namespace Kopernicus

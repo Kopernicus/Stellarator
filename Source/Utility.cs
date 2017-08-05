@@ -6,15 +6,14 @@
 
 
 using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
+using Accrete;
 using ConfigNodeParser;
+using DynamicExpresso;
 using ProceduralQuadSphere.Unity;
 using Color = ProceduralQuadSphere.Unity.Color;
-using Accrete;
-using DynamicExpresso;
 
 namespace Stellarator
 {
@@ -379,7 +378,7 @@ namespace Stellarator
             {
                 return interpreter.Eval<Object>(expression).ToString();
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 return expression;
             }

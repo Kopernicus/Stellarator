@@ -16,6 +16,7 @@ namespace Stellarator.Database
     public class RingPrefab
     {
         [ParserTargetCollection("Rings")] public List<Ring> rings;
+
         public class Ring
         {
             [ParserTarget("innerRadius")] public NumericParser<Double> innerRadius;
