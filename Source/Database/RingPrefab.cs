@@ -4,25 +4,25 @@
  * Licensed under the Terms of the MIT License
  */
 
-using System;
-using System.Collections.Generic;
-using Kopernicus.Configuration;
-
 namespace Stellarator.Database
 {
+    using System.Collections.Generic;
+    using Kopernicus.Configuration;
+
     /// <summary>
-    /// Prefab for a PQS
-    /// </summary>{
+    ///     Prefab for a PQS
+    /// </summary>
+    /// {
     public class RingPrefab
     {
         [ParserTargetCollection("Rings")] public List<Ring> rings;
 
         public class Ring
         {
-            [ParserTarget("innerRadius")] public NumericParser<Double> innerRadius;
-            [ParserTarget("outerRadius")] public NumericParser<Double> outerRadius;
-            [ParserTarget("angle")] public NumericParser<Double> angle;
-            [ParserTarget("lockRotation")] public NumericParser<Boolean> lockRotation;
+            [ParserTarget("angle")] public NumericParser<double> angle;
+            [ParserTarget("innerRadius")] public NumericParser<double> innerRadius;
+            [ParserTarget("lockRotation")] public NumericParser<bool> lockRotation;
+            [ParserTarget("outerRadius")] public NumericParser<double> outerRadius;
         }
     }
 }

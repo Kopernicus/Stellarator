@@ -4,22 +4,21 @@
  * Licensed under the Terms of the MIT License
  */
 
-using System;
-using Kopernicus.Configuration;
-
 namespace Stellarator.Database
 {
+    using Kopernicus.Configuration;
+
     /// <summary>
-    /// Prefab for StarMaterial
+    ///     Prefab for StarMaterial
     /// </summary>
     public class StarMaterial
     {
         [ParserTarget("emitColor0")] public ColorParser emitColor0;
         [ParserTarget("emitColor1")] public ColorParser emitColor1;
-        [ParserTarget("sunspotPower")] public NumericParser<Double> sunspotPower;
-        [ParserTarget("sunspotColor")] public ColorParser sunspotColor;
+        [ParserTarget("rimBlend")] public NumericParser<double> rimBlend;
         [ParserTarget("rimColor")] public ColorParser rimColor;
-        [ParserTarget("rimPower")] public NumericParser<Double> rimPower;
-        [ParserTarget("rimBlend")] public NumericParser<Double> rimBlend;
+        [ParserTarget("rimPower")] public NumericParser<double> rimPower;
+        [ParserTarget("sunspotColor")] public ColorParser sunspotColor;
+        [ParserTarget("sunspotPower")] public NumericParser<double> sunspotPower;
     }
 }

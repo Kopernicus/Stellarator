@@ -4,16 +4,16 @@
  * Licensed under the Terms of the MIT License
  */
 
-using Kopernicus.Configuration;
-
 namespace Stellarator.Database
 {
+    using Kopernicus.Configuration;
+
     /// <summary>
-    /// Prefab for a Star
+    ///     Prefab for a Star
     /// </summary>
     public class StarPrefab
     {
-        [ParserTarget("Material")] public StarMaterial material;
         [ParserTarget("Light")] public StarLight light;
+        [ParserTarget("Material")] public StarMaterial material;
     }
 }

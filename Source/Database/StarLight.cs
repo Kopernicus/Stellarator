@@ -4,25 +4,24 @@
  * Licensed under the Terms of the MIT License
  */
 
-using System;
-using Kopernicus.Configuration;
-
 namespace Stellarator.Database
 {
+    using Kopernicus.Configuration;
+
     /// <summary>
-    /// Prefab for StarMaterial
+    ///     Prefab for StarMaterial
     /// </summary>
     public class StarLight
     {
-        [ParserTarget("sunlightColor")] public ColorParser sunlightColor;
-        [ParserTarget("sunlightIntensity")] public NumericParser<Double> sunlightIntensity;
-        [ParserTarget("sunlightShadowStrength")] public NumericParser<Double> sunlightShadowStrength;
-        [ParserTarget("scaledSunlightColor")] public ColorParser scaledSunlightColor;
-        [ParserTarget("scaledSunlightIntensity")] public NumericParser<Double> scaledSunlightIntensity;
-        [ParserTarget("IVASunColor")] public ColorParser IVASunColor;
-        [ParserTarget("IVASunIntensity")] public NumericParser<Double> IVASunIntensity;
         [ParserTarget("ambientLightColor")] public ColorParser ambientLightColor;
+        [ParserTarget("givesOffLight")] public NumericParser<bool> givesOffLight;
+        [ParserTarget("IVASunColor")] public ColorParser IVASunColor;
+        [ParserTarget("IVASunIntensity")] public NumericParser<double> IVASunIntensity;
+        [ParserTarget("scaledSunlightColor")] public ColorParser scaledSunlightColor;
+        [ParserTarget("scaledSunlightIntensity")] public NumericParser<double> scaledSunlightIntensity;
         [ParserTarget("sunLensFlareColor")] public ColorParser sunLensFlareColor;
-        [ParserTarget("givesOffLight")] public NumericParser<Boolean> givesOffLight;
+        [ParserTarget("sunlightColor")] public ColorParser sunlightColor;
+        [ParserTarget("sunlightIntensity")] public NumericParser<double> sunlightIntensity;
+        [ParserTarget("sunlightShadowStrength")] public NumericParser<double> sunlightShadowStrength;
     }
 }

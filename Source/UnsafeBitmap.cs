@@ -4,113 +4,99 @@
  * Licensed under the Terms of the MIT License
  */
 
-using System;
-using System.Drawing;
-using System.Drawing.Imaging;
-
 namespace Stellarator
 {
-    public unsafe class UnsafeBitmap
+    using System;
+    using System.Drawing;
+    using System.Drawing.Imaging;
+
+    public unsafe class UnsafeBitmap : IDisposable
     {
-        readonly Bitmap bitmap;
-
-        // three elements used for MakeGreyUnsafe
-        private Int32 width;
-
-        private BitmapData bitmapData;
-        private Byte* pBase = null;
-
         public UnsafeBitmap(Image bitmap)
         {
-            this.bitmap = new Bitmap(bitmap);
+            Bitmap = new Bitmap(bitmap);
         }
 
-        public UnsafeBitmap(Int32 width, Int32 height)
+        public UnsafeBitmap(int width, int height)
         {
-            this.bitmap = new Bitmap(width, height, PixelFormat.Format24bppRgb);
+            Bitmap = new Bitmap(width, height, PixelFormat.Format24bppRgb);
         }
+
+        private BitmapData Data { get; set; }
+        private byte* PBase { get; set; } = null;
+
+        // three elements used for MakeGreyUnsafe
+        private int Width { get; set; }
+
+        public Bitmap Bitmap { get; }
 
         public void Dispose()
         {
-            bitmap.Dispose();
-        }
-
-        public Bitmap Bitmap
-        {
-            get { return bitmap; }
-        }
-
-        private Point PixelSize
-        {
-            get
-            {
-                GraphicsUnit unit = GraphicsUnit.Pixel;
-                RectangleF bounds = bitmap.GetBounds(ref unit);
-
-                return new Point((Int32) bounds.Width, (Int32) bounds.Height);
-            }
+            Bitmap.Dispose();
         }
 
         public void LockBitmap()
         {
-            GraphicsUnit unit = GraphicsUnit.Pixel;
-            RectangleF boundsF = bitmap.GetBounds(ref unit);
-            Rectangle bounds = new Rectangle((Int32) boundsF.X,
-                                             (Int32) boundsF.Y,
-                                             (Int32) boundsF.Width,
-                                             (Int32) boundsF.Height);
+            var unit = GraphicsUnit.Pixel;
+            var boundsF = Bitmap.GetBounds(ref unit);
+            var bounds = new Rectangle((int) boundsF.X,
+                                       (int) boundsF.Y,
+                                       (int) boundsF.Width,
+                                       (int) boundsF.Height);
 
             // Figure out the number of bytes in a row
             // This is rounded up to be a multiple of 4
             // bytes, since a scan line in an image must always be a multiple of 4 bytes
             // in length. 
-            width = (Int32) boundsF.Width * sizeof(PixelData);
-            if (width % 4 != 0)
-                width = 4 * (width / 4 + 1);
-            bitmapData = bitmap.LockBits(bounds, ImageLockMode.ReadWrite, PixelFormat.Format24bppRgb);
+            Width = (int) boundsF.Width * sizeof(PixelData);
+            if ((Width % 4) != 0)
+            {
+                Width = 4 * ((Width / 4) + 1);
+            }
+            Data = Bitmap.LockBits(bounds, ImageLockMode.ReadWrite, PixelFormat.Format24bppRgb);
 
-            pBase = (Byte*) bitmapData.Scan0.ToPointer();
+            PBase = (byte*) Data.Scan0.ToPointer();
         }
 
-        public Color GetPixel(Int32 x, Int32 y)
+        public Color GetPixel(int x, int y)
         {
-            PixelData returnValue = *PixelAt(x, y);
+            var returnValue = *PixelAt(x, y);
             return returnValue.ToColor();
         }
 
-        public void SetPixel(Int32 x, Int32 y, Color colour)
+        public void SetPixel(int x, int y, Color colour)
         {
-            PixelData* pixel = PixelAt(x, y);
+            var pixel = PixelAt(x, y);
             *pixel = PixelData.FromColor(colour);
         }
 
         public void UnlockBitmap()
         {
-            bitmap.UnlockBits(bitmapData);
-            bitmapData = null;
-            pBase = null;
+            Bitmap.UnlockBits(Data);
+            Data = null;
+            PBase = null;
         }
 
-        public PixelData* PixelAt(Int32 x, Int32 y)
+        private PixelData* PixelAt(int x, int y)
         {
-            return (PixelData*) (pBase + y * width + x * sizeof(PixelData));
+            return (PixelData*) (PBase + (y * Width) + (x * sizeof(PixelData)));
         }
     }
 
     public struct PixelData
     {
-        public Byte blue;
-        public Byte green;
-        public Byte red;
+        private byte Blue { get; set; }
+        private byte Green { get; set; }
+        private byte Red { get; set; }
 
         public Color ToColor()
         {
-            return Color.FromArgb(red, green, blue);
+            return Color.FromArgb(Red, Green, Blue);
         }
 
         public static PixelData FromColor(Color c)
         {
-            return new PixelData {blue = c.B, red = c.R, green = c.G};
+            return new PixelData {Blue = c.B, Red = c.R, Green = c.G};
         }
     }
 }

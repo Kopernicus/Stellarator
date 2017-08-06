@@ -4,13 +4,13 @@
  * Licensed under the Terms of the MIT License
  */
 
-using System;
-using System.Globalization;
-using System.Linq;
-using System.Threading;
-
 namespace Stellarator
 {
+    using System;
+    using System.Globalization;
+    using System.Linq;
+    using System.Threading;
+
     public static class Program
     {
         /// <summary>
