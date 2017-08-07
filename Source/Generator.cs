@@ -75,7 +75,7 @@ namespace Stellarator
             Kerbin = allBodies[Random.Next(0, allBodies.Count)];
 
             // Define Roman Numerals and letters
-            var moons = "abcdefghijklmnopqrstuvwxy";
+            const string moons = "abcdefghijklmnopqrstuvwxyz";
             var rN = new[]
                      {
                          "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X",

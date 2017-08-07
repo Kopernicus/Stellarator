@@ -18,7 +18,12 @@ namespace Stellarator
         /// </summary>
         /// <param name="args"></param>
         public static int Main(string[] args)
-        {
+        { /*ToDo: Optimize Generation Speed
+            <Thomas> Every planet could generate in its own thread, but that would cause a mess with logging. (not that I would care)
+            <Thomas> The export operation itself is harder to multithread because neither the KSP PQS nor my fake PQS are threadsafe
+            */
+            //------
+            //TODO:  it would make sense to offer a option in stellaris to generate multiple systemns and to not kill the stock system
             // Say hello
             Console.WriteLine("-------------------------------------------------------------");
             Console.WriteLine("Stellar Generator - Creates procedural systems for Kopernicus");
