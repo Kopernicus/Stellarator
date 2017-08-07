@@ -13,7 +13,10 @@ namespace Stellarator.Database
     /// </summary>
     public class StarPrefab
     {
-        [ParserTarget("Light")] public StarLight light;
-        [ParserTarget("Material")] public StarMaterial material;
+        [ParserTarget("Light")]
+        public StarLight Light { get; set; }
+
+        [ParserTarget("Material")]
+        public StarMaterial Material { get; set; }
     }
 }

@@ -13,12 +13,25 @@ namespace Stellarator.Database
     /// </summary>
     public class StarMaterial
     {
-        [ParserTarget("emitColor0")] public ColorParser emitColor0;
-        [ParserTarget("emitColor1")] public ColorParser emitColor1;
-        [ParserTarget("rimBlend")] public NumericParser<double> rimBlend;
-        [ParserTarget("rimColor")] public ColorParser rimColor;
-        [ParserTarget("rimPower")] public NumericParser<double> rimPower;
-        [ParserTarget("sunspotColor")] public ColorParser sunspotColor;
-        [ParserTarget("sunspotPower")] public NumericParser<double> sunspotPower;
+        [ParserTarget("emitColor0")]
+        public ColorParser EmitColor0 { get; set; }
+
+        [ParserTarget("emitColor1")]
+        public ColorParser EmitColor1 { get; set; }
+
+        [ParserTarget("rimBlend")]
+        public NumericParser<double> RimBlend { get; set; }
+
+        [ParserTarget("rimColor")]
+        public ColorParser RimColor { get; set; }
+
+        [ParserTarget("rimPower")]
+        public NumericParser<double> RimPower { get; set; }
+
+        [ParserTarget("sunspotColor")]
+        public ColorParser SunspotColor { get; set; }
+
+        [ParserTarget("sunspotPower")]
+        public NumericParser<double> SunspotPower { get; set; }
     }
 }

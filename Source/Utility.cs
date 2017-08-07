@@ -12,6 +12,7 @@ namespace Stellarator
     using System.Drawing;
     using System.Drawing.Imaging;
     using System.IO;
+    using System.Linq;
     using Accrete;
     using ConfigNodeParser;
     using DynamicExpresso;
@@ -175,13 +176,10 @@ namespace Stellarator
         public static ConfigNode Load(string foldername)
         {
             var supernode = new ConfigNode("STELLARATOR");
-            foreach (var file in Directory.GetFiles(Directory.GetCurrentDirectory() + "/data/" + foldername, "*.cfg",
-                                                    SearchOption.AllDirectories))
-            {
-                var n = ConfigNode.Load(file);
-                supernode = Merge(n.GetNode("STELLARATOR"), supernode);
-            }
-            return supernode;
+            return Directory
+                .GetFiles(Directory.GetCurrentDirectory() + "/data/" + foldername, "*.cfg", SearchOption.AllDirectories)
+                .Select(ConfigNode.Load)
+                .Aggregate(supernode, (current, n) => Merge(n.GetNode("STELLARATOR"), current));
         }
 
         /// <summary>

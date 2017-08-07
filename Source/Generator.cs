@@ -162,30 +162,30 @@ namespace Stellarator
             data = Random.Choose(data.nodes);
             var star = Parser.CreateObjectFromConfigNode<StarPrefab>(data);
 
-            // Materials
-            var mat = new ConfigNode("Material");
+            // materials
+            var mat = new ConfigNode("material");
             scaled.AddConfigNode(mat);
-            mat.AddValue("emitColor0", Parser.WriteColor(star.material.emitColor0));
-            mat.AddValue("emitColor1", Parser.WriteColor(star.material.emitColor1));
-            mat.AddValue("sunspotPower", "" + star.material.sunspotPower);
-            mat.AddValue("sunspotColor", Parser.WriteColor(star.material.sunspotColor));
-            mat.AddValue("rimColor", Parser.WriteColor(star.material.rimColor));
-            mat.AddValue("rimPower", "" + star.material.rimPower);
-            mat.AddValue("rimBlend", "" + star.material.rimBlend);
+            mat.AddValue("emitColor0", Parser.WriteColor(star.Material.EmitColor0));
+            mat.AddValue("emitColor1", Parser.WriteColor(star.Material.EmitColor1));
+            mat.AddValue("sunspotPower", "" + star.Material.SunspotPower);
+            mat.AddValue("sunspotColor", Parser.WriteColor(star.Material.SunspotColor));
+            mat.AddValue("rimColor", Parser.WriteColor(star.Material.RimColor));
+            mat.AddValue("rimPower", "" + star.Material.RimPower);
+            mat.AddValue("rimBlend", "" + star.Material.RimBlend);
 
-            // Light Node
-            var light = new ConfigNode("Light");
+            // light Node
+            var light = new ConfigNode("light");
             scaled.AddConfigNode(light);
-            light.AddValue("sunlightColor", Parser.WriteColor(star.light.sunlightColor));
-            light.AddValue("sunlightIntensity", "" + star.light.sunlightIntensity);
-            light.AddValue("sunlightShadowStrength", "" + star.light.sunlightShadowStrength);
-            light.AddValue("scaledSunlightColor", Parser.WriteColor(star.light.scaledSunlightColor));
-            light.AddValue("scaledSunlightIntensity", "" + star.light.scaledSunlightIntensity);
-            light.AddValue("IVASunColor", Parser.WriteColor(star.light.IVASunColor));
-            light.AddValue("IVASunIntensity", "" + star.light.IVASunIntensity);
-            light.AddValue("ambientLightColor", Parser.WriteColor(star.light.ambientLightColor));
-            light.AddValue("sunLensFlareColor", Parser.WriteColor(star.light.sunLensFlareColor));
-            light.AddValue("givesOffLight", "" + star.light.givesOffLight);
+            light.AddValue("sunlightColor", Parser.WriteColor(star.Light.SunlightColor));
+            light.AddValue("sunlightIntensity", "" + star.Light.SunlightIntensity);
+            light.AddValue("sunlightShadowStrength", "" + star.Light.SunlightShadowStrength);
+            light.AddValue("scaledSunlightColor", Parser.WriteColor(star.Light.ScaledSunlightColor));
+            light.AddValue("scaledSunlightIntensity", "" + star.Light.ScaledSunlightIntensity);
+            light.AddValue("IVASunColor", Parser.WriteColor(star.Light.IvaSunColor));
+            light.AddValue("IVASunIntensity", "" + star.Light.IvaSunIntensity);
+            light.AddValue("ambientlightColor", Parser.WriteColor(star.Light.AmbientLightColor));
+            light.AddValue("sunLensFlareColor", Parser.WriteColor(star.Light.SunLensFlareColor));
+            light.AddValue("givesOfflight", "" + star.Light.GivesOffLight);
             light.AddValue("luminosity", "" + (system.stellar_luminosity_ratio * 1360));
 
             // TODO: Coronas       
@@ -233,7 +233,7 @@ namespace Stellarator
                 else
                 {
                     template.AddValue("name", Utility.GetTemplate(planet.surface_pressure > 0.00001, false));
-                    template.AddValue("removeAllPQSMods", "True");
+                    template.AddValue("removeAllPQSmods", "True");
                     if (planet.surface_pressure <= 0.00001)
                     {
                         template.AddValue("removeAtmosphere", "True");
@@ -245,7 +245,7 @@ namespace Stellarator
             else
             {
                 template.AddValue("name", "Kerbin");
-                template.AddValue("removePQSMods",
+                template.AddValue("removePQSmods",
                                   "PQSLandControl, QuadEnhanceCoast, VertexHeightMap, VertexHeightNoiseVertHeightCurve2, VertexRidgedAltitudeCurve, VertexSimplexHeightAbsolute");
                 template.AddValue("removeAtmosphere", "True");
                 template.AddValue("removeOcean", "True");
@@ -295,8 +295,8 @@ namespace Stellarator
             var scaled = new ConfigNode("ScaledVersion");
             node.AddConfigNode(scaled);
 
-            // Material
-            var mat = new ConfigNode("Material");
+            // material
+            var mat = new ConfigNode("material");
             scaled.AddConfigNode(mat);
             if (!planet.gas_giant)
             {
@@ -368,15 +368,15 @@ namespace Stellarator
                 var ringDatatbase = Utility.Load("rings");
                 var data = Random.Choose(ringDatatbase.nodes);
                 var def = Parser.CreateObjectFromConfigNode<RingPrefab>(data);
-                foreach (var r in def.rings)
+                foreach (var r in def.Rings)
                 {
                     var ring = new ConfigNode("Ring");
                     rings.AddConfigNode(ring);
-                    ring.AddValue("innerRadius", "" + (planet.radius * 0.1 * r.innerRadius));
-                    ring.AddValue("outerRadius", "" + (planet.radius * 0.1 * r.outerRadius));
-                    ring.AddValue("angle", "" + r.angle);
+                    ring.AddValue("innerRadius", "" + (planet.radius * 0.1 * r.InnerRadius));
+                    ring.AddValue("outerRadius", "" + (planet.radius * 0.1 * r.OuterRadius));
+                    ring.AddValue("angle", "" + r.Angle);
                     ring.AddValue("color", Parser.WriteColor(Utility.AlterColor(planetColor)));
-                    ring.AddValue("lockRotation", "" + r.lockRotation);
+                    ring.AddValue("lockRotation", "" + r.LockRotation);
                     ring.AddValue("unlit", "False");
                 }
 
@@ -446,20 +446,16 @@ namespace Stellarator
             // Create the node
             var pqs = new ConfigNode("PQS");
 
-            // TODO: Material Settings?
+            // TODO: material Settings?
 
             // Create a node for the mods
-            var mods = new ConfigNode("Mods");
+            var mods = new ConfigNode("mods");
             pqs.AddConfigNode(mods);
 
             // Load the PQSDatabase and select a setup
             var pqsDatabase = Utility.Load("pqs");
-            var data = new List<PQSPreset>();
-            foreach (var n in pqsDatabase.nodes)
-            {
-                data.Add(Parser.CreateObjectFromConfigNode<PQSPreset>(n));
-            }
-            data = data.Where(d => ((planet.radius * 100) > d.minRadius) && ((planet.radius * 100) < d.maxRadius))
+            var data = pqsDatabase.nodes.Select(n => Parser.CreateObjectFromConfigNode<PQSPreset>(n)).ToList();
+            data = data.Where(d => ((planet.radius * 100) > d.MinRadius) && ((planet.radius * 100) < d.MaxRadius))
                        .ToList();
             var setup = data[Random.Next(0, data.Count)];
 
@@ -476,14 +472,14 @@ namespace Stellarator
                 .Reference(typeof(Utils));
 
             // Transfer the mod nodes and evaluate expressions
-            foreach (var modNode in setup.mods.nodes)
+            foreach (var modNode in setup.Mods.nodes)
             {
                 mods.AddConfigNode(Utility.Eval(modNode, interpreter));
             }
 
             // Create a new PQSObject
             var pqsVersion = new PQS(planet.radius * 100);
-            var patchedMods = new List<PQSMod>();
+            var patchedmods = new List<PQSMod>();
 
             // Log
             Console.WriteLine($"Created PQS Object for {name}");
@@ -507,8 +503,8 @@ namespace Stellarator
                     continue;
                 }
 
-                // Do any PQS Mods already exist on this PQS matching this mod?
-                var existingMods = pqsVersion.mods.Where(m => m.GetType() == modType);
+                // Do any PQS mods already exist on this PQS matching this mod?
+                var existingmods = pqsVersion.mods.Where(m => m.GetType() == modType);
 
                 // Create the loader
                 var loader = Activator.CreateInstance(loaderType);
@@ -517,14 +513,14 @@ namespace Stellarator
                 var createNew = loaderType.GetMethod("Create", new[] {typeof(PQS)});
                 var create = loaderType.GetMethod("Create", new[] {modType});
 
-                var pqsMods = existingMods as IList<PQSMod> ?? existingMods.ToList();
-                if (pqsMods.Any())
+                var pqsmods = existingmods as IList<PQSMod> ?? existingmods.ToList();
+                if (pqsmods.Any())
                 {
                     // Attempt to find a PQS mod we can edit that we have not edited before
-                    var existingMod = pqsMods.FirstOrDefault(m => !patchedMods.Contains(m) &&
+                    var existingMod = pqsmods.FirstOrDefault(m => !patchedmods.Contains(m) &&
                                                                   (!mod.HasValue("name") ||
                                                                    (mod.HasValue("index")
-                                                                        ? (pqsMods.ToList().IndexOf(m) ==
+                                                                        ? (pqsmods.ToList().IndexOf(m) ==
                                                                            int.Parse(mod.GetValue("index"))) &&
                                                                           (m.name == mod.GetValue("name"))
                                                                         : m.name == mod.GetValue("name"))));
@@ -532,7 +528,7 @@ namespace Stellarator
                     {
                         create.Invoke(loader, new object[] {existingMod});
                         Parser.LoadObjectFromConfigurationNode(loader, mod);
-                        patchedMods.Add(existingMod);
+                        patchedmods.Add(existingMod);
                     }
                     else
                     {

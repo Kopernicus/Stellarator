@@ -14,8 +14,13 @@ namespace Stellarator.Database
     /// </summary>
     public class PQSPreset
     {
-        [ParserTarget("maxRadius")] public NumericParser<int> maxRadius;
-        [ParserTarget("minRadius")] public NumericParser<int> minRadius;
-        [ParserTarget("Mods")] public ConfigNode mods;
+        [ParserTarget("maxRadius")]
+        public NumericParser<int> MaxRadius { get; set; }
+
+        [ParserTarget("minRadius")]
+        public NumericParser<int> MinRadius { get; set; }
+
+        [ParserTarget("Mods")]
+        public ConfigNode Mods { get; set; }
     }
 }
