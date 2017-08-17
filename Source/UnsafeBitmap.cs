@@ -37,9 +37,9 @@ namespace Stellarator
 
         public void LockBitmap()
         {
-            var unit = GraphicsUnit.Pixel;
-            var boundsF = Bitmap.GetBounds(ref unit);
-            var bounds = new Rectangle((int) boundsF.X,
+            GraphicsUnit unit = GraphicsUnit.Pixel;
+            RectangleF boundsF = Bitmap.GetBounds(ref unit);
+            Rectangle bounds = new Rectangle((int) boundsF.X,
                                        (int) boundsF.Y,
                                        (int) boundsF.Width,
                                        (int) boundsF.Height);
@@ -60,13 +60,13 @@ namespace Stellarator
 
         public Color GetPixel(int x, int y)
         {
-            var returnValue = *PixelAt(x, y);
+            PixelData returnValue = *PixelAt(x, y);
             return returnValue.ToColor();
         }
 
         public void SetPixel(int x, int y, Color colour)
         {
-            var pixel = PixelAt(x, y);
+            PixelData* pixel = PixelAt(x, y);
             *pixel = PixelData.FromColor(colour);
         }
 

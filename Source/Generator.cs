@@ -12,6 +12,7 @@ namespace Stellarator
     using System.Drawing.Imaging;
     using System.IO;
     using System.Linq;
+    using System.Reflection;
     using Accrete;
     using ConfigNodeParser;
     using Database;
@@ -24,7 +25,7 @@ namespace Stellarator
 
     public class Generator
     {
-//TODO: Refactor Generator.cs >> Thomas told me
+//TODO: Refactor Generator.cs >> Thomas told me (MartinX3)
         /// <summary>
         ///     The random number generator
         /// </summary>
@@ -33,7 +34,7 @@ namespace Stellarator
         /// <summary>
         ///     The seed the system is using
         /// </summary>
-        private static int Seed { get; set; }
+        private static Int32 Seed { get; set; }
 
         /// <summary>
         ///     The Kerbin equivalent for the system
@@ -43,59 +44,59 @@ namespace Stellarator
         /// <summary>
         ///     This is the core of the whole app. It generates a solar system, based on a seed.
         /// </summary>
-        public static void Generate(string seed, string folder, bool systematicNames)
+        public static void Generate(String seed, String folder, Boolean systematicNames)
         {
             // Log
             Console.WriteLine("Generating the solar system...");
             Console.WriteLine();
 
             // Create a new Solar System using libaccrete
-            var system = new SolarSystem(false, true, s => { });
-            SolarSystem.Generate(ref system, seed.GetHashCode(), int.MaxValue);
+            SolarSystem system = new SolarSystem(false, true, s => { });
+            SolarSystem.Generate(ref system, seed.GetHashCode(), Int32.MaxValue);
             Seed = seed.GetHashCode();
 
             // Reuse the random component
             Random = system.random;
 
             // All Nodes
-            var nodes = new List<ConfigNode>();
+            List<ConfigNode> nodes = new List<ConfigNode>();
 
             // Save the main config
             Directory.CreateDirectory(Directory.GetCurrentDirectory() + "/systems/" + folder);
             Directory.CreateDirectory(Directory.GetCurrentDirectory() + "/systems/" + folder + "/Configs");
             Utility.Save(new ConfigNode("!Body,*"), "@Kopernicus:AFTER[KOPERNICUS]",
                          Directory.GetCurrentDirectory() + "/systems/" + folder + "/System.cfg",
-                         string.Format(Templates.Header, seed));
+                         String.Format(Templates.Header, seed));
 
             // Sun
             nodes.Add(GenerateSun(system, systematicNames));
 
             // Select Kerbin
-            var allBodies = system.Bodies.Where(p => !p.gas_giant && (p.surface_pressure > 0)).ToList();
+            List<Planet> allBodies = system.Bodies.Where(p => !p.gas_giant && (p.surface_pressure > 0)).ToList();
             Kerbin = allBodies[Random.Next(0, allBodies.Count)];
 
             // Define Roman Numerals and letters
-            const string moons = "abcdefghijklmnopqrstuvwxyz";
-            var rN = new[]
-                     {
-                         "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X",
-                         "XI", "XII", "XIII", "XIV", "XV", "XVI", "XVII", "XVIII", "XIX", "XX",
-                         "XXI", "XXII", "XXIII", "XXIV", "XXV", "XXVI", "XXVII", "XXVIII", "XXIX", "XXX",
-                         "XXXI", "XXXII", "XXXIII", "XXXIV", "XXXV", "XXXVI", "XXXVII", "XXXVIII", "XXXIX", "XL",
-                         "XLI", "XLII", "XLIII", "XLIV", "XLV", "XLVI", "XLVII", "XLVIII", "XLIX", "L"
-                     };
+            const String moons = "abcdefghijklmnopqrstuvwxyz";
+            String[] rN =
+            {
+                "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X",
+                "XI", "XII", "XIII", "XIV", "XV", "XVI", "XVII", "XVIII", "XIX", "XX",
+                "XXI", "XXII", "XXIII", "XXIV", "XXV", "XXVI", "XXVII", "XXVIII", "XXIX", "XXX",
+                "XXXI", "XXXII", "XXXIII", "XXXIV", "XXXV", "XXXVI", "XXXVII", "XXXVIII", "XXXIX", "XL",
+                "XLI", "XLII", "XLIII", "XLIV", "XLV", "XLVI", "XLVII", "XLVIII", "XLIX", "L"
+            };
 
             // Iterate over all bodies in the generated system
-            for (var i = 0; i < system.Bodies.Length; i++)
+            for (Int32 i = 0; i < system.Bodies.Length; i++)
             {
-                var node = GenerateBody(system[i], folder,
-                                        systematicName: systematicNames
-                                                            ? nodes[0].GetValue("cbNameLater") + " " + rN[i]
-                                                            : null);
+                ConfigNode node = GenerateBody(system[i], folder,
+                                               systematicName: systematicNames
+                                                                   ? nodes[0].GetValue("cbNameLater") + " " + rN[i]
+                                                                   : null);
                 nodes.Add(node);
-                for (var j = 0; j < system[i].BodiesOrbiting.Length; j++)
+                for (Int32 j = 0; j < system[i].BodiesOrbiting.Length; j++)
                 {
-                    var name = node.HasValue("cbNameLater") ? node.GetValue("cbNameLater") : node.GetValue("name");
+                    String name = node.HasValue("cbNameLater") ? node.GetValue("cbNameLater") : node.GetValue("name");
                     nodes.Add(GenerateBody(system[i][j], folder, node.GetValue("name"),
                                            systematicNames ? name + moons[j] : null));
                 }
@@ -105,12 +106,12 @@ namespace Stellarator
             Console.WriteLine("Saving the system");
 
             // Save the config
-            foreach (var node in nodes)
+            foreach (ConfigNode node in nodes)
             {
-                var name = node.HasValue("cbNameLater") ? node.GetValue("cbNameLater") : node.GetValue("name");
+                String name = node.HasValue("cbNameLater") ? node.GetValue("cbNameLater") : node.GetValue("name");
                 Utility.Save(node, "@Kopernicus:AFTER[KOPERNICUS]",
                              Directory.GetCurrentDirectory() + "/systems/" + folder + "/Configs/" + name + ".cfg",
-                             string.Format(Templates.Header, seed));
+                             String.Format(Templates.Header, seed));
 
                 // Log
                 Console.WriteLine($"Saved {name}");
@@ -120,50 +121,50 @@ namespace Stellarator
         /// <summary>
         ///     Creates the ConfigNode for the SunBody
         /// </summary>
-        private static ConfigNode GenerateSun(SolarSystem system, bool systematicNames)
+        private static ConfigNode GenerateSun(SolarSystem system, Boolean systematicNames)
         {
             // Create the Body node
 
-            var name = Random.Next(0, 100) < (systematicNames ? 50 : 1)
-                           ? Utility.SystematicStarName()
-                           : Utility.GenerateStarName();
+            String name = Random.Next(0, 100) < (systematicNames ? 50 : 1)
+                              ? Utility.SystematicStarName()
+                              : Utility.GenerateStarName();
 
-            var node = new ConfigNode("Body");
+            ConfigNode node = new ConfigNode("Body");
             node.AddValue("name", "Sun");
             node.AddValue("cbNameLater", name);
 
             // Template
-            var template = new ConfigNode("Template");
+            ConfigNode template = new ConfigNode("Template");
             node.AddConfigNode(template);
             template.AddValue("name", "Sun");
 
             // Properties
-            var properties = new ConfigNode("Properties");
+            ConfigNode properties = new ConfigNode("Properties");
             node.AddConfigNode(properties);
             properties.AddValue("radius", "" + (system.stellar_radius_ratio * 261600000));
             properties.AddValue("mass", "" + (system.stellar_mass_ratio * 1.75656696858329E+28));
             properties.AddValue("timewarpAltitudeLimits",
-                                string.Join(" ",
-                                            Templates.SunTimewarplimits.Select(i => (int) (i * system
-                                                                                               .stellar_radius_ratio
-                                                                                          ))));
+                                String.Join(" ",
+                                            Templates.SunTimewarplimits.Select(i => (Int32) (i * system
+                                                                                                 .stellar_radius_ratio
+                                                                                            ))));
             properties.AddValue("useTheInName", "False");
 
             // Log
             Console.WriteLine($"Generated root body named {name}");
 
             // Scaled Space
-            var scaled = new ConfigNode("ScaledVersion");
+            ConfigNode scaled = new ConfigNode("ScaledVersion");
             node.AddConfigNode(scaled);
 
             // Load database stuff
-            var starDatabase = Utility.Load("stars");
-            var data = starDatabase.GetNode(system.type.star_class);
+            ConfigNode starDatabase = Utility.Load("stars");
+            ConfigNode data = starDatabase.GetNode(system.type.star_class);
             data = Random.Choose(data.nodes);
-            var star = Parser.CreateObjectFromConfigNode<StarPrefab>(data);
+            StarPrefab star = Parser.CreateObjectFromConfigNode<StarPrefab>(data);
 
-            // materials
-            var mat = new ConfigNode("material");
+            // Materials
+            ConfigNode mat = new ConfigNode("Material");
             scaled.AddConfigNode(mat);
             mat.AddValue("emitColor0", Parser.WriteColor(star.Material.EmitColor0));
             mat.AddValue("emitColor1", Parser.WriteColor(star.Material.EmitColor1));
@@ -173,8 +174,8 @@ namespace Stellarator
             mat.AddValue("rimPower", "" + star.Material.RimPower);
             mat.AddValue("rimBlend", "" + star.Material.RimBlend);
 
-            // light Node
-            var light = new ConfigNode("light");
+            // Light Node
+            ConfigNode light = new ConfigNode("Light");
             scaled.AddConfigNode(light);
             light.AddValue("sunlightColor", Parser.WriteColor(star.Light.SunlightColor));
             light.AddValue("sunlightIntensity", "" + star.Light.SunlightIntensity);
@@ -185,7 +186,7 @@ namespace Stellarator
             light.AddValue("IVASunIntensity", "" + star.Light.IvaSunIntensity);
             light.AddValue("ambientlightColor", Parser.WriteColor(star.Light.AmbientLightColor));
             light.AddValue("sunLensFlareColor", Parser.WriteColor(star.Light.SunLensFlareColor));
-            light.AddValue("givesOfflight", "" + star.Light.GivesOffLight);
+            light.AddValue("givesOffLight", "" + star.Light.GivesOffLight);
             light.AddValue("luminosity", "" + (system.stellar_luminosity_ratio * 1360));
 
             // TODO: Coronas       
@@ -201,11 +202,11 @@ namespace Stellarator
         /// <summary>
         ///     Generates the parameters for a planet
         /// </summary>
-        private static ConfigNode GenerateBody(Planet planet, string folder, string referenceBody = "Sun",
-                                               string systematicName = null)
+        private static ConfigNode GenerateBody(Planet planet, String folder, String referenceBody = "Sun",
+                                               String systematicName = null)
         {
-            var name = systematicName ?? Utility.GenerateName();
-            var node = new ConfigNode("Body");
+            String name = systematicName ?? Utility.GenerateName();
+            ConfigNode node = new ConfigNode("Body");
 
             // Name
             if (planet != Kerbin)
@@ -222,7 +223,7 @@ namespace Stellarator
             node.AddValue("randomMainMenuBody", "" + (referenceBody == "Sun"));
 
             // Template
-            var template = new ConfigNode("Template");
+            ConfigNode template = new ConfigNode("Template");
             node.AddConfigNode(template);
             if (planet != Kerbin)
             {
@@ -233,7 +234,7 @@ namespace Stellarator
                 else
                 {
                     template.AddValue("name", Utility.GetTemplate(planet.surface_pressure > 0.00001, false));
-                    template.AddValue("removeAllPQSmods", "True");
+                    template.AddValue("removeAllPQSMods", "True");
                     if (planet.surface_pressure <= 0.00001)
                     {
                         template.AddValue("removeAtmosphere", "True");
@@ -245,14 +246,14 @@ namespace Stellarator
             else
             {
                 template.AddValue("name", "Kerbin");
-                template.AddValue("removePQSmods",
+                template.AddValue("removePQSMods",
                                   "PQSLandControl, QuadEnhanceCoast, VertexHeightMap, VertexHeightNoiseVertHeightCurve2, VertexRidgedAltitudeCurve, VertexSimplexHeightAbsolute");
                 template.AddValue("removeAtmosphere", "True");
                 template.AddValue("removeOcean", "True");
             }
 
             // Properties
-            var properties = new ConfigNode("Properties");
+            ConfigNode properties = new ConfigNode("Properties");
             node.AddConfigNode(properties);
             properties.AddValue("radius", "" + (planet.radius * 100));
             properties.AddValue("geeASL", "" + planet.surface_grav);
@@ -261,20 +262,20 @@ namespace Stellarator
             properties.AddValue("initialRotation", "" + Random.Next(0, 361));
             properties.AddValue("albedo", "" + planet.albedo);
             properties.AddValue("timewarpAltitudeLimits",
-                                string.Join(" ",
+                                String.Join(" ",
                                             Templates.KerbinTimewarplimits.Select(i =>
-                                                                                      (int) (i * ((planet.radius *
-                                                                                                   100) / 600000)))));
+                                                                                      (Int32) (i * ((planet.radius *
+                                                                                                     100) / 600000)))));
             properties.AddValue("useTheInName", "False");
 
             // Log
             Console.WriteLine($"Generated a planet named {name}. GasGiant: {planet.gas_giant}. Template: {template.GetValue("name")}");
 
             // Color
-            var planetColor = Utility.GenerateColor();
+            Color planetColor = Utility.GenerateColor();
 
             // Orbit
-            var orbit = new ConfigNode("Orbit");
+            ConfigNode orbit = new ConfigNode("Orbit");
             node.AddConfigNode(orbit);
             orbit.AddValue("referenceBody", referenceBody);
             orbit.AddValue("eccentricity", "" + planet.e);
@@ -292,11 +293,11 @@ namespace Stellarator
             Console.WriteLine($"Generated orbit around {referenceBody} for {name}");
 
             // Scaled Space
-            var scaled = new ConfigNode("ScaledVersion");
+            ConfigNode scaled = new ConfigNode("ScaledVersion");
             node.AddConfigNode(scaled);
 
-            // material
-            var mat = new ConfigNode("material");
+            // Material
+            ConfigNode mat = new ConfigNode("Material");
             scaled.AddConfigNode(mat);
             if (!planet.gas_giant)
             {
@@ -306,9 +307,9 @@ namespace Stellarator
             if (planet.gas_giant)
             {
                 // Texture
-                var files = Directory.GetFiles(Directory.GetCurrentDirectory() + "/data/textures/");
-                var texture = Random.Choose(files);
-                var textureName = Path.GetFileNameWithoutExtension(texture) + ".png";
+                String[] files = Directory.GetFiles(Directory.GetCurrentDirectory() + "/data/textures/");
+                String texture = Random.Choose(files);
+                String textureName = Path.GetFileNameWithoutExtension(texture) + ".png";
                 Directory.CreateDirectory(Directory.GetCurrentDirectory() + "/systems/" + folder + "/PluginData/");
                 File.Copy(texture,
                           Directory.GetCurrentDirectory() + "/systems/" + folder + "/PluginData/" + textureName, true);
@@ -316,8 +317,9 @@ namespace Stellarator
 
                 // Load the Image
                 Color average;
-                using (var image = new Bitmap(Directory.GetCurrentDirectory() + "/systems/" + folder + "/PluginData/" +
-                                              textureName))
+                using (Bitmap image = new Bitmap(Directory.GetCurrentDirectory() + "/systems/" + folder +
+                                                 "/PluginData/" +
+                                                 textureName))
                 {
                     average = Utility.GetAverageColor(image);
                 }
@@ -327,7 +329,7 @@ namespace Stellarator
                              (Random.Next(0, 2) == 1 ? 1 : -1) + "," + (Random.Next(0, 2) == 1 ? 1 : -1));
 
                 mat.AddValue("color", Parser.WriteColor(Utility.ReColor(Utility.AlterColor(planetColor), average)));
-                var gradient = new ConfigNode("Gradient");
+                ConfigNode gradient = new ConfigNode("Gradient");
                 mat.AddConfigNode(gradient);
                 gradient.AddValue("0.0", Parser.WriteColor(Utility.AlterColor(planetColor)));
                 gradient.AddValue("0.6", "0.0549,0.0784,0.141,1");
@@ -340,7 +342,7 @@ namespace Stellarator
             // Atmosphere
             if (planet.surface_pressure > 0.00001)
             {
-                var atmosphere = new ConfigNode("Atmosphere");
+                ConfigNode atmosphere = new ConfigNode("Atmosphere");
                 node.AddConfigNode(atmosphere);
                 atmosphere.AddValue("enabled", "True");
                 atmosphere.AddValue("oxygen", "" + Random.Boolean(10));
@@ -363,14 +365,14 @@ namespace Stellarator
             // Rings :D
             if (planet.gas_giant && (Random.Next(0, 100) < 5))
             {
-                var rings = new ConfigNode("Rings");
+                ConfigNode rings = new ConfigNode("Rings");
                 node.AddConfigNode(rings);
-                var ringDatatbase = Utility.Load("rings");
-                var data = Random.Choose(ringDatatbase.nodes);
-                var def = Parser.CreateObjectFromConfigNode<RingPrefab>(data);
-                foreach (var r in def.Rings)
+                ConfigNode ringDatatbase = Utility.Load("rings");
+                ConfigNode data = Random.Choose(ringDatatbase.nodes);
+                RingPrefab def = Parser.CreateObjectFromConfigNode<RingPrefab>(data);
+                foreach (RingPrefab.Ring r in def.Rings)
                 {
-                    var ring = new ConfigNode("Ring");
+                    ConfigNode ring = new ConfigNode("Ring");
                     rings.AddConfigNode(ring);
                     ring.AddValue("innerRadius", "" + (planet.radius * 0.1 * r.InnerRadius));
                     ring.AddValue("outerRadius", "" + (planet.radius * 0.1 * r.OuterRadius));
@@ -388,18 +390,18 @@ namespace Stellarator
             if (!planet.gas_giant)
             {
                 Color average;
-                GeneratePqs(ref node, name, folder, planet, out average);
+                GeneratePQS(ref node, name, folder, planet, out average);
 
                 // Apply colors
                 orbit.AddValue("color", Parser.WriteColor(Utility.AlterColor(average)));
                 if (node.HasNode("Atmosphere"))
                 {
-                    var atmosphere = node.GetNode("Atmosphere");
+                    ConfigNode atmosphere = node.GetNode("Atmosphere");
                     atmosphere.AddValue("ambientColor", Parser.WriteColor(Utility.AlterColor(average)));
                     atmosphere.AddValue("lightColor",
                                         Parser.WriteColor(Utility.AlterColor(Utility.LightColor(average))));
                 }
-                var gradient = new ConfigNode("Gradient");
+                ConfigNode gradient = new ConfigNode("Gradient");
                 mat.AddConfigNode(gradient);
                 gradient.AddValue("0.0", Parser.WriteColor(Utility.AlterColor(average)));
                 gradient.AddValue("0.6", "0.0549,0.0784,0.141,1");
@@ -419,14 +421,14 @@ namespace Stellarator
         /// </summary>
         /// <param name="atmosphere"></param>
         /// <param name="template"></param>
-        private static void GenerateAtmosphereCurves(ref ConfigNode atmosphere, string template)
+        private static void GenerateAtmosphereCurves(ref ConfigNode atmosphere, String template)
         {
-            var pressure =
+            ConfigNode pressure =
                 ConfigNode.Load(Directory.GetCurrentDirectory() + "/data/curves/" + template + "Pressure.cfg");
             pressure.name = "pressureCurve";
             atmosphere.AddConfigNode(pressure);
             atmosphere.AddValue("pressureCurveIsNormalized", "True");
-            var temperature =
+            ConfigNode temperature =
                 ConfigNode.Load(Directory.GetCurrentDirectory() + "/data/curves/" + template + "Temperature.cfg");
             temperature.name = "temperatureCurve";
             atmosphere.AddConfigNode(temperature);
@@ -437,34 +439,35 @@ namespace Stellarator
         ///     Generates a PQS Setup + the Scaled Space Maps needed
         /// </summary>
         /// <returns></returns>
-        private static void GeneratePqs(ref ConfigNode node, string name, string folder, Planet planet,
+        private static void GeneratePQS(ref ConfigNode node, String name, String folder, Planet planet,
                                         out Color average)
         {
             // Log
             Console.WriteLine("Preparing to load PQS data");
 
             // Create the node
-            var pqs = new ConfigNode("PQS");
+            ConfigNode pqs = new ConfigNode("PQS");
 
-            // TODO: material Settings?
+            // TODO: Material Settings?
 
             // Create a node for the mods
-            var mods = new ConfigNode("mods");
+            ConfigNode mods = new ConfigNode("mods");
             pqs.AddConfigNode(mods);
 
             // Load the PQSDatabase and select a setup
-            var pqsDatabase = Utility.Load("pqs");
-            var data = pqsDatabase.nodes.Select(n => Parser.CreateObjectFromConfigNode<PQSPreset>(n)).ToList();
+            ConfigNode pqsDatabase = Utility.Load("pqs");
+            List<PQSPreset> data = pqsDatabase.nodes.Select(n => Parser.CreateObjectFromConfigNode<PQSPreset>(n))
+                                              .ToList();
             data = data.Where(d => ((planet.radius * 100) > d.MinRadius) && ((planet.radius * 100) < d.MaxRadius))
                        .ToList();
-            var setup = data[Random.Next(0, data.Count)];
+            PQSPreset setup = data[Random.Next(0, data.Count)];
 
-            // Setup the interpreter
-            var interpreter = new Interpreter()
+            // Setup the Int32erpreter
+            Interpreter Int32erpreter = new Interpreter()
                 .SetVariable("planet", planet, typeof(Planet))
                 .SetVariable("pqsVersion", setup, typeof(PQSPreset))
                 .SetVariable("Random", Random, typeof(Random))
-                .SetVariable("Seed", Seed, typeof(int))
+                .SetVariable("Seed", Seed, typeof(Int32))
                 .SetVariable("Color", Utility.GenerateColor(), typeof(Color))
                 .Reference(typeof(Parser))
                 .Reference(typeof(Generator))
@@ -472,58 +475,58 @@ namespace Stellarator
                 .Reference(typeof(Utils));
 
             // Transfer the mod nodes and evaluate expressions
-            foreach (var modNode in setup.Mods.nodes)
+            foreach (ConfigNode modNode in setup.Mods.nodes)
             {
-                mods.AddConfigNode(Utility.Eval(modNode, interpreter));
+                mods.AddConfigNode(Utility.Eval(modNode, Int32erpreter));
             }
 
             // Create a new PQSObject
-            var pqsVersion = new PQS(planet.radius * 100);
-            var patchedmods = new List<PQSMod>();
+            PQS pqsVersion = new PQS(planet.radius * 100);
+            List<PQSMod> patchedmods = new List<PQSMod>();
 
             // Log
             Console.WriteLine($"Created PQS Object for {name}");
 
             // Get all loaded types
-            var types = AppDomain.CurrentDomain.GetAssemblies().SelectMany(a => a.GetTypes()).ToList();
+            List<Type> types = AppDomain.CurrentDomain.GetAssemblies().SelectMany(a => a.GetTypes()).ToList();
 
             // Load mods from Config
-            foreach (var mod in mods.nodes)
+            foreach (ConfigNode mod in mods.nodes)
             {
                 // get the mod type
                 if (types.Count(t => t.Name == mod.name) == 0)
                 {
                     continue;
                 }
-                var loaderType = types.FirstOrDefault(t => t.Name == mod.name);
-                var testName = mod.name != "LandControl" ? "PQSMod_" + mod.name : "PQSLandControl";
-                var modType = types.FirstOrDefault(t => t.Name == testName);
+                Type loaderType = types.FirstOrDefault(t => t.Name == mod.name);
+                String testName = mod.name != "LandControl" ? "PQSMod_" + mod.name : "PQSLandControl";
+                Type modType = types.FirstOrDefault(t => t.Name == testName);
                 if ((loaderType == null) || (modType == null))
                 {
                     continue;
                 }
 
                 // Do any PQS mods already exist on this PQS matching this mod?
-                var existingmods = pqsVersion.mods.Where(m => m.GetType() == modType);
+                IEnumerable<PQSMod> existingmods = pqsVersion.mods.Where(m => m.GetType() == modType);
 
                 // Create the loader
-                var loader = Activator.CreateInstance(loaderType);
+                object loader = Activator.CreateInstance(loaderType);
 
                 // Reflection, because C# being silly... :/
-                var createNew = loaderType.GetMethod("Create", new[] {typeof(PQS)});
-                var create = loaderType.GetMethod("Create", new[] {modType});
+                MethodInfo createNew = loaderType.GetMethod("Create", new[] {typeof(PQS)});
+                MethodInfo create = loaderType.GetMethod("Create", new[] {modType});
 
-                var pqsmods = existingmods as IList<PQSMod> ?? existingmods.ToList();
+                IList<PQSMod> pqsmods = existingmods as IList<PQSMod> ?? existingmods.ToList();
                 if (pqsmods.Any())
                 {
                     // Attempt to find a PQS mod we can edit that we have not edited before
-                    var existingMod = pqsmods.FirstOrDefault(m => !patchedmods.Contains(m) &&
-                                                                  (!mod.HasValue("name") ||
-                                                                   (mod.HasValue("index")
-                                                                        ? (pqsmods.ToList().IndexOf(m) ==
-                                                                           int.Parse(mod.GetValue("index"))) &&
-                                                                          (m.name == mod.GetValue("name"))
-                                                                        : m.name == mod.GetValue("name"))));
+                    PQSMod existingMod = pqsmods.FirstOrDefault(m => !patchedmods.Contains(m) &&
+                                                                     (!mod.HasValue("name") ||
+                                                                      (mod.HasValue("index")
+                                                                           ? (pqsmods.ToList().IndexOf(m) ==
+                                                                              Int32.Parse(mod.GetValue("index"))) &&
+                                                                             (m.name == mod.GetValue("name"))
+                                                                           : m.name == mod.GetValue("name"))));
                     if (existingMod != null)
                     {
                         create.Invoke(loader, new object[] {existingMod});
@@ -547,12 +550,12 @@ namespace Stellarator
             }
 
             // Size
-            var width = pqsVersion.radius >= 600000 ? 4096 : pqsVersion.radius <= 100000 ? 1024 : 2048;
+            Int32 width = pqsVersion.radius >= 600000 ? 4096 : pqsVersion.radius <= 100000 ? 1024 : 2048;
 
             // Export ScaledSpace Maps
-            using (var diffuse = new UnsafeBitmap(width, width / 2))
+            using (UnsafeBitmap diffuse = new UnsafeBitmap(width, width / 2))
             {
-                using (var height = new UnsafeBitmap(width, width / 2))
+                using (UnsafeBitmap height = new UnsafeBitmap(width, width / 2))
                 {
                     Console.WriteLine("Exporting Scaled Space maps from the PQS. This could take a while...");
 
@@ -560,26 +563,29 @@ namespace Stellarator
                     pqsVersion.SetupSphere();
                     diffuse.LockBitmap();
                     height.LockBitmap();
-                    for (var i = 0; i < width; i++)
+                    for (Int32 i = 0; i < width; i++)
                     {
-                        for (var j = 0; j < (width / 2); j++)
+                        for (Int32 j = 0; j < (width / 2); j++)
                         {
                             // Create a VertexBuildData
-                            var builddata = new VertexBuildData
-                                            {
-                                                directionFromCenter =
-                                                    Quaternion.CreateFromAngleAxis((360d / width) * i, Vector3.Up) *
-                                                    Quaternion.CreateFromAngleAxis(90d - ((180d / (width / 2.0)) * j),
-                                                                                   Vector3.Right) * Vector3.Forward,
-                                                vertHeight = pqsVersion.radius
-                                            };
+                            VertexBuildData builddata = new VertexBuildData
+                                                        {
+                                                            directionFromCenter =
+                                                                Quaternion.CreateFromAngleAxis((360d / width) * i,
+                                                                                               Vector3.Up) *
+                                                                Quaternion
+                                                                    .CreateFromAngleAxis(90d - ((180d / (width / 2.0)) * j),
+                                                                                         Vector3.Right) *
+                                                                Vector3.Forward,
+                                                            vertHeight = pqsVersion.radius
+                                                        };
 
                             // Build the maps
                             pqsVersion.OnVertexBuildHeight(builddata);
                             pqsVersion.OnVertexBuild(builddata);
                             builddata.vertColor.a = 1f;
-                            var h = Mathf.Clamp01((float) ((builddata.vertHeight - pqsVersion.radius) *
-                                                           (1d / pqsVersion.radiusMax)));
+                            Single h = Mathf.Clamp01((Single) ((builddata.vertHeight - pqsVersion.radius) *
+                                                               (1d / pqsVersion.radiusMax)));
                             diffuse.SetPixel(i, j, builddata.vertColor);
                             height.SetPixel(i, j, new Color(h, h, h));
                         }
@@ -589,7 +595,7 @@ namespace Stellarator
 
                     // Save the textures
                     Directory.CreateDirectory(Directory.GetCurrentDirectory() + "/systems/" + folder + "/PluginData/");
-                    using (var normals = Utility.BumpToNormalMap(height, 9)
+                    using (UnsafeBitmap normals = Utility.BumpToNormalMap(height, 9)
                     ) // TODO: Implement something to make strength dynamic
                     {
                         diffuse.Bitmap

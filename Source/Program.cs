@@ -37,9 +37,9 @@ namespace Stellarator
 
             //TODO: MartinX3 Change How we get the args. Only show question, if arg is not given.
             // Ask for Input
-            var seed = Prompt("Please enter the seed you want to use: ", "--seed");
-            var folder = Prompt("Please choose a folder name for your system: ", "--name");
-            var systematic = Prompt("Use systematic planet names? (y/n) ", "--systematic", true);
+            string seed = Prompt("Please enter the seed you want to use: ", "--seed");
+            string folder = Prompt("Please choose a folder name for your system: ", "--name");
+            string systematic = Prompt("Use systematic planet names? (y/n) ", "--systematic", true);
             Console.WriteLine();
 
             //TODO: Is there a better way? y/n
@@ -64,10 +64,10 @@ namespace Stellarator
         private static string Prompt(string prompt, string cmdLine, bool key = false)
         {
             //TODO: MartinX3 Change How we get the args. Only show question, if arg is not given.
-            var args = Environment.GetCommandLineArgs();
+            string[] args = Environment.GetCommandLineArgs();
             if (args.Any(s => s.Trim().StartsWith(cmdLine)))
             {
-                var arg = args.First(s => s.Trim().StartsWith(cmdLine));
+                string arg = args.First(s => s.Trim().StartsWith(cmdLine));
                 arg = arg.Trim().Remove(0, (cmdLine + ":").Length);
                 Console.WriteLine(prompt + arg);
                 return arg;

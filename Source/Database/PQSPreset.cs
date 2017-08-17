@@ -4,11 +4,11 @@
  * Licensed under the Terms of the MIT License
  */
 
+using ConfigNodeParser;
+using Kopernicus.Configuration;
+
 namespace Stellarator.Database
 {
-    using ConfigNodeParser;
-    using Kopernicus.Configuration;
-
     /// <summary>
     ///     Prefab for a PQS
     /// </summary>

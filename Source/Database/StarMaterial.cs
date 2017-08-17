@@ -4,10 +4,10 @@
  * Licensed under the Terms of the MIT License
  */
 
+using Kopernicus.Configuration;
+
 namespace Stellarator.Database
 {
-    using Kopernicus.Configuration;
-
     /// <summary>
     ///     Prefab for StarMaterial
     /// </summary>

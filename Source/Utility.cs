@@ -8,6 +8,7 @@
 namespace Stellarator
 {
     using System;
+    using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
     using System.Drawing;
     using System.Drawing.Imaging;
@@ -49,24 +50,24 @@ namespace Stellarator
         public static UnsafeBitmap BumpToNormalMap(UnsafeBitmap source, float strength)
         {
             strength = Mathf.Clamp(strength, 0.0F, 10.0F);
-            var result =
+            UnsafeBitmap result =
                 new UnsafeBitmap(new Bitmap(source.Bitmap.Width, source.Bitmap.Height, PixelFormat.Format32bppArgb));
             source.LockBitmap();
             result.LockBitmap();
-            for (var by = 0; by < result.Bitmap.Height; by++)
+            for (int by = 0; by < result.Bitmap.Height; by++)
             {
-                for (var bx = 0; bx < result.Bitmap.Width; bx++)
+                for (int bx = 0; bx < result.Bitmap.Width; bx++)
                 {
-                    var x = bx == 0 ? result.Bitmap.Width : bx;
-                    var xLeft = ((Color) source.GetPixel(x - 1, by)).grayscale * strength;
+                    int x = bx == 0 ? result.Bitmap.Width : bx;
+                    float xLeft = ((Color) source.GetPixel(x - 1, by)).grayscale * strength;
                     x = bx == (result.Bitmap.Width - 1) ? 0 : bx;
-                    var xRight = ((Color) source.GetPixel(x + 1, by)).grayscale * strength;
-                    var y = by == 0 ? result.Bitmap.Height : by;
-                    var yUp = ((Color) source.GetPixel(bx, y - 1)).grayscale * strength;
+                    float xRight = ((Color) source.GetPixel(x + 1, by)).grayscale * strength;
+                    int y = by == 0 ? result.Bitmap.Height : by;
+                    float yUp = ((Color) source.GetPixel(bx, y - 1)).grayscale * strength;
                     y = by == (result.Bitmap.Height - 1) ? 0 : by;
-                    var yDown = ((Color) source.GetPixel(bx, y + 1)).grayscale * strength;
-                    var xDelta = ((xLeft - xRight) + 1) * 0.5f;
-                    var yDelta = ((yUp - yDown) + 1) * 0.5f;
+                    float yDown = ((Color) source.GetPixel(bx, y + 1)).grayscale * strength;
+                    float xDelta = ((xLeft - xRight) + 1) * 0.5f;
+                    float yDelta = ((yUp - yDown) + 1) * 0.5f;
                     result.SetPixel(bx, by, new Color(yDelta, yDelta, yDelta, xDelta));
                 }
             }
@@ -83,7 +84,7 @@ namespace Stellarator
             byte avgB;
             byte avgG;
             byte avgR;
-            using (var bitmap = new UnsafeBitmap(bm))
+            using (UnsafeBitmap bitmap = new UnsafeBitmap(bm))
             {
                 bitmap.LockBitmap();
                 long[] totals = {0, 0, 0};
@@ -91,11 +92,11 @@ namespace Stellarator
                 long width = bm.Width;
                 long height = bm.Height;
 
-                for (var y = 0; y < height; y++)
+                for (int y = 0; y < height; y++)
                 {
-                    for (var x = 0; x < width; x++)
+                    for (int x = 0; x < width; x++)
                     {
-                        var c = bitmap.GetPixel(x, y);
+                        System.Drawing.Color c = bitmap.GetPixel(x, y);
                         totals[0] += c.B;
                         totals[1] += c.G;
                         totals[2] += c.R;
@@ -120,9 +121,9 @@ namespace Stellarator
         /// <returns></returns>
         public static Color GenerateColor()
         {
-            var r = Generator.Random.Next(0, 256);
-            var g = Generator.Random.Next(0, 256);
-            var b = Generator.Random.Next(0, 256);
+            int r = Generator.Random.Next(0, 256);
+            int g = Generator.Random.Next(0, 256);
+            int b = Generator.Random.Next(0, 256);
             return new Color32((byte) r, (byte) g, (byte) b, 255);
         }
 
@@ -175,7 +176,7 @@ namespace Stellarator
         /// </summary>
         public static ConfigNode Load(string foldername)
         {
-            var supernode = new ConfigNode("STELLARATOR");
+            ConfigNode supernode = new ConfigNode("STELLARATOR");
             return Directory
                 .GetFiles(Directory.GetCurrentDirectory() + "/data/" + foldername, "*.cfg", SearchOption.AllDirectories)
                 .Select(ConfigNode.Load)
@@ -187,15 +188,15 @@ namespace Stellarator
         /// </summary>
         private static ConfigNode Merge(ConfigNode from, ConfigNode to)
         {
-            foreach (var value in from.values)
+            foreach (KeyValuePair<string, string> value in from.values)
             {
                 to.AddValue(value.Key, value.Value);
             }
-            foreach (var node in from.nodes)
+            foreach (ConfigNode node in from.nodes)
             {
                 if (to.HasNode(node.name))
                 {
-                    var toNode = to.GetNode(node.name);
+                    ConfigNode toNode = to.GetNode(node.name);
                     if (toNode == null)
                     {
                         throw new ArgumentNullException(nameof(toNode));
@@ -215,11 +216,11 @@ namespace Stellarator
         /// </summary>
         public static ConfigNode Eval(ConfigNode node, Interpreter interpreter)
         {
-            for (var i = 0; i < node.CountValues; i++)
+            for (int i = 0; i < node.CountValues; i++)
             {
                 node.SetValue(node.values[i].Key, interpreter.TryEval(node.values[i].Value));
             }
-            for (var i = 0; i < node.CountNodes; i++)
+            for (int i = 0; i < node.CountNodes; i++)
             {
                 node.nodes[i] = Eval(node.nodes[i], interpreter);
             }
@@ -232,8 +233,8 @@ namespace Stellarator
         public static void Save(ConfigNode node, string parent, string path, string header)
         {
             // Create wrapper nodes
-            var root = new ConfigNode(parent);
-            var wrapper = new ConfigNode();
+            ConfigNode root = new ConfigNode(parent);
+            ConfigNode wrapper = new ConfigNode();
             root.AddConfigNode(node);
             wrapper.AddConfigNode(root);
 
@@ -270,24 +271,24 @@ namespace Stellarator
         /// </summary>
         public static string GenerateStarName()
         {
-            var namesDatabase = Load("starnames");
+            ConfigNode namesDatabase = Load("starnames");
             // Load Greek Letters
-            var commonLetters = namesDatabase.GetValues("commonLetters");
-            var rareLetters = namesDatabase.GetValues("rareLetters");
+            string[] commonLetters = namesDatabase.GetValues("commonLetters");
+            string[] rareLetters = namesDatabase.GetValues("rareLetters");
             // Load Greek Characters
-            var commonChars = namesDatabase.GetValues("commonChars");
-            var rareChars = namesDatabase.GetValues("rareChars");
+            string[] commonChars = namesDatabase.GetValues("commonChars");
+            string[] rareChars = namesDatabase.GetValues("rareChars");
             // Load constellation names
-            var prefix = namesDatabase.GetValues("starprefix");
-            var middle = namesDatabase.GetValues("starmiddle");
-            var suffix = namesDatabase.GetValues("starsuffix");
+            string[] prefix = namesDatabase.GetValues("starprefix");
+            string[] middle = namesDatabase.GetValues("starmiddle");
+            string[] suffix = namesDatabase.GetValues("starsuffix");
             // Load multiple systems nomenclature
-            var multiple = namesDatabase.GetValues("starmultiple");
-            var useChars = false;
+            string[] multiple = namesDatabase.GetValues("starmultiple");
+            bool useChars = false;
 
             // Generate Constellation Name First
 
-            var name = Generator.Random.Choose(prefix);
+            string name = Generator.Random.Choose(prefix);
             name += Generator.Random.Choose(middle);
             // Avoid being anal
             if (name == "An")
@@ -303,7 +304,7 @@ namespace Stellarator
             }
 
             // Choose which letter to use
-            var letter = Generator.Random.Next(0, 501);
+            int letter = Generator.Random.Next(0, 501);
             if (letter < 350)
             {
                 if (useChars)
@@ -368,11 +369,11 @@ namespace Stellarator
         /// </summary>
         public static string SystematicStarName()
         {
-            var namesDatabase = Load("starnames");
+            ConfigNode namesDatabase = Load("starnames");
             // Load Acronyms
-            var acronym = namesDatabase.GetValues("acronym");
+            string[] acronym = namesDatabase.GetValues("acronym");
 
-            var name = Generator.Random.Choose(acronym);
+            string name = Generator.Random.Choose(acronym);
             name += new string('0', Generator.Random.Next(0, 5));
             name += Generator.Random.Next(100, 9999);
             return name;
@@ -384,13 +385,13 @@ namespace Stellarator
         /// </summary>
         public static string GenerateName()
         {
-            var namesDatabase = Load("names");
-            var prefix = namesDatabase.GetValues("prefix");
-            var middle = namesDatabase.GetValues("middle");
-            var suffix = namesDatabase.GetValues("suffix");
-            var hasMiddle = false;
+            ConfigNode namesDatabase = Load("names");
+            string[] prefix = namesDatabase.GetValues("prefix");
+            string[] middle = namesDatabase.GetValues("middle");
+            string[] suffix = namesDatabase.GetValues("suffix");
+            bool hasMiddle = false;
 
-            var name = Generator.Random.Choose(prefix);
+            string name = Generator.Random.Choose(prefix);
             if (Generator.Random.Next(0, 100) < 50)
             {
                 name += Generator.Random.Choose(middle);
