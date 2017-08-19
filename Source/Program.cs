@@ -17,7 +17,7 @@ namespace Stellarator
         ///     The entrypoint for our application.
         /// </summary>
         /// <param name="args"></param>
-        public static int Main(string[] args)
+        public static int Main(String[] args)
         { /*ToDo: Optimize Generation Speed
             <Thomas> Every planet could generate in its own thread, but that would cause a mess with logging. (not that I would care)
             <Thomas> The export operation itself is harder to multithread because neither the KSP PQS nor my fake PQS are threadsafe
@@ -37,9 +37,9 @@ namespace Stellarator
 
             //TODO: MartinX3 Change How we get the args. Only show question, if arg is not given.
             // Ask for Input
-            string seed = Prompt("Please enter the seed you want to use: ", "--seed");
-            string folder = Prompt("Please choose a folder name for your system: ", "--name");
-            string systematic = Prompt("Use systematic planet names? (y/n) ", "--systematic", true);
+            String seed = Prompt("Please enter the seed you want to use: ", "--seed");
+            String folder = Prompt("Please choose a folder name for your system: ", "--name");
+            String systematic = Prompt("Use systematic planet names? (y/n) ", "--systematic", true);
             Console.WriteLine();
 
             //TODO: Is there a better way? y/n
@@ -61,13 +61,13 @@ namespace Stellarator
         /// <summary>
         ///     Asks the user something and returns an answer.
         /// </summary>
-        private static string Prompt(string prompt, string cmdLine, bool key = false)
+        private static String Prompt(String prompt, String cmdLine, bool key = false)
         {
             //TODO: MartinX3 Change How we get the args. Only show question, if arg is not given.
-            string[] args = Environment.GetCommandLineArgs();
+            String[] args = Environment.GetCommandLineArgs();
             if (args.Any(s => s.Trim().StartsWith(cmdLine)))
             {
-                string arg = args.First(s => s.Trim().StartsWith(cmdLine));
+                String arg = args.First(s => s.Trim().StartsWith(cmdLine));
                 arg = arg.Trim().Remove(0, (cmdLine + ":").Length);
                 Console.WriteLine(prompt + arg);
                 return arg;

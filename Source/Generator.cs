@@ -510,7 +510,7 @@ namespace Stellarator
                 IEnumerable<PQSMod> existingmods = pqsVersion.mods.Where(m => m.GetType() == modType);
 
                 // Create the loader
-                object loader = Activator.CreateInstance(loaderType);
+                Object loader = Activator.CreateInstance(loaderType);
 
                 // Reflection, because C# being silly... :/
                 MethodInfo createNew = loaderType.GetMethod("Create", new[] {typeof(PQS)});
@@ -529,19 +529,19 @@ namespace Stellarator
                                                                            : m.name == mod.GetValue("name"))));
                     if (existingMod != null)
                     {
-                        create.Invoke(loader, new object[] {existingMod});
+                        create.Invoke(loader, new Object[] {existingMod});
                         Parser.LoadObjectFromConfigurationNode(loader, mod);
                         patchedmods.Add(existingMod);
                     }
                     else
                     {
-                        createNew.Invoke(loader, new object[] {pqsVersion});
+                        createNew.Invoke(loader, new Object[] {pqsVersion});
                         Parser.LoadObjectFromConfigurationNode(loader, mod);
                     }
                 }
                 else
                 {
-                    createNew.Invoke(loader, new object[] {pqsVersion});
+                    createNew.Invoke(loader, new Object[] {pqsVersion});
                     Parser.LoadObjectFromConfigurationNode(loader, mod);
                 }
 

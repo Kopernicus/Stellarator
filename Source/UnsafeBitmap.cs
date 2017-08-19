@@ -17,16 +17,16 @@ namespace Stellarator
             Bitmap = new Bitmap(bitmap);
         }
 
-        public UnsafeBitmap(int width, int height)
+        public UnsafeBitmap(Int32 width, Int32 height)
         {
             Bitmap = new Bitmap(width, height, PixelFormat.Format24bppRgb);
         }
 
         private BitmapData Data { get; set; }
-        private byte* PBase { get; set; } = null;
+        private Byte* PBase { get; set; } = null;
 
         // three elements used for MakeGreyUnsafe
-        private int Width { get; set; }
+        private Int32 Width { get; set; }
 
         public Bitmap Bitmap { get; }
 
@@ -39,32 +39,32 @@ namespace Stellarator
         {
             GraphicsUnit unit = GraphicsUnit.Pixel;
             RectangleF boundsF = Bitmap.GetBounds(ref unit);
-            Rectangle bounds = new Rectangle((int) boundsF.X,
-                                       (int) boundsF.Y,
-                                       (int) boundsF.Width,
-                                       (int) boundsF.Height);
+            Rectangle bounds = new Rectangle((Int32) boundsF.X,
+                                       (Int32) boundsF.Y,
+                                       (Int32) boundsF.Width,
+                                       (Int32) boundsF.Height);
 
-            // Figure out the number of bytes in a row
+            // Figure out the number of Bytes in a row
             // This is rounded up to be a multiple of 4
-            // bytes, since a scan line in an image must always be a multiple of 4 bytes
+            // Bytes, since a scan line in an image must always be a multiple of 4 Bytes
             // in length. 
-            Width = (int) boundsF.Width * sizeof(PixelData);
+            Width = (Int32) boundsF.Width * sizeof(PixelData);
             if ((Width % 4) != 0)
             {
                 Width = 4 * ((Width / 4) + 1);
             }
             Data = Bitmap.LockBits(bounds, ImageLockMode.ReadWrite, PixelFormat.Format24bppRgb);
 
-            PBase = (byte*) Data.Scan0.ToPointer();
+            PBase = (Byte*) Data.Scan0.ToPointer();
         }
 
-        public Color GetPixel(int x, int y)
+        public Color GetPixel(Int32 x, Int32 y)
         {
             PixelData returnValue = *PixelAt(x, y);
             return returnValue.ToColor();
         }
 
-        public void SetPixel(int x, int y, Color colour)
+        public void SetPixel(Int32 x, Int32 y, Color colour)
         {
             PixelData* pixel = PixelAt(x, y);
             *pixel = PixelData.FromColor(colour);
@@ -77,7 +77,7 @@ namespace Stellarator
             PBase = null;
         }
 
-        private PixelData* PixelAt(int x, int y)
+        private PixelData* PixelAt(Int32 x, Int32 y)
         {
             return (PixelData*) (PBase + (y * Width) + (x * sizeof(PixelData)));
         }
@@ -85,9 +85,9 @@ namespace Stellarator
 
     public struct PixelData
     {
-        private byte Blue { get; set; }
-        private byte Green { get; set; }
-        private byte Red { get; set; }
+        private Byte Blue { get; set; }
+        private Byte Green { get; set; }
+        private Byte Red { get; set; }
 
         public Color ToColor()
         {
