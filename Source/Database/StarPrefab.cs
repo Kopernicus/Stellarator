@@ -9,11 +9,14 @@ using Kopernicus.Configuration;
 namespace Stellarator.Database
 {
     /// <summary>
-    /// Prefab for a Star
+    ///     Prefab for a Star
     /// </summary>
     public class StarPrefab
     {
-        [ParserTarget("Material")] public StarMaterial material;
-        [ParserTarget("Light")] public StarLight light;
+        [ParserTarget("Light")]
+        public StarLight Light { get; set; }
+
+        [ParserTarget("Material")]
+        public StarMaterial Material { get; set; }
     }
 }

@@ -27,3 +27,10 @@ Stellarator is licensed under the terms of the MIT license. It is based on Newto
 ConfigNodeParser and libaccrete are released into the public domain.
 
 Stellarator includes Code from the Kopernicus Library for KSP (ModLoader and Parser namespace), which is released under LGPL.
+
+### Code Conventions
+
+* Usings need to be outside of the namespace declaration.
+* Use CLR-Type-Names instead of type aliases (e.g. Int32 instead of int).
+* Don't use 'var', use CLR-Type-Names (e.g. Single instead of var).
+* Watch out, some 'unused' methods mybe used by reflection, because it is called in a textfile.

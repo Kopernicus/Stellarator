@@ -4,19 +4,23 @@
  * Licensed under the Terms of the MIT License
  */
 
-using System;
 using ConfigNodeParser;
 using Kopernicus.Configuration;
 
 namespace Stellarator.Database
 {
     /// <summary>
-    /// Prefab for a PQS
+    ///     Prefab for a PQS
     /// </summary>
     public class PQSPreset
     {
-        [ParserTarget("minRadius")] public NumericParser<Int32> minRadius;
-        [ParserTarget("maxRadius")] public NumericParser<Int32> maxRadius;
-        [ParserTarget("Mods")] public ConfigNode mods;
+        [ParserTarget("maxRadius")]
+        public NumericParser<int> MaxRadius { get; set; }
+
+        [ParserTarget("minRadius")]
+        public NumericParser<int> MinRadius { get; set; }
+
+        [ParserTarget("Mods")]
+        public ConfigNode Mods { get; set; }
     }
 }
