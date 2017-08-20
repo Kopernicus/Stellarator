@@ -462,8 +462,8 @@ namespace Stellarator
                        .ToList();
             PQSPreset setup = data[Random.Next(0, data.Count)];
 
-            // Setup the Int32erpreter
-            Interpreter Int32erpreter = new Interpreter()
+            // Setup the interpreter
+            Interpreter interpreter = new Interpreter()
                 .SetVariable("planet", planet, typeof(Planet))
                 .SetVariable("pqsVersion", setup, typeof(PQSPreset))
                 .SetVariable("Random", Random, typeof(Random))
@@ -477,7 +477,7 @@ namespace Stellarator
             // Transfer the mod nodes and evaluate expressions
             foreach (ConfigNode modNode in setup.Mods.nodes)
             {
-                mods.AddConfigNode(Utility.Eval(modNode, Int32erpreter));
+                mods.AddConfigNode(Utility.Eval(modNode, interpreter));
             }
 
             // Create a new PQSObject
