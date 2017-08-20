@@ -439,6 +439,7 @@ namespace Stellarator
         ///     Generates a PQS Setup + the Scaled Space Maps needed
         /// </summary>
         /// <returns></returns>
+        // ReSharper disable once InconsistentNaming
         private static void GeneratePQS(ref ConfigNode node, String name, String folder, Planet planet,
                                         out Color average)
         {
