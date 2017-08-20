@@ -12,8 +12,8 @@ Be warned that Stellarator deletes the whole system and rebuilds it from scratch
 ### Credit
 Stellarator is based on the following libraries:
 * [ConfigNode.dll](https://github.com/godarklight/ConfigNodeParser) - Standalone Implementation of KSPs config nodes by godarklight
-* [libpqsmods.dll](https://github.com/Kopernicus/pqsmods-standalone) - Standalone Implementation of KSPs PQSMod types by ThomasKerman / The Kopernicus Team
-* [libaccrete.dll](https://github.com/ThomasKerman/Accrete) - A library that simulates planet formation and accretation. Multiple authors, ported from C to C# by ThomasKerman
+* [libpqsmods.dll](https://github.com/Kopernicus/pqsmods-standalone) - Standalone Implementation of KSPs PQSMod types by StollD / The Kopernicus Team
+* [libaccrete.dll](https://github.com/StollD/Accrete) - A library that simulates planet formation and accretation. Multiple authors, ported from C to C# by StollD
 
 Other credit goes to:
 * KillAshley and Sigma88: They are working on the prefab database used by Stellarator to create working but different planet setups
@@ -30,7 +30,7 @@ Stellarator includes Code from the Kopernicus Library for KSP (ModLoader and Par
 
 ### Code Conventions
 
-* Usings need to be outside of the namespace declaration.
+* 'using's need to be outside of the namespace declaration.
 * Use CLR-Type-Names instead of type aliases (e.g. Int32 instead of int).
 * Don't use 'var', use CLR-Type-Names (e.g. Single instead of var).
-* Watch out, some 'unused' methods mybe used by reflection, because it is called in a textfile.
+* Watch out, some 'unused' methods maybe used by reflection, because they is called in a .cfg-file.
