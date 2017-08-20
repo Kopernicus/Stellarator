@@ -595,9 +595,9 @@ namespace Stellarator
 
                     // Save the textures
                     Directory.CreateDirectory(Directory.GetCurrentDirectory() + "/systems/" + folder + "/PluginData/");
-                    using (UnsafeBitmap normals = Utility.BumpToNormalMap(height, 9)
-                    ) // TODO: Implement something to make strength dynamic
+                    using (UnsafeBitmap normals = Utility.BumpToNormalMap(height, 9))
                     {
+                        // TODO: Implement something to make strength dynamic
                         diffuse.Bitmap
                                .Save(Directory.GetCurrentDirectory() + "/systems/" + folder + "/PluginData/" + name + "_Texture.png",
                                      ImageFormat.Png);
