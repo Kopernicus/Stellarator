@@ -30,11 +30,11 @@ namespace Stellarator
         /// <summary>
         ///     Tries to evaluate an expression and returns the expression text when it fails
         /// </summary>
-        private static String TryEval(this Interpreter Int32erpreter, String expression)
+        private static String TryEval(this Interpreter interpreter, String expression)
         {
             try
             {
-                return Int32erpreter.Eval<Object>(expression).ToString();
+                return interpreter.Eval<Object>(expression).ToString();
             }
             catch (Exception)
             {
@@ -214,15 +214,15 @@ namespace Stellarator
         /// <summary>
         ///     Evals the values of a confignode
         /// </summary>
-        public static ConfigNode Eval(ConfigNode node, Interpreter Int32erpreter)
+        public static ConfigNode Eval(ConfigNode node, Interpreter interpreter)
         {
             for (Int32 i = 0; i < node.CountValues; i++)
             {
-                node.SetValue(node.values[i].Key, Int32erpreter.TryEval(node.values[i].Value));
+                node.SetValue(node.values[i].Key, interpreter.TryEval(node.values[i].Value));
             }
             for (Int32 i = 0; i < node.CountNodes; i++)
             {
-                node.nodes[i] = Eval(node.nodes[i], Int32erpreter);
+                node.nodes[i] = Eval(node.nodes[i], interpreter);
             }
             return node;
         }

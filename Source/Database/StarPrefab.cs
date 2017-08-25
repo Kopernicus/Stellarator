@@ -14,9 +14,11 @@ namespace Stellarator.Database
     public class StarPrefab
     {
         [ParserTarget("Light")]
+        // ReSharper disable once UnusedAutoPropertyAccessor.Global
         public StarLight Light { get; set; }
 
         [ParserTarget("Material")]
+        // ReSharper disable once UnusedAutoPropertyAccessor.Global
         public StarMaterial Material { get; set; }
     }
 }

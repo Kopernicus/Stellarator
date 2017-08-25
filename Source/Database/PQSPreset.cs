@@ -12,15 +12,19 @@ namespace Stellarator.Database
     /// <summary>
     ///     Prefab for a PQS
     /// </summary>
+    // ReSharper disable once InconsistentNaming
     public class PQSPreset
     {
         [ParserTarget("maxRadius")]
+        // ReSharper disable once UnusedAutoPropertyAccessor.Global
         public NumericParser<int> MaxRadius { get; set; }
 
         [ParserTarget("minRadius")]
+        // ReSharper disable once UnusedAutoPropertyAccessor.Global
         public NumericParser<int> MinRadius { get; set; }
 
         [ParserTarget("Mods")]
+        // ReSharper disable once UnusedAutoPropertyAccessor.Global
         public ConfigNode Mods { get; set; }
     }
 }
