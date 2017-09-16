@@ -568,10 +568,6 @@ namespace Stellarator
             // Size
             Int32 width = pqsVersion.radius >= 600000 ? 4096 : pqsVersion.radius <= 100000 ? 1024 : 2048;
 
-            // Texture colors
-            Color Darker = Utility.AlterColor(Utility.Dark(planetColor));
-            Color Lighter = Utility.AlterColor(Utility.LightColor(planetColor));
-
             // Biome colors
             int numBiomes = Random.Next(2, 10);
             biomes = new List<Color>(numBiomes);
@@ -621,16 +617,7 @@ namespace Stellarator
                                 Single h1 = Mathf.Clamp01((Single)((builddata.vertHeight - pqsVersion.radius) *
                                        (1d / (pqsVersion.radiusMax != 0 ? pqsVersion.radiusMax : planet.radius))));
 
-                                if (pqsVersion.radiusMax != 0)
-                                {
-                                    diffuse.SetPixel(i, j, new Color(h, h, h));
-                                }
-                                else
-                                {
-                                    diffuse.SetPixel(i, j, new Color(h1 >= 0.5 ? ((Lighter.r - planetColor.r) * (h1 - 0.5f) * 2) + planetColor.r : ((planetColor.r - Darker.r) * h1 * 2) + Darker.r,
-                                                                    h1 >= 0.5 ? ((Lighter.g - planetColor.g) * (h1 - 0.5f) * 2) + planetColor.g : ((planetColor.g - Darker.g) * h1 * 2) + Darker.g,
-                                                                    h1 >= 0.5 ? ((Lighter.b - planetColor.b) * (h1 - 0.5f) * 2) + planetColor.b : ((planetColor.b - Darker.b) * h1 * 2) + Darker.b));
-                                }
+                                diffuse.SetPixel(i, j, new Color(h, h, h));
                                 height.SetPixel(i, j, new Color(h, h, h));
 
                                 biomeMap.SetPixel(i, j, biomes[(int)(h1 * (numBiomes - 1))]);
