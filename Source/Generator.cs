@@ -72,8 +72,9 @@ namespace Stellarator
             nodes.Add(GenerateSun(system, systematicNames));
 
             // Select Kerbin
-            List<Planet> allBodies = system.Bodies.Where(p => !p.gas_giant && (p.surface_pressure > 0)).ToList();
-            Kerbin = allBodies[Random.Next(0, allBodies.Count)];
+            List<Planet> allBodies = system.Bodies.SelectMany(x => new Planet[] { x }.Union(x.BodiesOrbiting)).ToList();
+            List<Planet> startBodies = allBodies.Where(p => !p.gas_giant && (p.surface_pressure > 0)).ToList();
+            Kerbin = startBodies[Random.Next(0, startBodies.Count)];
 
             // Define Roman Numerals and letters
             const String moons = "abcdefghijklmnopqrstuvwxyz";
