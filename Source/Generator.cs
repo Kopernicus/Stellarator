@@ -1,4 +1,4 @@
-﻿/**
+/**
  * Stellarator - Creates procedural systems for Kopernicus
  * Copyright (c) 2016 Thomas P.
  * Licensed under the Terms of the MIT License
@@ -148,7 +148,7 @@ namespace Stellarator
                                             Templates.SunTimewarplimits.Select(i => (Int32) (i * system
                                                                                                  .stellar_radius_ratio
                                                                                             ))));
-            properties.AddValue("useTheInName", "False");
+            //properties.AddValue("useTheInName", "False");
 
             // Log
             Console.WriteLine($"Generated root body named {name}");
