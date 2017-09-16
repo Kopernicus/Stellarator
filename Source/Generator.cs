@@ -440,7 +440,7 @@ namespace Stellarator
         /// </summary>
         /// <returns></returns>
         // ReSharper disable once InconsistentNaming
-        private static void GeneratePQS(ref ConfigNode node, String name, String folder, Planet planet,
+        private static void GeneratePQS(ref ConfigNode node, String name, String folder, Planet planet, Color planetColor,
                                         out Color average)
         {
             // Log
@@ -553,6 +553,10 @@ namespace Stellarator
             // Size
             Int32 width = pqsVersion.radius >= 600000 ? 4096 : pqsVersion.radius <= 100000 ? 1024 : 2048;
 
+            // Texture colors
+            Color Darker = Utility.AlterColor(Utility.Dark(planetColor));
+            Color Lighter = Utility.AlterColor(Utility.LightColor(planetColor));
+
             // Export ScaledSpace Maps
             using (UnsafeBitmap diffuse = new UnsafeBitmap(width, width / 2))
             {
@@ -585,9 +589,22 @@ namespace Stellarator
                             pqsVersion.OnVertexBuildHeight(builddata);
                             pqsVersion.OnVertexBuild(builddata);
                             builddata.vertColor.a = 1f;
+
                             Single h = Mathf.Clamp01((Single) ((builddata.vertHeight - pqsVersion.radius) *
                                                                (1d / pqsVersion.radiusMax)));
-                            diffuse.SetPixel(i, j, builddata.vertColor);
+                            Single h1 = Mathf.Clamp01((Single)((builddata.vertHeight - pqsVersion.radius) *
+                                   (1d / (pqsVersion.radiusMax != 0 ? pqsVersion.radiusMax : planet.radius))));
+
+                            if (pqsVersion.radiusMax != 0)
+                            {
+                                diffuse.SetPixel(i, j, new Color(h, h, h));
+                            }
+                            else
+                            {
+                                diffuse.SetPixel(i, j, new Color(h1 >= 0.5 ? ((Lighter.r - planetColor.r) * (h1 - 0.5f) * 2) + planetColor.r : ((planetColor.r - Darker.r) * h1 * 2) + Darker.r,
+                                                                h1 >= 0.5 ? ((Lighter.g - planetColor.g) * (h1 - 0.5f) * 2) + planetColor.g : ((planetColor.g - Darker.g) * h1 * 2) + Darker.g,
+                                                                h1 >= 0.5 ? ((Lighter.b - planetColor.b) * (h1 - 0.5f) * 2) + planetColor.b : ((planetColor.b - Darker.b) * h1 * 2) + Darker.b));
+                            }
                             height.SetPixel(i, j, new Color(h, h, h));
                         }
                     }
