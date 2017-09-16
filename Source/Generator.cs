@@ -617,7 +617,7 @@ namespace Stellarator
                                 Single h1 = Mathf.Clamp01((Single)((builddata.vertHeight - pqsVersion.radius) *
                                        (1d / (pqsVersion.radiusMax != 0 ? pqsVersion.radiusMax : planet.radius))));
 
-                                diffuse.SetPixel(i, j, new Color(h, h, h));
+                                diffuse.SetPixel(i, j, builddata.vertColor);
                                 height.SetPixel(i, j, new Color(h, h, h));
 
                                 biomeMap.SetPixel(i, j, biomes[(int)(h1 * (numBiomes - 1))]);
