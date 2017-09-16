@@ -1,4 +1,4 @@
-﻿/**
+/**
  * Stellarator - Creates procedural systems for Kopernicus
  * Copyright (c) 2016 Thomas P.
  * Licensed under the Terms of the MIT License
@@ -148,7 +148,7 @@ namespace Stellarator
                                             Templates.SunTimewarplimits.Select(i => (Int32) (i * system
                                                                                                  .stellar_radius_ratio
                                                                                             ))));
-            properties.AddValue("useTheInName", "False");
+            //properties.AddValue("useTheInName", "False");
 
             // Log
             Console.WriteLine($"Generated root body named {name}");
@@ -184,7 +184,7 @@ namespace Stellarator
             light.AddValue("scaledSunlightIntensity", "" + star.Light.ScaledSunlightIntensity);
             light.AddValue("IVASunColor", Parser.WriteColor(star.Light.IvaSunColor));
             light.AddValue("IVASunIntensity", "" + star.Light.IvaSunIntensity);
-            light.AddValue("ambientlightColor", Parser.WriteColor(star.Light.AmbientLightColor));
+            light.AddValue("ambientLightColor", Parser.WriteColor(star.Light.AmbientLightColor));
             light.AddValue("sunLensFlareColor", Parser.WriteColor(star.Light.SunLensFlareColor));
             light.AddValue("givesOffLight", "" + star.Light.GivesOffLight);
             light.AddValue("luminosity", "" + (system.stellar_luminosity_ratio * 1360));
@@ -452,7 +452,7 @@ namespace Stellarator
             // TODO: Material Settings?
 
             // Create a node for the mods
-            ConfigNode mods = new ConfigNode("mods");
+            ConfigNode mods = new ConfigNode("Mods");
             pqs.AddConfigNode(mods);
 
             // Load the PQSDatabase and select a setup
