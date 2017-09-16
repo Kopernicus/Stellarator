@@ -360,6 +360,38 @@ namespace Stellarator
 
                 // Log
                 Console.WriteLine($"Generated atmosphere for {name}");
+
+                // Ocean
+                if (!planet.gas_giant)
+                {
+                    if (planet.surface_temp < planet.boil_point && (Random.Next(0, 100) < 35))
+                    {
+                        ConfigNode ocean = new ConfigNode("Ocean");
+                        node.AddConfigNode(ocean);
+                        ocean.AddValue("density", "" + planet.hydrosphere * (Random.NextDouble() * 2));
+                        ocean.AddValue("minLevel", "1");
+                        ocean.AddValue("maxLevel", "6");
+                        ocean.AddValue("minDetailDistance", "8");
+                        ocean.AddValue("maxQuadLengthsPerFrame", "0.03");
+
+                        Color waterColor = Utility.GenerateColor();
+                        ocean.AddValue("oceanColor", Parser.WriteColor(waterColor));
+
+                        ConfigNode oceanmat = new ConfigNode("Material");
+                        ocean.AddConfigNode(oceanmat);
+
+                        oceanmat.AddValue("colorFromSpace", Parser.WriteColor(waterColor));
+                        oceanmat.AddValue("color", Parser.WriteColor(waterColor));
+
+                        ConfigNode oceanfallbackmat = new ConfigNode("FallbackMaterial");
+                        ocean.AddConfigNode(oceanfallbackmat);
+
+                        oceanfallbackmat.AddValue("colorFromSpace", Parser.WriteColor(waterColor));
+                        oceanfallbackmat.AddValue("color", Parser.WriteColor(waterColor));
+
+                        Console.WriteLine($"Generated ocean for {name}");
+                    }
+                }
             }
 
             // Rings :D
