@@ -82,7 +82,7 @@ namespace Stellarator
             FlattenSystem(system.Bodies, ref allBodies);
             AllBodies = allBodies;
 
-            List<Planet> startBodies = allBodies.Where(p => !p.gas_giant && (p.surface_pressure > 0)).ToList();
+            List<Planet> startBodies = AllBodies.Where(p => !p.gas_giant && (p.surface_pressure > 0)).SelectMany(x => (x.radius > 2500 ? new List<Planet>() { x, x, x } : new List<Planet>() { x })).ToList();
             Kerbin = startBodies[Random.Next(0, startBodies.Count)];
             
             // Define Roman Numerals and letters
