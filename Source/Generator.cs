@@ -295,7 +295,7 @@ namespace Stellarator
                                             Templates.KerbinTimewarplimits.Select(i =>
                                                                                       (Int32) (i * ((planet.radius *
                                                                                                      100) / 600000)))));
-            properties.AddValue("useTheInName", "False");
+            //properties.AddValue("useTheInName", "False");
 
             // Log
             Console.WriteLine($"Generated a planet named {name}. GasGiant: {planet.gas_giant}. Template: {template.GetValue("name")}");
