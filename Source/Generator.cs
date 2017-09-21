@@ -42,6 +42,11 @@ namespace Stellarator
         private static Planet Kerbin { get; set; }
 
         /// <summary>
+        ///     All planetary bodies in the system
+        /// </summary>
+        private static List<Planet> AllBodies { get; set; }
+
+        /// <summary>
         ///     This is the core of the whole app. It generates a solar system, based on a seed.
         /// </summary>
         public static void Generate(String seed, String folder, Boolean systematicNames)
@@ -72,10 +77,14 @@ namespace Stellarator
             nodes.Add(GenerateSun(system, systematicNames));
 
             // Select Kerbin
-            List<Planet> allBodies = system.Bodies.SelectMany(x => new Planet[] { x }.Union(x.BodiesOrbiting)).ToList();
-            List<Planet> startBodies = allBodies.Where(p => !p.gas_giant && (p.surface_pressure > 0)).ToList();
-            Kerbin = startBodies[Random.Next(0, startBodies.Count)];
+            // Select Kerbin
+            List<Planet> allBodies = new List<Planet>();
+            FlattenSystem(system.Bodies, ref allBodies);
+            AllBodies = allBodies;
 
+            List<Planet> startBodies = AllBodies.Where(p => !p.gas_giant && (p.surface_pressure > 0)).SelectMany(x => (x.radius > 2500 ? new List<Planet>() { x, x, x } : new List<Planet>() { x })).ToList();
+            Kerbin = startBodies[Random.Next(0, startBodies.Count)];
+            
             // Define Roman Numerals and letters
             const String moons = "abcdefghijklmnopqrstuvwxyz";
             String[] rN =
@@ -116,6 +125,25 @@ namespace Stellarator
 
                 // Log
                 Console.WriteLine($"Saved {name}");
+            }
+        }
+
+        /// <summary>
+        /// Go over all bodies recuresively, add them to a flat list
+        /// </summary>
+        /// <param name="planets">List of planetary bodies</param>
+        /// <param name="list">Array of all planetary bodies, including all oribiting bodies</param>
+        private static void FlattenSystem(Planet[] planets, ref List<Planet> list)
+        {
+            if (planets == null)
+            {
+                return;
+            }
+
+            foreach (var planet in planets)
+            {
+                list.Add(planet);
+                FlattenSystem(planet.BodiesOrbiting, ref list);
             }
         }
 
@@ -462,6 +490,78 @@ namespace Stellarator
 
             // Return
             return node;
+        }
+
+        /// <summary>
+        /// Generate the science values for the given planet, based on planet stats
+        /// </summary>
+        /// <param name="planet"></param>
+        /// <param name="config"></param>
+        /// <returns></returns>
+        private static ConfigNode GenerateScienceValues(Planet planet, ConfigNode config)
+        {
+            if (planet == Kerbin)
+            {
+                return null;
+            }
+
+            ConfigNode scienceValues = new ConfigNode("ScienceValues");
+            scienceValues.AddValue("spaceAltitudeThreshold", "" + (int)(planet.radius * 100 / 2));
+            if (config.HasNode("Atmosphere"))
+            {
+                scienceValues.AddValue("flyingAltitudeThreshold", "" + (int)(double.Parse(config.GetNode("Atmosphere").GetValue("atmosphereDepth")) / 4));
+            }
+
+            double globalMultiplier = 5 + planet.Rank(AllBodies, Kerbin);
+            if (planet.surface_grav < 0.3)
+            {
+                globalMultiplier *= 0.85;
+            }
+            else if (planet.surface_grav < 0.7)
+            {
+            }
+            else if (planet.surface_grav < 1.3)
+            {
+                globalMultiplier *= 1.5;
+            }
+            else
+            {
+                globalMultiplier *= 2;
+            }
+
+            globalMultiplier += (0.5 * Math.Abs(double.Parse(config.GetNode("Orbit").GetValue("inclination"))));
+            globalMultiplier *= Math.Min(1.5, 1 + planet.e * 5);
+
+            scienceValues.AddValue("recoveryValue", "" + (int)globalMultiplier);
+            scienceValues.AddValue("inSpaceHighDataValue", "" + (int)globalMultiplier);
+            scienceValues.AddValue("inSpaceLowDataValue", "" + (int)(globalMultiplier + 1));
+
+            if (planet.gas_giant)
+            {
+                scienceValues.AddValue("flyingHighDataValue", "" + (int)(globalMultiplier + 2));
+                scienceValues.AddValue("flyingLowDataValue", "" + (int)(globalMultiplier + 3));
+            }
+            else
+            {
+                if (config.HasNode("Atmosphere"))
+                {
+                    double altitude = double.Parse(config.GetNode("Atmosphere").GetValue("atmosphereDepth"));
+                    double pressure = double.Parse(config.GetNode("Atmosphere").GetValue("staticPressureASL"));
+
+                    globalMultiplier += Math.Min(4, (altitude / 100000d) * (pressure / 100d));
+
+                    scienceValues.AddValue("flyingHighDataValue", "" + (int)globalMultiplier);
+                    scienceValues.AddValue("flyingLowDataValue", "" + (int)globalMultiplier);
+                }
+
+                if (config.HasNode("Ocean"))
+                {
+                    scienceValues.AddValue("splashedDataValue", "" + (int)(globalMultiplier + 2));
+                }
+                scienceValues.AddValue("landedDataValue", "" + (int)(globalMultiplier + 2));
+            }
+
+            return scienceValues;
         }
 
         /// <summary>
