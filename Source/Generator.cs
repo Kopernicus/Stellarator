@@ -423,7 +423,22 @@ namespace Stellarator
             if (!planet.gas_giant)
             {
                 Color average;
-                GeneratePQS(ref node, name, folder, planet, out average);
+                List<Color> biomes;
+                GeneratePQS(ref node, name, folder, planet, planetColor, out average, out biomes);
+
+                // Biomes
+                ConfigNode bio = new ConfigNode("Biomes");
+                properties.AddConfigNode(bio);
+                for (int i = 0; i < biomes.Count; i++)
+                {
+                    ConfigNode biome = new ConfigNode("Biome");
+                    bio.AddConfigNode(biome);
+
+                    biome.AddValue("name", "Biome " + (i + 1));
+                    biome.AddValue("value", "1");
+                    biome.AddValue("color", Parser.WriteColor(biomes[i]));
+                }
+                Console.WriteLine($"Generated biomes for {name}");
 
                 // Apply colors
                 orbit.AddValue("color", Parser.WriteColor(Utility.AlterColor(average)));
@@ -473,8 +488,8 @@ namespace Stellarator
         /// </summary>
         /// <returns></returns>
         // ReSharper disable once InconsistentNaming
-        private static void GeneratePQS(ref ConfigNode node, String name, String folder, Planet planet,
-                                        out Color average)
+        private static void GeneratePQS(ref ConfigNode node, String name, String folder, Planet planet, Color planetColor,
+                                        out Color average, out List<Color> biomes)
         {
             // Log
             Console.WriteLine("Preparing to load PQS data");
@@ -586,61 +601,83 @@ namespace Stellarator
             // Size
             Int32 width = pqsVersion.radius >= 600000 ? 4096 : pqsVersion.radius <= 100000 ? 1024 : 2048;
 
+            // Biome colors
+            int numBiomes = Random.Next(2, 10);
+            biomes = new List<Color>(numBiomes);
+            for (int i = 0; i < numBiomes; i++)
+            {
+                biomes.Add(Utility.GenerateColor());
+            }
+
             // Export ScaledSpace Maps
             using (UnsafeBitmap diffuse = new UnsafeBitmap(width, width / 2))
             {
                 using (UnsafeBitmap height = new UnsafeBitmap(width, width / 2))
                 {
-                    Console.WriteLine("Exporting Scaled Space maps from the PQS. This could take a while...");
-
-                    // Iterate over the PQS
-                    pqsVersion.SetupSphere();
-                    diffuse.LockBitmap();
-                    height.LockBitmap();
-                    for (Int32 i = 0; i < width; i++)
+                    using (UnsafeBitmap biomeMap = new UnsafeBitmap(width, width / 2))
                     {
-                        for (Int32 j = 0; j < (width / 2); j++)
+                        Console.WriteLine("Exporting Scaled Space maps from the PQS. This could take a while...");
+
+                        // Iterate over the PQS
+                        pqsVersion.SetupSphere();
+                        diffuse.LockBitmap();
+                        height.LockBitmap();
+                        biomeMap.LockBitmap();
+                        for (Int32 i = 0; i < width; i++)
                         {
-                            // Create a VertexBuildData
-                            VertexBuildData builddata = new VertexBuildData
-                                                        {
-                                                            directionFromCenter =
-                                                                Quaternion.CreateFromAngleAxis((360d / width) * i,
-                                                                                               Vector3.Up) *
-                                                                Quaternion
-                                                                    .CreateFromAngleAxis(90d - ((180d / (width / 2.0)) * j),
-                                                                                         Vector3.Right) *
-                                                                Vector3.Forward,
-                                                            vertHeight = pqsVersion.radius
-                                                        };
+                            for (Int32 j = 0; j < (width / 2); j++)
+                            {
+                                // Create a VertexBuildData
+                                VertexBuildData builddata = new VertexBuildData
+                                {
+                                    directionFromCenter =
+                                                                    Quaternion.CreateFromAngleAxis((360d / width) * i,
+                                                                                                   Vector3.Up) *
+                                                                    Quaternion
+                                                                        .CreateFromAngleAxis(90d - ((180d / (width / 2.0)) * j),
+                                                                                             Vector3.Right) *
+                                                                    Vector3.Forward,
+                                    vertHeight = pqsVersion.radius
+                                };
 
-                            // Build the maps
-                            pqsVersion.OnVertexBuildHeight(builddata);
-                            pqsVersion.OnVertexBuild(builddata);
-                            builddata.vertColor.a = 1f;
-                            Single h = Mathf.Clamp01((Single) ((builddata.vertHeight - pqsVersion.radius) *
-                                                               (1d / pqsVersion.radiusMax)));
-                            diffuse.SetPixel(i, j, builddata.vertColor);
-                            height.SetPixel(i, j, new Color(h, h, h));
+                                // Build the maps
+                                pqsVersion.OnVertexBuildHeight(builddata);
+                                pqsVersion.OnVertexBuild(builddata);
+                                builddata.vertColor.a = 1f;
+
+                                Single h = Mathf.Clamp01((Single)((builddata.vertHeight - pqsVersion.radius) *
+                                                                   (1d / pqsVersion.radiusMax)));
+                                Single h1 = Mathf.Clamp01((Single)((builddata.vertHeight - pqsVersion.radius) *
+                                       (1d / (pqsVersion.radiusMax != 0 ? pqsVersion.radiusMax : planet.radius))));
+
+                                diffuse.SetPixel(i, j, builddata.vertColor);
+                                height.SetPixel(i, j, new Color(h, h, h));
+
+                                biomeMap.SetPixel(i, j, biomes[(int)(h1 * (numBiomes - 1))]);
+                            }
                         }
-                    }
-                    diffuse.UnlockBitmap();
-                    height.UnlockBitmap();
+                        diffuse.UnlockBitmap();
+                        height.UnlockBitmap();
+                        biomeMap.UnlockBitmap();
 
-                    // Save the textures
-                    Directory.CreateDirectory(Directory.GetCurrentDirectory() + "/systems/" + folder + "/PluginData/");
-                    using (UnsafeBitmap normals = Utility.BumpToNormalMap(height, 9))
-                    {
-                        // TODO: Implement something to make strength dynamic
-                        diffuse.Bitmap
-                               .Save(Directory.GetCurrentDirectory() + "/systems/" + folder + "/PluginData/" + name + "_Texture.png",
-                                     ImageFormat.Png);
-                        height.Bitmap
-                              .Save(Directory.GetCurrentDirectory() + "/systems/" + folder + "/PluginData/" + name + "_Height.png",
-                                    ImageFormat.Png); // In case you need it :)
-                        normals.Bitmap
-                               .Save(Directory.GetCurrentDirectory() + "/systems/" + folder + "/PluginData/" + name + "_Normals.png",
-                                     ImageFormat.Png);
+                        // Save the textures
+                        Directory.CreateDirectory(Directory.GetCurrentDirectory() + "/systems/" + folder + "/PluginData/");
+                        using (UnsafeBitmap normals = Utility.BumpToNormalMap(height, 9))
+                        {
+                            // TODO: Implement something to make strength dynamic
+                            diffuse.Bitmap
+                                   .Save(Directory.GetCurrentDirectory() + "/systems/" + folder + "/PluginData/" + name + "_Texture.png",
+                                         ImageFormat.Png);
+                            height.Bitmap
+                                  .Save(Directory.GetCurrentDirectory() + "/systems/" + folder + "/PluginData/" + name + "_Height.png",
+                                        ImageFormat.Png); // In case you need it :)
+                            normals.Bitmap
+                                   .Save(Directory.GetCurrentDirectory() + "/systems/" + folder + "/PluginData/" + name + "_Normals.png",
+                                         ImageFormat.Png);
+                            biomeMap.Bitmap
+                                   .Save(Directory.GetCurrentDirectory() + "/systems/" + folder + "/PluginData/" + name + "_Biomes.png",
+                                         ImageFormat.Png);
+                        }
                     }
                 }
 
